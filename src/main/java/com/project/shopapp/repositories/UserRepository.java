@@ -6,7 +6,7 @@ import com.project.shopapp.models.*;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-    boolean existsByPhoneNumber(String phoneNumber);
-    Optional<User> findByPhoneNumber(String phoneNumber);
+    boolean existsByUsername(String username);
+    Optional<User> findByUsername(String username);
     //SELECT * FROM users WHERE phoneNumber=?
 }

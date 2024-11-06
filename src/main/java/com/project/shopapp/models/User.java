@@ -26,26 +26,14 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "fullname", length = 100)
     private String fullName;
 
-    @Column(name = "phone_number", length = 10, nullable = false)
-    private String phoneNumber;
+    @Column(name = "username", length = 10, nullable = false)
+    private String username;
 
-    @Column(name = "address", length = 200)
-    private String address;
-
-    @Column(name = "password", length = 200, nullable = false)
+    @Column(name = "password", length = 100, nullable = false)
     private String password;
 
-    @Column(name = "is_active")
+    @Column(name = "is_active", columnDefinition = "TINYINT(1) DEFAULT 1")
     private boolean active;
-
-    @Column(name = "date_of_birth")
-    private Date dateOfBirth;
-
-    @Column(name = "facebook_account_id")
-    private int facebookAccountId;
-
-    @Column(name = "google_account_id")
-    private int googleAccountId;
 
     @ManyToOne
     @JoinColumn(name = "role_id")
@@ -59,10 +47,6 @@ public class User extends BaseEntity implements UserDetails {
         return authorityList;
     }
 
-    @Override
-    public String getUsername() {
-        return phoneNumber;
-    }
 
     @Override
     public boolean isAccountNonExpired() {

@@ -18,9 +18,9 @@ public class UserDTO {
     @JsonProperty("fullname")
     private String fullName;
 
-    @JsonProperty("phone_number")
-    @NotBlank(message = "Phone number is required")
-    private String phoneNumber;
+    @JsonProperty("username")
+    @NotBlank(message = "username is required")
+    private String username;
 
     private String address;
 
@@ -29,15 +29,6 @@ public class UserDTO {
 
     @JsonProperty("retype_password")
     private String retypePassword;
-
-    @JsonProperty("date_of_birth")
-    private Date dateOfBirth;
-
-    @JsonProperty("facebook_account_id")
-    private int facebookAccountId;
-
-    @JsonProperty("google_account_id")
-    private int googleAccountId;
 
     @NotNull(message = "Role id is required")
     @JsonProperty("role_id")

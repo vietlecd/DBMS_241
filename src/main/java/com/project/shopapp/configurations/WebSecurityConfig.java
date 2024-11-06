@@ -28,8 +28,6 @@ public class WebSecurityConfig {
     @Value("${api.prefix}")
     private String apiPrefix;
 
-
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http)  throws Exception{
         http

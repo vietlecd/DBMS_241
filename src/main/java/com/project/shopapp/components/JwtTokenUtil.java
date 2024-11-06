@@ -32,11 +32,11 @@ public class JwtTokenUtil {
         //properties => claims
         Map<String, Object> claims = new HashMap<>();
         //this.generateSecretKey();
-        claims.put("phoneNumber", user.getPhoneNumber());
+        claims.put("username", user.getUsername());
         try {
             String token = Jwts.builder()
                     .setClaims(claims) //how to extract claims from this ?  Payload
-                    .setSubject(user.getPhoneNumber())
+                    .setSubject(user.getUsername())
                     .setExpiration(new Date(System.currentTimeMillis() + expiration * 1000L)) //30 ngày
                     .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                     .compact();

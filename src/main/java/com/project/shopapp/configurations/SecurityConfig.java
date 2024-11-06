@@ -21,11 +21,11 @@ public class SecurityConfig {
     //user's detail object
     @Bean
     public UserDetailsService userDetailsService() {
-        return phoneNumber -> userRepository
-                .findByPhoneNumber(phoneNumber)
+        return username -> userRepository
+                .findByUsername(username)
                 .orElseThrow(() ->
                         new UsernameNotFoundException(
-                                "Cannot find user with phone number = "+phoneNumber));
+                                "Cannot find user with username = "+username));
     }
     @Bean
     public PasswordEncoder passwordEncoder() {
