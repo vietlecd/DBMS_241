@@ -5,18 +5,13 @@ USE bookstore;
 CREATE TABLE users(
     id INT PRIMARY KEY AUTO_INCREMENT,
     fullname VARCHAR(100) DEFAULT '',
-    phone_number VARCHAR(10) NOT NULL,
-    address VARCHAR(200) DEFAULT '',
+    username VARCHAR(10) NOT NULL,
     password VARCHAR(100) NOT NULL DEFAULT '',
+    role_id INT,
     created_at DATETIME,
     updated_at DATETIME,
-    is_active TINYINT(1) DEFAULT 1,
-    date_of_birth DATE,
-    facebook_account_id INT DEFAULT 0,
-    google_account_id INT DEFAULT 0
+    is_active TINYINT(1) DEFAULT 1
 );
-ALTER TABLE users ADD COLUMN role_id INT;
-
 CREATE TABLE roles(
     id INT PRIMARY KEY,
     name VARCHAR(20) NOT NULL 
@@ -34,24 +29,13 @@ CREATE TABLE tokens(
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
--- hỗ trợ đăng nhập từ Facebook và Google
-CREATE TABLE social_accounts(
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    provider VARCHAR(20) NOT NULL COMMENT 'Tên nhà social network',
-    provider_id VARCHAR(50) NOT NULL,
-    email VARCHAR(150) NOT NULL COMMENT 'Email tài khoản',
-    name VARCHAR(100) NOT NULL COMMENT 'Tên người dùng',
-    user_id int,
-    FOREIGN KEY (user_id) REFERENCES users(id)
-);
-
 -- Bảng danh mục sản phẩm(Category)
 CREATE TABLE categories(
     id INT PRIMARY KEY AUTO_INCREMENT,
-    name varchar(100) NOT NULL DEFAULT '' COMMENT 'Tên danh mục, vd: đồ điện tử'
+    name varchar(100) NOT NULL DEFAULT ''
 );
 
--- Bảng chứa sản phẩm(Product): "laptop macbook air 15 inch 2023", iphone 15 pro,...
+-- Bảng chứa sản phẩm(Product)
 CREATE TABLE products (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(350) COMMENT 'Tên sản phẩm',
@@ -80,23 +64,16 @@ CREATE TABLE orders(
     fullname VARCHAR(100) DEFAULT '',
     email VARCHAR(100) DEFAULT '',
     phone_number VARCHAR(20) NOT NULL,
-    address VARCHAR(200) NOT NULL,
     note VARCHAR(100) DEFAULT '',
     order_date DATETIME DEFAULT CURRENT_TIMESTAMP,
     status VARCHAR(20),
     total_money FLOAT CHECK(total_money >= 0)
 );
-
-ALTER TABLE orders ADD COLUMN `shipping_method` VARCHAR(100);
-ALTER TABLE orders ADD COLUMN `shipping_address` VARCHAR(200);
-ALTER TABLE orders ADD COLUMN `shipping_date` DATE;
-ALTER TABLE orders ADD COLUMN `tracking_number` VARCHAR(100);
-ALTER TABLE orders ADD COLUMN `payment_method` VARCHAR(100);
 -- xóa 1 đơn hàng => xóa mềm => thêm trường active
 ALTER TABLE orders ADD COLUMN active TINYINT(1);
 -- Trạng thái đơn hàng chỉ đc phép nhận "một số giá trị cụ thể"
 ALTER TABLE orders 
-MODIFY COLUMN status ENUM('pending', 'processing', 'shipped', 'delivered', 'cancelled') 
+MODIFY COLUMN status ENUM('pending', 'processing', 'cancelled')
 COMMENT 'Trạng thái đơn hàng';
 
 CREATE TABLE order_details(
@@ -110,3 +87,53 @@ CREATE TABLE order_details(
     total_money FLOAT CHECK(total_money >= 0),
     color VARCHAR(20) DEFAULT ''
 );
+
+CREATE TABLE payment(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    pay_type VARCHAR(200),
+    pay_amount VARCHAR(200)
+);
+
+CREATE TABLE point(
+    user_id INT,
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    amount INT,
+    type VARCHAR(200),
+    view_count INT,
+    ad_point INT,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE deposit_withdraw(
+    payment_id INT,
+    point_id INT,
+    FOREIGN KEY (payment_id) REFERENCES payment(id),
+    FOREIGN KEY (point_id) REFERENCES point(id),
+    is_author BOOLEAN DEFAULT FALSE
+);
+
+CREATE TABLE author(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT,
+    FOREIGN KEY (user_id) REFERENCES  users(id),
+    bio TEXT,
+    id_cardNumber VARCHAR(50),
+    id_cardImage VARCHAR(300) COMMENT 'lưu dạng URL'
+);
+
+CREATE TABLE audience(
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  user_id INT,
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE friendship(
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  user_id INT,
+  FOREIGN KEY (user_id) REFERENCES users(id),
+  audience_id INT,
+  FOREIGN KEY (audience_id) REFERENCES audience(id)
+);
+
