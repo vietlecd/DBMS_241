@@ -50,6 +50,11 @@ public class UserService implements IUserService {
 
         newUser.setRole(role);
 
+        //Decoed kí tự password
+        String password = userDTO.getPassword();
+        String encodedPassword = passwordEncoder.encode(password);
+        newUser.setPassword(encodedPassword);
+
         return userRepository.save(newUser);
     }
 
