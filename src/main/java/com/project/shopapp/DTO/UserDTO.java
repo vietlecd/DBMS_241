@@ -22,8 +22,6 @@ public class UserDTO {
     @NotBlank(message = "username is required")
     private String username;
 
-    private String address;
-
     @NotBlank(message = "Password can not be blank")
     private String password;
 
