@@ -28,10 +28,13 @@ CREATE TABLE tokens(
 
 CREATE TABLE Audience (
     id INT,
-    friend INT,
+    friend_id INT,
+    status VARCHAR(20) DEFAULT 'Accepted',
     FOREIGN KEY (id) REFERENCES User(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (friend) REFERENCES User(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    PRIMARY KEY (id, friend)
+    FOREIGN KEY (friend_id) REFERENCES User(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    PRIMARY KEY (id, friend_id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CHECK(user_id < friend_id)
 );
 
 CREATE TABLE Author (
