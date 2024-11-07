@@ -1,5 +1,3 @@
-CREATE DATABASE book_store;
-USE book_store;
 
 CREATE TABLE User(
     id INT PRIMARY KEY AUTO_INCREMENT,
