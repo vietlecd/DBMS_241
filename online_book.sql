@@ -14,6 +14,17 @@ CREATE TABLE Roles(
 );
 ALTER TABLE User ADD FOREIGN KEY (role_id) REFERENCES Roles (id);
 
+CREATE TABLE tokens(
+    id int PRIMARY KEY AUTO_INCREMENT,
+    token varchar(255) UNIQUE NOT NULL,
+    token_type varchar(50) NOT NULL,
+    expiration_date DATETIME,
+    revoked tinyint(1) NOT NULL,
+    expired tinyint(1) NOT NULL,
+    user_id int,
+    FOREIGN KEY (user_id) REFERENCES User(id)
+);
+
 CREATE TABLE Audience (
     id INT,
     friend INT,
@@ -36,6 +47,38 @@ CREATE TABLE Book (
     bDescription TEXT,
     coverImage VARCHAR(255),
     publishYear INT
+);
+
+-- Đặt hàng - orders
+CREATE TABLE Orders(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id int,
+    FOREIGN KEY (user_id) REFERENCES User(id),
+    fullname VARCHAR(100) DEFAULT '',
+    email VARCHAR(100) DEFAULT '',
+    phone_number VARCHAR(20) NOT NULL,
+    note VARCHAR(100) DEFAULT '',
+    order_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    status VARCHAR(20),
+    total_money FLOAT CHECK(total_money >= 0)
+);
+-- xóa 1 đơn hàng => xóa mềm => thêm trường active
+ALTER TABLE Orders ADD COLUMN active TINYINT(1);
+-- Trạng thái đơn hàng chỉ đc phép nhận "một số giá trị cụ thể"
+ALTER TABLE Orders 
+MODIFY COLUMN status ENUM('pending', 'processing', 'cancelled')
+COMMENT 'Trạng thái đơn hàng';
+
+CREATE TABLE order_details(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    order_id INT,
+    FOREIGN KEY (order_id) REFERENCES Orders (id),
+    product_id INT,
+    FOREIGN KEY (product_id) REFERENCES Book (bookID),
+    price FLOAT CHECK(price >= 0),
+    number_of_products INT CHECK(number_of_products > 0),
+    total_money FLOAT CHECK(total_money >= 0),
+    color VARCHAR(20) DEFAULT ''
 );
 
 CREATE TABLE ListOfReading (
