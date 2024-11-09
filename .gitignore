@@ -35,3 +35,9 @@ build/
 
 .env
 .mvn/
+.gitignore
+mvnw
+mvnw.cmd
+shopapp.iml
+*.iml
+shopapp.iml
