@@ -129,11 +129,13 @@ CREATE TABLE audience(
   FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
-CREATE TABLE friendship(
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  user_id INT,
-  FOREIGN KEY (user_id) REFERENCES users(id),
-  audience_id INT,
-  FOREIGN KEY (audience_id) REFERENCES audience(id)
+CREATE TABLE friendship (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    friend_id INT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (friend_id) REFERENCES users(id),
+    UNIQUE KEY (user_id, friend_id)
 );
+
 

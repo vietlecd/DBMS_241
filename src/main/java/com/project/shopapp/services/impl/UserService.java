@@ -60,8 +60,8 @@ public class UserService implements IUserService {
 
 
     @Override
-    public String login(String phoneNumber, String password) throws Exception {
-        Optional<User> optionalUser = userRepository.findByUsername(phoneNumber);
+    public String login(String username, String password) throws Exception {
+        Optional<User> optionalUser = userRepository.findByUsername(username);
         if(optionalUser.isEmpty()) {
             throw new DataNotFoundException("Invalid username / password");
         }
@@ -73,7 +73,7 @@ public class UserService implements IUserService {
         }
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                phoneNumber, password,
+                username, password,
                 existingUser.getAuthorities()
         );
 
