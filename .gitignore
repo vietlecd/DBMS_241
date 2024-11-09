@@ -41,3 +41,8 @@ mvnw.cmd
 shopapp.iml
 *.iml
 shopapp.iml
+mvnw
+mvnw.cmd
+shopapp.sql
+shopapp.iml
+.mvn
