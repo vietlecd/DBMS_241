@@ -46,6 +46,7 @@ public class UserService implements IUserService {
                 .fullName(userDTO.getFullName())
                 .username(userDTO.getUsername())
                 .password(userDTO.getPassword())
+                .phoneNumber(userDTO.getPhoneNumber())
                 .build();
 
         newUser.setRole(role);
