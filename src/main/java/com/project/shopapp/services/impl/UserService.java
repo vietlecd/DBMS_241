@@ -32,9 +32,13 @@ public class UserService implements IUserService {
     public User createUser(UserDTO userDTO) throws Exception {
         //register user
         String username = userDTO.getUsername();
+        String phoneNumber = userDTO.getPhoneNumber();
 
         if(userRepository.existsByUsername(username)) {
             throw new DataIntegrityViolationException("username already exists");
+        }
+        if(userRepository.existsByPhoneNumber(phoneNumber)) {
+            throw new DataIntegrityViolationException("phone number already exists");
         }
         Role role =roleRepository.findById(userDTO.getRoleId())
                 .orElseThrow(() -> new DataNotFoundException("Role not found"));
@@ -46,6 +50,7 @@ public class UserService implements IUserService {
                 .fullName(userDTO.getFullName())
                 .username(userDTO.getUsername())
                 .password(userDTO.getPassword())
+                .phoneNumber(userDTO.getPhoneNumber())
                 .build();
 
         newUser.setRole(role);
