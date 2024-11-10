@@ -15,6 +15,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: false
+
         naming:
           physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
   servlet:
@@ -28,3 +29,4 @@ api:
 jwt:
   expiration: 2592000 # 30 days
   secretKey: ${JWT_SECRET_KEY}
+
