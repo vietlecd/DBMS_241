@@ -7,4 +7,6 @@ import java.util.Map;
 
 public interface IBookService {
     List<BookDTO> findAll(Map<String, Object> params);
+    BookDTO createBook(BookDTO bookDTO);
+    boolean deleteBookByTitle(String title);
 }
