@@ -31,9 +31,6 @@ public class CategoryEntity {
     private Set<BookEntity> books;
 
 
-
-
-
     // Getters và setters
     public Long getCateID() {
         return cateID;

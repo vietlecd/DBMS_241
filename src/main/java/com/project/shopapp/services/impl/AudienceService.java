@@ -1,5 +1,6 @@
 package com.project.shopapp.services.impl;
 
+import com.project.shopapp.customexceptions.DataNotFoundException;
 import com.project.shopapp.models.Audience;
 import com.project.shopapp.models.User;
 import com.project.shopapp.repositories.AudienceRepository;
@@ -19,59 +20,83 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
-public class AudienceService {
+public class AudienceService implements IAudienceService{
     private AudienceRepository audienceRepository;
     private UserRepository userRepository;
 
-    public ResponseEntity<String> sendFriendRequest(String myUsername, String friendUsername) throws Exception {
-        User friend = userRepository.findByUsername(friendUsername)
-                .orElseThrow(() -> new Exception("Friend not found: " + friendUsername));
-        User user = userRepository.findByUsername(myUsername)
-                .orElseThrow(() -> new Exception("User not found: " + myUsername));
+    public ResponseEntity<String> sendFriendRequest(String myUsername, String friendUsername){
+        User user;
+        User friend;
 
-        if (user.getId() == friend.getId()) {
-            return new ResponseEntity<>("Cannot create Request with each other", HttpStatus.FORBIDDEN);
+        try {
+            friend = userRepository.findByUsername(friendUsername)
+                    .orElseThrow(() -> new DataNotFoundException("Friend not found: " + friendUsername));
+            user = userRepository.findByUsername(myUsername)
+                    .orElseThrow(() -> new DataNotFoundException("User not found: " + myUsername));
+        } catch (DataNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
-        Optional<Audience> existedRelationship = audienceRepository.findByUsers(user.getId(), friend.getId());
-        if (existedRelationship.isPresent()) {
-            return new ResponseEntity<>("Friends request already existed", HttpStatus.FORBIDDEN);
-        }
 
-        Audience audience = new Audience();
-        audience.setFriend1(user.getId());
-        audience.setFriend2(friend.getId());
-        audience.setStatus(0);
-
-        audienceRepository.save(audience);
-        return new ResponseEntity<>("Friend request sent successfully", HttpStatus.ACCEPTED);
-
-    }
-
-    public ResponseEntity<String> acceptedFriend(String myUsername, String friendUsername) throws Exception {
-        User friend = userRepository.findByUsername(friendUsername)
-                .orElseThrow(() -> new Exception("Friend not found: " + friendUsername));
-        User user = userRepository.findByUsername(myUsername)
-                .orElseThrow(() -> new Exception("User not found: " + myUsername));
-
-        Optional<Audience> request = audienceRepository.findByUsers(user.getId(), friend.getId());
-        if (request.isPresent() && request.get().getStatus() == 0) {
-
-            if (!request.get().getFriend2().equals(user.getId())) {
-                return new ResponseEntity<>("Only recipent can accept", HttpStatus.FORBIDDEN);
+            if (user.getId() == friend.getId()) {
+                return new ResponseEntity<>("Cannot create Request with each other", HttpStatus.FORBIDDEN);
             }
-            Audience audience = request.get();
-            audience.setStatus(1);
-            audienceRepository.save(audience);
-            return new ResponseEntity<>("Accept friend successfully", HttpStatus.ACCEPTED);
-        }
-        return new ResponseEntity<>("No friend request found", HttpStatus.FORBIDDEN);
-    }
+            Optional<Audience> existedRelationship = audienceRepository.findByUsers(user.getId(), friend.getId());
+            if (existedRelationship.isPresent()) {
+                return new ResponseEntity<>("Friends request already existed", HttpStatus.FORBIDDEN);
+            }
 
-    public ResponseEntity<String> deniedFriend(String myUsername, String friendUsername) throws Exception {
-        User friend = userRepository.findByUsername(friendUsername)
-                .orElseThrow(() -> new Exception("Friend not found: " + friendUsername));
-        User user = userRepository.findByUsername(myUsername)
-                .orElseThrow(() -> new Exception("User not found: " + myUsername));
+            Audience audience = Audience.builder()
+                    .friend1(user)
+                    .friend2(friend.getId())
+                    .status(0)
+                    .build();
+
+            audienceRepository.save(audience);
+            return new ResponseEntity<>("Friend request sent successfully", HttpStatus.ACCEPTED);
+
+        }
+
+
+    public ResponseEntity<String> acceptedFriend(String myUsername, String friendUsername){
+        User user;
+        User friend;
+
+        try {
+            friend = userRepository.findByUsername(friendUsername)
+                    .orElseThrow(() -> new DataNotFoundException("Friend not found: " + friendUsername));
+            user = userRepository.findByUsername(myUsername)
+                    .orElseThrow(() -> new DataNotFoundException("User not found: " + myUsername));
+        } catch (DataNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+
+            Optional<Audience> request = audienceRepository.findByUsers(user.getId(), friend.getId());
+            if (request.isPresent() && request.get().getStatus() == 0) {
+
+                if (!request.get().getFriend2().equals(user.getId())) {
+                    return new ResponseEntity<>("Only recipent can accept", HttpStatus.FORBIDDEN);
+                }
+                Audience audience = request.get();
+                audience.setStatus(1);
+                audienceRepository.save(audience);
+                return new ResponseEntity<>("Accept friend successfully", HttpStatus.ACCEPTED);
+            }
+            return new ResponseEntity<>("No friend request found", HttpStatus.FORBIDDEN);
+        }
+
+
+    public ResponseEntity<String> deniedFriend(String myUsername, String friendUsername) {
+        User user;
+        User friend;
+
+        try {
+            friend = userRepository.findByUsername(friendUsername)
+                    .orElseThrow(() -> new DataNotFoundException("Friend not found: " + friendUsername));
+            user = userRepository.findByUsername(myUsername)
+                    .orElseThrow(() -> new DataNotFoundException("User not found: " + myUsername));
+        } catch (DataNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
 
         Optional<Audience> request = audienceRepository.findByUsers(user.getId(), friend.getId());
         if (request.isPresent() && request.get().getStatus() == 0) {
@@ -87,11 +112,18 @@ public class AudienceService {
         return new ResponseEntity<>("No friend request found", HttpStatus.FORBIDDEN);
     }
 
-    public ResponseEntity<String> deleteFriend(String myUsername, String friendUsername) throws Exception {
-        User friend = userRepository.findByUsername(friendUsername)
-                .orElseThrow(() -> new Exception("Friend not found: " + friendUsername));
-        User user = userRepository.findByUsername(myUsername)
-                .orElseThrow(() -> new Exception("User not found: " + myUsername));
+    public ResponseEntity<String> deleteFriend(String myUsername, String friendUsername) {
+        User user;
+        User friend;
+
+        try {
+            friend = userRepository.findByUsername(friendUsername)
+                    .orElseThrow(() -> new DataNotFoundException("Friend not found: " + friendUsername));
+            user = userRepository.findByUsername(myUsername)
+                    .orElseThrow(() -> new DataNotFoundException("User not found: " + myUsername));
+        } catch (DataNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
         Optional<Audience> request = audienceRepository.findByUsers(user.getId(), friend.getId());
         if (request.isPresent() && request.get().getStatus() == 1) {
             Audience audience = request.get();
@@ -101,9 +133,11 @@ public class AudienceService {
         return new ResponseEntity<>("No friend request found", HttpStatus.FORBIDDEN);
     }
 
-    public List<String> getFriends(String myUsername) throws Exception {
+    public List<String> getFriends(String myUsername) {
+
         User user = userRepository.findByUsername(myUsername)
-                .orElseThrow(() -> new Exception("User not found: " + myUsername));
+                    .orElseThrow(() -> new DataNotFoundException("User not found: " + myUsername));
+
         List<Integer> friendId = audienceRepository.findFriendIdsByUserId(user.getId());
 
         if (!friendId.isEmpty()) {
@@ -112,9 +146,9 @@ public class AudienceService {
         return Collections.emptyList();
     }
 
-    public List<String> getRequest(String myUsername) throws Exception {
+    public List<String> getRequest(String myUsername) {
         User user = userRepository.findByUsername(myUsername)
-                .orElseThrow(() -> new Exception("User not found: " + myUsername));
+                .orElseThrow(() -> new DataNotFoundException("User not found: " + myUsername));
         List<Integer> request = audienceRepository.findRequestByUserId(user.getId());
 
          if(!request.isEmpty()) {
@@ -124,3 +158,4 @@ public class AudienceService {
         return Collections.emptyList();
     }
 }
+

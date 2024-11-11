@@ -15,8 +15,9 @@ public class Audience extends BaseEntity{
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name="friend1")
-    private Integer friend1;
+    @OneToOne
+    @JoinColumn(name="friend1")
+    private User friend1;
 
     @Column(name="friend2")
     private Integer  friend2;
