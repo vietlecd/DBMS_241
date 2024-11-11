@@ -137,7 +137,7 @@ public class AuthorService implements IAuthorService {
 
             userRepository.save(user1);
 
-            authorRepository.delete(author.get());
+            authorRepository.delete(author1);
             return new ResponseEntity<>("Delete author successfully", HttpStatus.ACCEPTED);
         }
         return new ResponseEntity<>("No author found", HttpStatus.FORBIDDEN);
