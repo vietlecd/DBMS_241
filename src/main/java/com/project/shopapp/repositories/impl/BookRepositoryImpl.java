@@ -2,6 +2,7 @@ package com.project.shopapp.repositories.impl;
 
 import com.project.shopapp.repositories.BookRepositoryCustom;
 import com.project.shopapp.repositories.entity.BookEntity;
+import com.project.shopapp.repositories.entity.CategoryEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
@@ -18,33 +19,35 @@ public class BookRepositoryImpl implements BookRepositoryCustom {
     private EntityManager entityManager;
 
     @Transactional(readOnly = true)
-    public List<BookEntity> findByParamsAndTypeCode(Map<String, Object> params, List<String> typeCode) {
+    public List<BookEntity> findByParamsAndTypeCode(Map<String, Object> params) {
         // Khởi tạo chuỗi JPQL cho truy vấn
-        StringBuilder jpql = new StringBuilder("SELECT b FROM BookEntity b WHERE 1=1");
+        StringBuilder jpql = new StringBuilder("SELECT DISTINCT b FROM BookEntity b");
 
-        // Thêm điều kiện từ params vào JPQL
+        // Kiểm tra nếu tham số "name" có mặt thì thêm JOIN với CategoryEntity
+        if (params.containsKey("name")) {
+            jpql.append(" JOIN b.categories c"); // Thêm JOIN với CategoryEntity nếu có name
+        }
+
+        jpql.append(" WHERE 1=1");
+
+        // Thêm các điều kiện từ params
         params.forEach((key, value) -> {
             if (value != null) {
-                // Xử lý giá trị của chuỗi để loại bỏ ký tự xuống dòng và khoảng trắng không mong muốn
                 String cleanedValue = value.toString().replaceAll("[\\n\\r]+", "").trim();
-
-                if (isNumeric(cleanedValue)) {
+                if ("name".equals(key)) {
+                    // Điều kiện đặc biệt cho tham số "name" (tìm theo tên của category)
+                    jpql.append(" AND c.name LIKE :name");
+                    params.put("name", cleanedValue);
+                } else if (isNumeric(cleanedValue)) {
                     jpql.append(" AND b.").append(key).append(" = :").append(key);
+                    params.put(key, cleanedValue);
                 } else {
                     jpql.append(" AND b.").append(key).append(" LIKE :").append(key);
+                    params.put(key, cleanedValue);
                 }
-
-                // Ghi đè giá trị đã làm sạch vào params
-                params.put(key, cleanedValue);
             }
         });
 
-        // Thêm điều kiện typeCode nếu có
-        if (typeCode != null && !typeCode.isEmpty()) {
-            jpql.append(" AND b.typeCode IN :typeCode");
-        }
-
-        // In chuỗi JPQL đã tạo để kiểm tra
         System.out.println("Generated JPQL Query: " + jpql);
 
         // Tạo đối tượng Query từ JPQL
@@ -56,14 +59,10 @@ public class BookRepositoryImpl implements BookRepositoryCustom {
                 if (isNumeric(value.toString())) {
                     query.setParameter(key, value);
                 } else {
-                    query.setParameter(key, "%" + value + "%"); // Thêm dấu % cho LIKE
+                    query.setParameter(key, "%" + value + "%");
                 }
             }
         });
-
-        if (typeCode != null && !typeCode.isEmpty()) {
-            query.setParameter("typeCode", typeCode);
-        }
 
         // Thực thi truy vấn và lấy kết quả
         List<BookEntity> resultList = query.getResultList();
@@ -74,6 +73,11 @@ public class BookRepositoryImpl implements BookRepositoryCustom {
         // In chi tiết từng đối tượng trả về để kiểm tra dữ liệu
         for (BookEntity book : resultList) {
             System.out.println("Book ID: " + book.getBookID() + ", Title: " + book.getTitle());
+
+            // In ra các thuộc tính của CategoryEntity liên kết với BookEntity
+            for (CategoryEntity category : book.getCategories()) {
+                System.out.println("Category Name: " + category.getName() + ", Description: " + category.getCatedescription());
+            }
         }
 
         return resultList;
