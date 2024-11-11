@@ -41,7 +41,7 @@ public class AuthorController {
     }
 
     @GetMapping("/getAuthor")
-    public List<AuthorDTOResponse> getList() {
+    public List<AuthorDTOResponse> getAuthorList() {
         return authorService.getAuThor();
     }
 
@@ -49,5 +49,7 @@ public class AuthorController {
     public List<AuthorDTOResponse> getAuthorRequest() {
         return authorService.getAuthorRequest();
     }
+
+
 
 }

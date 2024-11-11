@@ -25,7 +25,8 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
     Optional<Author> findByUserId(@Param("userId") Integer userId);
 
     @Query("SELECT new com.project.shopapp.responses.AuthorDTOResponse(a.userId.username, a.userId.fullName, a.userId.phoneNumber) " +
-            "FROM Author a")
+            "FROM Author a " +
+            "WHERE a.status = 1")
     List<AuthorDTOResponse> findAllAuthors();
 
     @Query("SELECT new com.project.shopapp.responses.AuthorDTOResponse(a.userId.username, a.userId.fullName, a.userId.phoneNumber) " +
