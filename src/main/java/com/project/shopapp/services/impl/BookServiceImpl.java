@@ -63,4 +63,40 @@ public class BookServiceImpl implements IBookService {
 
         return result;
     }
+    @Override
+    public BookDTO createBook(BookDTO bookDTO) {
+        // Chuyển đổi từ BookDTO sang BookEntity
+        BookEntity bookEntity = new BookEntity();
+        bookEntity.setTitle(bookDTO.getbTitle());
+        bookEntity.setDescription(bookDTO.getDescription());
+        bookEntity.setCoverimage(bookDTO.getCoverImage());
+        bookEntity.setPublishyear(bookDTO.getPublishYear());
+        bookEntity.setPrice(bookDTO.getPrice());
+
+        // Lưu BookEntity vào cơ sở dữ liệu
+        bookEntity = bookRepository.save(bookEntity);
+
+        // Chuyển đổi ngược từ BookEntity sang BookDTO để trả về
+        BookDTO result = new BookDTO();
+        result.setBookID(bookEntity.getBookID());
+        result.setbTitle(bookEntity.getTitle());
+        result.setDescription(bookEntity.getDescription());
+        result.setCoverImage(bookEntity.getCoverimage());
+        result.setPublishYear(bookEntity.getPublishyear());
+        result.setPrice(bookEntity.getPrice());
+
+        return result;
+    }
+    @Override
+    public boolean deleteBookByTitle(String title) {
+        // Tìm sách theo title
+        BookEntity bookEntity = bookRepository.findByTitle(title);
+        if (bookEntity != null) {
+            bookRepository.delete(bookEntity); // Xóa sách
+            return true;
+        }
+        return false; // Không tìm thấy sách
+    }
 }
+
+
