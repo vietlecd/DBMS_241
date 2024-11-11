@@ -3,8 +3,10 @@ package com.project.shopapp.services.impl;
 import com.project.shopapp.DTO.AuthorDTO;
 import com.project.shopapp.customexceptions.DataNotFoundException;
 import com.project.shopapp.models.Author;
+import com.project.shopapp.models.Role;
 import com.project.shopapp.models.User;
 import com.project.shopapp.repositories.AuthorRepository;
+import com.project.shopapp.repositories.RoleRepository;
 import com.project.shopapp.repositories.UserRepository;
 import com.project.shopapp.responses.AuthorDTOResponse;
 import com.project.shopapp.services.IAuthorService;
@@ -41,11 +43,15 @@ public class AuthorService implements IAuthorService {
                 Author author = Author.builder()
                         .userId(user)
                         .bio(authorDTO.getBio())
-                        .id_card(authorDTO.getId_card())
+                        .idCard(authorDTO.getId_card())
                         .status(0)
                         .build();
 
-                authorRepository.save(author);
+                if (!authorRepository.existsAuthorByIdCard(authorDTO.getId_card())) {
+                    authorRepository.save(author);
+                } else {
+                    return new ResponseEntity<>("IDCard (CCCD) Existed", HttpStatus.FORBIDDEN);
+                }
             }
             else
                 return new ResponseEntity<>("Author Existed", HttpStatus.FORBIDDEN);
@@ -56,8 +62,6 @@ public class AuthorService implements IAuthorService {
 
         return new ResponseEntity<>("Thêm request thành cong", HttpStatus.ACCEPTED);
     }
-
-
 
     public ResponseEntity<String> acceptedAuthor(String username) {
         User user;
@@ -74,6 +78,15 @@ public class AuthorService implements IAuthorService {
             Author author1 = author.get();
             author1.setStatus(1);
             authorRepository.save(author1);
+
+            Role authorRole = new Role();
+            authorRole.setId(0);
+
+            User user1 = author1.getUserId();
+            user1.setRole(authorRole);
+
+            userRepository.save(user1);
+
         } else {
             return new ResponseEntity<>("Khong tim thay Author" + username, HttpStatus.NOT_FOUND);
         }
@@ -115,7 +128,15 @@ public class AuthorService implements IAuthorService {
 
         Optional<Author> author = authorRepository.findByUserIdAndStatus(user.getId());
         if (author.isPresent() && author.get().getStatus() == 1) {
-//            Author author = request.get();
+            Author author1 = author.get();
+            Role authorRole = new Role();
+            authorRole.setId(2);
+
+            User user1 = author1.getUserId();
+            user1.setRole(authorRole);
+
+            userRepository.save(user1);
+
             authorRepository.delete(author.get());
             return new ResponseEntity<>("Delete author successfully", HttpStatus.ACCEPTED);
         }

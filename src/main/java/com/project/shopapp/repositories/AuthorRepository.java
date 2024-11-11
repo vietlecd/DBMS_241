@@ -15,6 +15,8 @@ import java.util.Optional;
 public interface AuthorRepository extends JpaRepository<Author, Long> {
     Boolean existsAuthorByUserId(User userId);
 
+    Boolean existsAuthorByIdCard(String idCard);
+
 //    @Query("SELECT a FROM Author a WHERE a.userId.id = :userId AND a.status=1")
 //    Optional<Author> findByUserId(@Param("userID") Integer userId);
 

@@ -24,7 +24,7 @@ public class Author {
     private String bio;
 
     @Column(name = "id_card")
-    private String id_card;
+    private String idCard;
 
     @Column(name = "status")
     private Integer status;
