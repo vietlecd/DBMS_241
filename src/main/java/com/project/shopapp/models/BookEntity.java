@@ -1,5 +1,5 @@
-/*
-package com.project.shopapp.repositories.entity;
+package com.project.shopapp.models;
+
 
 import jakarta.persistence.*;
 import java.util.Set;
@@ -93,4 +93,3 @@ public class BookEntity {
         this.categories = categories;
     }
 }
-*/
