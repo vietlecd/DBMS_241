@@ -1,3 +1,4 @@
+/*
 package com.project.shopapp.repositories.impl;
 
 import com.project.shopapp.repositories.CateRepository;
@@ -36,3 +37,4 @@ public class CateRepositoryImpl implements CateRepository {
         return cateID;
     }
 }
+*/

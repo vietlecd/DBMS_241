@@ -1,29 +1,41 @@
 package com.project.shopapp.repositories.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-
+import jakarta.persistence.*;
+import java.util.Set;
 
 @Entity
-
 @Table(name = "book")
 public class BookEntity {
 
     @Id
-    @Column(name = "bookID")  // Tên cột trong DB
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "bookID")
     private Long bookID;
 
-    @Column(name = "title")  // Tên cột trong DB
+    @Column(name = "title")
     private String title;
 
-    @Column(name = "description")  // Đặt tên cột trùng với DB
+    @Column(name = "description")
     private String description;
 
-    @Column(name = "coverimage")  // Đặt tên cột trùng với DB
+    @Column(name = "coverimage")
     private String coverimage;
 
+    @Column(name = "price")
+    private String price;
+
+    @Column(name = "publishyear")
+    private Integer publishyear;
+
+    @ManyToMany
+    @JoinTable(
+            name = "cate", // Tên bảng trung gian
+            joinColumns = @JoinColumn(name = "bookID", referencedColumnName = "bookID"), // Tham chiếu đến bookID của BookEntity
+            inverseJoinColumns = @JoinColumn(name = "cateID", referencedColumnName = "cateID") // Tham chiếu đến cateID của CategoryEntity
+    )
+    private Set<CategoryEntity> categories;
+
+    // Getters và setters
     public Long getBookID() {
         return bookID;
     }
@@ -56,6 +68,14 @@ public class BookEntity {
         this.coverimage = coverimage;
     }
 
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
     public Integer getPublishyear() {
         return publishyear;
     }
@@ -64,7 +84,11 @@ public class BookEntity {
         this.publishyear = publishyear;
     }
 
-    @Column(name = "publishyear")  // Đặt tên cột trùng với DB
-    private Integer publishyear;
+    public Set<CategoryEntity> getCategories() {
+        return categories;
+    }
 
+    public void setCategories(Set<CategoryEntity> categories) {
+        this.categories = categories;
+    }
 }

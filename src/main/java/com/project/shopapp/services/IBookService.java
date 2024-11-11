@@ -6,5 +6,5 @@ import java.util.List;
 import java.util.Map;
 
 public interface IBookService {
-    List<BookDTO> findAll(Map<String, Object> params, List<String> typeCode);
+    List<BookDTO> findAll(Map<String, Object> params);
 }

@@ -18,11 +18,10 @@ public class BookController {
 
     @GetMapping("/api/book")
     public List<BookDTO> getBook(
-            @RequestParam Map<String, Object> params,
-            @RequestParam(name = "typeCode", required = false) List<String> typeCode) {
+            @RequestParam Map<String, Object> params) {
 
         // Gọi đến service để lấy danh sách BookDTO dựa trên tham số truyền vào
-        List<BookDTO> result = bookService.findAll(params, typeCode);
+        List<BookDTO> result = bookService.findAll(params);
         return result;
     }
 

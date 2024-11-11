@@ -1,34 +1,44 @@
 package com.project.shopapp.DTO;
 
-public class BookDTO{
+public class BookDTO {
     private Long bookID;
     private String bTitle;
-    private String bDescription;
+
     private String coverImage;
-    private String CategoryName;
 
-    public String getCategoryName() {
-        return CategoryName;
+    private String catedescription;
+    private String price;
+
+    private String name;
+
+    public String getDescription() {
+        return description;
     }
 
-    public void setCategoryName(String categoryName) {
-        CategoryName = categoryName;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-
-
-    public String getbTitle() {
-        return bTitle;
+    private String description;
+    public String getName() {
+        return name;
     }
 
-    public void setbTitle(String bTitle) {
-        this.bTitle = bTitle;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getbDescription() {
-        return bDescription;
+    public String getCatedescription() {
+        return catedescription;
     }
 
+    public void setCatedescription(String catedescription) {
+        this.catedescription = catedescription;
+    }
+
+    private int publishYear;
+
+    // Getter và Setter cho bookID
     public Long getBookID() {
         return bookID;
     }
@@ -37,10 +47,21 @@ public class BookDTO{
         this.bookID = bookID;
     }
 
-    public void setbDescription(String bDescription) {
-        this.bDescription = bDescription;
+    // Getter và Setter cho bTitle
+    public String getbTitle() {
+        return bTitle;
     }
 
+    public void setbTitle(String bTitle) {
+        this.bTitle = bTitle;
+    }
+
+    // Getter và Setter cho bDescription
+
+
+
+
+    // Getter và Setter cho coverImage
     public String getCoverImage() {
         return coverImage;
     }
@@ -49,6 +70,20 @@ public class BookDTO{
         this.coverImage = coverImage;
     }
 
+    // Getter và Setter cho categoryName
+
+
+
+    // Getter và Setter cho price
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
+    // Getter và Setter cho publishYear
     public int getPublishYear() {
         return publishYear;
     }
@@ -56,8 +91,4 @@ public class BookDTO{
     public void setPublishYear(int publishYear) {
         this.publishYear = publishYear;
     }
-
-    private int publishYear;
-
-
 }

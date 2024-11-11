@@ -1,22 +1,48 @@
-
-
 package com.project.shopapp.repositories.entity;
 
-public class CategoryEntity {
-    private int cateID;
-    private String name;
-    private String cateDescription;
+import jakarta.persistence.*;
+import java.util.Set;
 
-    // Getter và Setter cho cateID
-    public int getCateID() {
+@Entity
+@Table(name = "category")
+public class CategoryEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "cateID")
+    private Long cateID;
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "catedescription")
+    private String catedescription;
+
+
+    public String getCatedescription() {
+        return catedescription;
+    }
+
+    public void setCatedescription(String catedescription) {
+        this.catedescription = catedescription;
+    }
+
+    @ManyToMany(mappedBy = "categories")
+    private Set<BookEntity> books;
+
+
+
+
+
+    // Getters và setters
+    public Long getCateID() {
         return cateID;
     }
 
-    public void setCateID(int cateID) {
+    public void setCateID(Long cateID) {
         this.cateID = cateID;
     }
 
-    // Getter và Setter cho name
     public String getName() {
         return name;
     }
@@ -25,13 +51,11 @@ public class CategoryEntity {
         this.name = name;
     }
 
-    // Getter và Setter cho cateDescription
-    public String getCateDescription() {
-        return cateDescription;
+    public Set<BookEntity> getBooks() {
+        return books;
     }
 
-    public void setCateDescription(String cateDescription) {
-        this.cateDescription = cateDescription;
+    public void setBooks(Set<BookEntity> books) {
+        this.books = books;
     }
-
 }
