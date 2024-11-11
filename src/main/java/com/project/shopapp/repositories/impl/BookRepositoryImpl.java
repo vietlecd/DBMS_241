@@ -1,13 +1,16 @@
 package com.project.shopapp.repositories.impl;
 
+import com.project.shopapp.models.BookEntity;
+import com.project.shopapp.models.CategoryEntity;
 import com.project.shopapp.repositories.BookRepositoryCustom;
-import com.project.shopapp.repositories.entity.BookEntity;
-import com.project.shopapp.repositories.entity.CategoryEntity;
+
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
 
 import java.util.List;
 import java.util.Map;

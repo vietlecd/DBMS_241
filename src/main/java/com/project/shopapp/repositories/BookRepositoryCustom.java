@@ -1,6 +1,8 @@
 package com.project.shopapp.repositories;
 
-import com.project.shopapp.repositories.entity.BookEntity;
+
+
+import com.project.shopapp.models.BookEntity;
 
 import java.util.List;
 import java.util.Map;

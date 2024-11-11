@@ -7,10 +7,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.project.shopapp.DTO.BookDTO;
+import com.project.shopapp.models.BookEntity;
+import com.project.shopapp.models.CategoryEntity;
 import com.project.shopapp.repositories.BookRepository;
 
-import com.project.shopapp.repositories.entity.BookEntity;
-import com.project.shopapp.repositories.entity.CategoryEntity;
+
 import com.project.shopapp.services.IBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
