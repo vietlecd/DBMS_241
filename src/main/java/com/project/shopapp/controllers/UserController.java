@@ -36,7 +36,7 @@ public class UserController {
             if(!userDTO.getPassword().equals(userDTO.getRetypePassword())){
                 return ResponseEntity.badRequest().body("Password not match");
             }
-            User user = userService.createUser(userDTO);//return ResponseEntity.ok("Register successfully");
+            userService.createUser(userDTO);//return ResponseEntity.ok("Register successfully");
             return ResponseEntity.ok("Registered successful");
         }
         catch (Exception ex){
