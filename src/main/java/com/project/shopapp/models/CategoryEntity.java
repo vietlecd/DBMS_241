@@ -1,5 +1,5 @@
-/*
-package com.project.shopapp.repositories.entity;
+package com.project.shopapp.models;
+
 
 import jakarta.persistence.*;
 import java.util.Set;
@@ -32,6 +32,9 @@ public class CategoryEntity {
     private Set<BookEntity> books;
 
 
+
+
+
     // Getters và setters
     public Long getCateID() {
         return cateID;
@@ -57,4 +60,3 @@ public class CategoryEntity {
         this.books = books;
     }
 }
-*/
