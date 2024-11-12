@@ -6,9 +6,8 @@ import com.project.shopapp.models.Author;
 import com.project.shopapp.models.Role;
 import com.project.shopapp.models.User;
 import com.project.shopapp.repositories.AuthorRepository;
-import com.project.shopapp.repositories.RoleRepository;
 import com.project.shopapp.repositories.UserRepository;
-import com.project.shopapp.responses.AuthorDTOResponse;
+import com.project.shopapp.responses.BaseProjection;
 import com.project.shopapp.services.IAuthorService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -17,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -143,7 +141,7 @@ public class AuthorService implements IAuthorService {
         return new ResponseEntity<>("No author found", HttpStatus.FORBIDDEN);
     }
 
-    public List<AuthorDTOResponse> getAuThor() {
+    public List<BaseProjection> getAuThor() {
         try {
             return authorRepository.findAllAuthors();
         } catch (Exception e) {
@@ -152,9 +150,9 @@ public class AuthorService implements IAuthorService {
         }
     }
 
-    public List<AuthorDTOResponse> getAuthorRequest() {
+    public List<BaseProjection> getAuthorRequest() {
         try {
-            return authorRepository.findAllAuthorsWithStatus();
+            return authorRepository.findAllAuthorRequests();
         } catch (Exception e) {
             //logger.error("An error occurred while fetching authors", e);
             return Collections.emptyList();

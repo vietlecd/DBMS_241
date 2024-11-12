@@ -1,8 +1,7 @@
 package com.project.shopapp.services;
 
 import com.project.shopapp.DTO.AuthorDTO;
-import com.project.shopapp.models.Author;
-import com.project.shopapp.responses.AuthorDTOResponse;
+import com.project.shopapp.responses.BaseProjection;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -16,7 +15,7 @@ public interface IAuthorService {
 
     ResponseEntity<String> deleteAuthor(String username);
 
-    List<AuthorDTOResponse> getAuThor();
+    List<BaseProjection> getAuThor();
 
-    List<AuthorDTOResponse> getAuthorRequest();
+    List<BaseProjection> getAuthorRequest();
 }

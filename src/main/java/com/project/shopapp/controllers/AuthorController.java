@@ -2,8 +2,7 @@ package com.project.shopapp.controllers;
 
 import com.project.shopapp.DTO.AuthorDTO;
 import com.project.shopapp.helpers.AuthenticationHelper;
-import com.project.shopapp.models.Author;
-import com.project.shopapp.responses.AuthorDTOResponse;
+import com.project.shopapp.responses.BaseProjection;
 import com.project.shopapp.services.IAuthorService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -41,12 +40,12 @@ public class AuthorController {
     }
 
     @GetMapping("/getAuthor")
-    public List<AuthorDTOResponse> getAuthorList() {
+    public List<BaseProjection> getAuthorList() {
         return authorService.getAuThor();
     }
 
     @GetMapping("/getAuthorRequest")
-    public List<AuthorDTOResponse> getAuthorRequest() {
+    public List<BaseProjection> getAuthorRequest() {
         return authorService.getAuthorRequest();
     }
 

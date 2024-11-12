@@ -2,11 +2,11 @@ package com.project.shopapp.repositories;
 
 
 
-import com.project.shopapp.models.BookEntity;
+import com.project.shopapp.models.Book;
 
 import java.util.List;
 import java.util.Map;
 
 public interface BookRepositoryCustom {
-    List<BookEntity> findByParamsAndTypeCode(Map<String, Object> params);
+    List<Book> findByParamsAndTypeCode(Map<String, Object> params);
 }

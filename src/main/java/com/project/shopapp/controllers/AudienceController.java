@@ -1,10 +1,9 @@
 package com.project.shopapp.controllers;
 
 import com.project.shopapp.helpers.AuthenticationHelper;
-import com.project.shopapp.models.Audience;
-import com.project.shopapp.models.User;
+import com.project.shopapp.responses.BaseProjection;
 import com.project.shopapp.services.IAudienceService;
-import com.project.shopapp.services.impl.AudienceService;
+import com.project.shopapp.services.IAuthorService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.http.ResponseEntity;
@@ -19,43 +18,21 @@ public class AudienceController {
     private final IAudienceService audienceService;
     private final AuthenticationHelper authenticationHelper;
 
-    @PostMapping("/addFriend/{friendUsername}")
-    public ResponseEntity<String> addFriend(@PathVariable String friendUsername, Authentication authentication) {
+    @PostMapping("/addFollow/{author}")
+    public ResponseEntity<String> addFollow(@PathVariable String author, Authentication authentication) {
         String myUsername = authenticationHelper.getUsername(authentication);
-        return audienceService.sendFriendRequest(myUsername, friendUsername);
+        return audienceService.sendFollow(myUsername, author);
     }
 
-    @PostMapping("/acceptFriend/{friendUsername}")
-    public ResponseEntity<String> acceptFriend(@PathVariable String friendUsername, Authentication authentication) {
+    @DeleteMapping("/deleteFollow/{author}")
+    public ResponseEntity<String> deleteFollow(@PathVariable String author, Authentication authentication) {
         String myUsername = authenticationHelper.getUsername(authentication);
-        return audienceService.acceptedFriend(myUsername, friendUsername);
+        return audienceService.deleteFollow(myUsername,author);
     }
 
-    @PostMapping("/denyFriend/{friendUsername}")
-    public ResponseEntity<String> denyFriend(@PathVariable String friendUsername, Authentication authentication) {
+    @GetMapping("/getAuthorFollow")
+    public List<BaseProjection> getFollow(Authentication authentication) {
         String myUsername = authenticationHelper.getUsername(authentication);
-        return audienceService.deniedFriend(myUsername,friendUsername);
-    }
-
-    @DeleteMapping("/deleteFriend/{friendUsername}")
-    public ResponseEntity<String> deleteFriend(@PathVariable String friendUsername, Authentication authentication) {
-        String myUsername = authenticationHelper.getUsername(authentication);
-        return audienceService.deleteFriend(myUsername,friendUsername);
-    }
-
-    @GetMapping("/getFriend")
-    public List<String> getFriends(Authentication authentication) {
-        User currentUser = (User) authentication.getPrincipal();
-        String myUsername = currentUser.getUsername();
-
-        return audienceService.getFriends(myUsername);
-    }
-
-    @GetMapping("/getFriendRequest")
-    public List<String> getRequests(Authentication authentication) {
-        User currentUser = (User) authentication.getPrincipal();
-        String myUsername = currentUser.getUsername();
-
-        return audienceService.getRequest(myUsername);
+        return audienceService.getFollows(myUsername);
     }
 }
