@@ -1,7 +1,7 @@
 package com.project.shopapp.repositories.impl;
 
-import com.project.shopapp.models.BookEntity;
-import com.project.shopapp.models.CategoryEntity;
+import com.project.shopapp.models.Book;
+import com.project.shopapp.models.Category;
 import com.project.shopapp.repositories.BookRepositoryCustom;
 
 
@@ -22,9 +22,9 @@ public class BookRepositoryImpl implements BookRepositoryCustom {
     private EntityManager entityManager;
 
     @Transactional(readOnly = true)
-    public List<BookEntity> findByParamsAndTypeCode(Map<String, Object> params) {
+    public List<Book> findByParamsAndTypeCode(Map<String, Object> params) {
         // Khởi tạo chuỗi JPQL cho truy vấn
-        StringBuilder jpql = new StringBuilder("SELECT DISTINCT b FROM BookEntity b");
+        StringBuilder jpql = new StringBuilder("SELECT DISTINCT b FROM Book b");
 
         // Kiểm tra nếu tham số "name" có mặt thì thêm JOIN với CategoryEntity
         if (params.containsKey("name")) {
@@ -54,7 +54,7 @@ public class BookRepositoryImpl implements BookRepositoryCustom {
         System.out.println("Generated JPQL Query: " + jpql);
 
         // Tạo đối tượng Query từ JPQL
-        Query query = entityManager.createQuery(jpql.toString(), BookEntity.class);
+        Query query = entityManager.createQuery(jpql.toString(), Book.class);
 
         // Gán giá trị cho các tham số trong truy vấn
         params.forEach((key, value) -> {
@@ -68,18 +68,18 @@ public class BookRepositoryImpl implements BookRepositoryCustom {
         });
 
         // Thực thi truy vấn và lấy kết quả
-        List<BookEntity> resultList = query.getResultList();
+        List<Book> resultList = query.getResultList();
 
         // In số lượng kết quả để kiểm tra
         System.out.println("Query result count: " + resultList.size());
 
         // In chi tiết từng đối tượng trả về để kiểm tra dữ liệu
-        for (BookEntity book : resultList) {
+        for (Book book : resultList) {
             System.out.println("Book ID: " + book.getBookID() + ", Title: " + book.getTitle());
 
             // In ra các thuộc tính của CategoryEntity liên kết với BookEntity
-            for (CategoryEntity category : book.getCategories()) {
-                System.out.println("Category Name: " + category.getName() + ", Description: " + category.getCatedescription());
+            for (Category category : book.getCategories()) {
+                System.out.println("Category Name: " + category.getNamecategory() + ", Description: " + category.getCatedescription());
             }
         }
 

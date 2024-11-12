@@ -6,7 +6,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "book")
-public class BookEntity {
+public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,13 +28,16 @@ public class BookEntity {
     @Column(name = "publishyear")
     private Integer publishyear;
 
+    @Column(name = "status")
+    private String status;
+
     @ManyToMany
     @JoinTable(
             name = "cate", // Tên bảng trung gian
             joinColumns = @JoinColumn(name = "bookID", referencedColumnName = "bookID"), // Tham chiếu đến bookID của BookEntity
             inverseJoinColumns = @JoinColumn(name = "cateID", referencedColumnName = "cateID") // Tham chiếu đến cateID của CategoryEntity
     )
-    private Set<CategoryEntity> categories;
+    private Set<Category> categories;
 
     // Getters và setters
     public Long getBookID() {
@@ -85,11 +88,18 @@ public class BookEntity {
         this.publishyear = publishyear;
     }
 
-    public Set<CategoryEntity> getCategories() {
+    public Set<Category> getCategories() {
         return categories;
     }
 
-    public void setCategories(Set<CategoryEntity> categories) {
+    public void setCategories(Set<Category> categories) {
         this.categories = categories;
+    }
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

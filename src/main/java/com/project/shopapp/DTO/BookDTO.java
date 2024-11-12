@@ -2,14 +2,24 @@ package com.project.shopapp.DTO;
 
 public class BookDTO {
     private Long bookID;
-    private String bTitle;
+    private String title;
 
     private String coverImage;
 
     private String catedescription;
     private String price;
 
-    private String name;
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    private String status;
+
+    private String namecategory;
 
     public String getDescription() {
         return description;
@@ -20,12 +30,13 @@ public class BookDTO {
     }
 
     private String description;
-    public String getName() {
-        return name;
+
+    public String getNamecategory() {
+        return namecategory;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNamecategory(String namecategory) {
+        this.namecategory = namecategory;
     }
 
     public String getCatedescription() {
@@ -47,19 +58,21 @@ public class BookDTO {
         this.bookID = bookID;
     }
 
-    // Getter và Setter cho bTitle
-    public String getbTitle() {
-        return bTitle;
-    }
 
-    public void setbTitle(String bTitle) {
-        this.bTitle = bTitle;
-    }
+
+
+
 
     // Getter và Setter cho bDescription
 
 
+    public String getTitle() {
+        return title;
+    }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     // Getter và Setter cho coverImage
     public String getCoverImage() {

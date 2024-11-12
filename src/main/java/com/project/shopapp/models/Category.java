@@ -6,19 +6,23 @@ import java.util.Set;
 
 @Entity
 @Table(name = "category")
-public class CategoryEntity {
+public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cateID")
     private Long cateID;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "namecategory")
+    private String namecategory;
+
+
 
     @Column(name = "catedescription")
     private String catedescription;
 
+    @ManyToMany(mappedBy = "categories")
+    private Set<Book> books;
 
     public String getCatedescription() {
         return catedescription;
@@ -27,13 +31,6 @@ public class CategoryEntity {
     public void setCatedescription(String catedescription) {
         this.catedescription = catedescription;
     }
-
-    @ManyToMany(mappedBy = "categories")
-    private Set<BookEntity> books;
-
-
-
-
 
     // Getters và setters
     public Long getCateID() {
@@ -44,19 +41,22 @@ public class CategoryEntity {
         this.cateID = cateID;
     }
 
-    public String getName() {
-        return name;
-    }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
-    public Set<BookEntity> getBooks() {
+    public Set<Book> getBooks() {
         return books;
     }
 
-    public void setBooks(Set<BookEntity> books) {
+    public void setBooks(Set<Book> books) {
         this.books = books;
     }
+
+    public String getNamecategory() {
+        return namecategory;
+    }
+
+    public void setNamecategory(String namecategory) {
+        this.namecategory = namecategory;
+    }
+
 }

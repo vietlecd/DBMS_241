@@ -36,4 +36,28 @@
             boolean deleted = bookService.deleteBookByTitle(title);
             return deleted ? "Book with title '" + title + "' was deleted successfully." : "Book with title '" + title + "' not found.";
         }
+
+
+        @PostMapping("/api/sendbookrequestcheck")
+        public String sendBookRequestCheck(@RequestParam String title) {
+            System.out.println("Received title: '" + title + "'");
+            boolean requestSent = bookService.sendBookRequestCheck(title);
+            return requestSent ? "Book request for title '" + title + "' sent successfully." : "Book request for title '" + title + "' failed.";
+        }
+
+        @PostMapping("/api/acceptbookrequestcheck")
+        public String acceptBookRequestCheck(@RequestParam String title) {
+            boolean requestAccepted = bookService.acceptBookRequestCheck(title.trim());
+            return requestAccepted ? "Book request for title '" + title + "' accepted." : "Book request for title '" + title + "' not found or already accepted.";
+        }
+
+        @GetMapping("/api/pendingbookrequests")
+        public List<BookDTO> getBooksWithPendingRequest() {
+            return bookService.getBooksWithPendingRequest();
+        }
+        @PostMapping("/api/denybookrequestcheck")
+        public String denyBookRequestCheck(@RequestParam String title) {
+            boolean requestDenied = bookService.denyBookRequestCheck(title.trim());
+            return requestDenied ? "Book request for title '" + title + "' denied." : "Book request for title '" + title + "' not found or already denied.";
+        }
     }

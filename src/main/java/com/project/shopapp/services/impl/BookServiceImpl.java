@@ -1,17 +1,16 @@
 package com.project.shopapp.services.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.project.shopapp.DTO.BookDTO;
-import com.project.shopapp.models.BookEntity;
-import com.project.shopapp.models.CategoryEntity;
+import com.project.shopapp.components.BookDTOFactory;
+import com.project.shopapp.models.Book;
+import com.project.shopapp.models.Category;
 import com.project.shopapp.repositories.BookRepository;
 
 
+import com.project.shopapp.repositories.CategoryRepository;
 import com.project.shopapp.services.IBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,17 +24,24 @@ public class BookServiceImpl implements IBookService {
     @Autowired
     private BookRepository bookRepository;
 
+    @Autowired
+    private BookDTOFactory bookDTOFactory;
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+
+
 
     @Override
     public List<BookDTO> findAll(Map<String, Object> params) {
         // Fetch list of BookEntity using JPA with filters
-        List<BookEntity> bookEntities = bookRepository.findByParamsAndTypeCode(params);
+        List<Book> bookEntities = bookRepository.findByParamsAndTypeCode(params);
         List<BookDTO> result = new ArrayList<>();
 
         // Convert each BookEntity to BookDTO
-        for (BookEntity item : bookEntities) {
+        for (Book item : bookEntities) {
             BookDTO book = new BookDTO();
-            book.setbTitle(item.getTitle());
+            book.setTitle(item.getTitle());
             book.setDescription(item.getDescription());
             book.setBookID(item.getBookID());
             book.setPrice(item.getPrice());
@@ -43,17 +49,17 @@ public class BookServiceImpl implements IBookService {
             book.setCoverImage(item.getCoverimage());
 
             // Lấy tên và mô tả của các danh mục liên quan
-            Set<CategoryEntity> categories = item.getCategories();
+            Set<Category> categories = item.getCategories();
             String categoryNames = categories.stream()
-                    .map(CategoryEntity::getName)
+                    .map(Category::getNamecategory)
                     .collect(Collectors.joining(", "));
             String categoryDescriptions = categories.stream()
-                    .map(CategoryEntity::getCatedescription)
+                    .map(Category::getCatedescription)
                     .collect(Collectors.joining(", "));
 
             // Set giá trị tên và mô tả của danh mục vào BookDTO
             book.setCatedescription(categoryDescriptions);
-            book.setName(categoryNames);
+            book.setNamecategory(categoryNames);
 
             result.add(book);
         }
@@ -65,38 +71,113 @@ public class BookServiceImpl implements IBookService {
     }
     @Override
     public BookDTO createBook(BookDTO bookDTO) {
-        // Chuyển đổi từ BookDTO sang BookEntity
-        BookEntity bookEntity = new BookEntity();
-        bookEntity.setTitle(bookDTO.getbTitle());
-        bookEntity.setDescription(bookDTO.getDescription());
-        bookEntity.setCoverimage(bookDTO.getCoverImage());
-        bookEntity.setPublishyear(bookDTO.getPublishYear());
-        bookEntity.setPrice(bookDTO.getPrice());
+        Book book = new Book();
+        book.setTitle(bookDTO.getTitle());
+        book.setDescription(bookDTO.getDescription());
+        book.setCoverimage(bookDTO.getCoverImage());
+        book.setPublishyear(bookDTO.getPublishYear());
+        book.setStatus(bookDTO.getStatus());
+        book.setPrice(bookDTO.getPrice());
 
-        // Lưu BookEntity vào cơ sở dữ liệu
-        bookEntity = bookRepository.save(bookEntity);
+        Set<Category> categories = new HashSet<>();
+        if (bookDTO.getNamecategory() != null && bookDTO.getCatedescription() != null) {
+            Category category = categoryRepository.findByNamecategoryAndCatedescription(
+                    bookDTO.getNamecategory(), bookDTO.getCatedescription());
+            if (category == null) {
+                category = new Category();
+                category.setNamecategory(bookDTO.getNamecategory());
+                category.setCatedescription(bookDTO.getCatedescription());
+                category = categoryRepository.save(category);
+            }
+            categories.add(category);
+        }
+        book.setCategories(categories);
+        book = bookRepository.save(book);
 
-        // Chuyển đổi ngược từ BookEntity sang BookDTO để trả về
         BookDTO result = new BookDTO();
-        result.setBookID(bookEntity.getBookID());
-        result.setbTitle(bookEntity.getTitle());
-        result.setDescription(bookEntity.getDescription());
-        result.setCoverImage(bookEntity.getCoverimage());
-        result.setPublishYear(bookEntity.getPublishyear());
-        result.setPrice(bookEntity.getPrice());
+        result.setBookID(book.getBookID());
+        result.setTitle(book.getTitle());
+        result.setDescription(book.getDescription());
+        result.setCoverImage(book.getCoverimage());
+        result.setPublishYear(book.getPublishyear());
+        result.setPrice(String.valueOf(book.getPrice()));
+        result.setStatus(book.getStatus());
+        result.setPrice(book.getPrice());
+
+        if (!book.getCategories().isEmpty()) {
+            Category category = book.getCategories().iterator().next();
+            result.setNamecategory(category.getNamecategory());
+            result.setCatedescription(category.getCatedescription());
+        }
 
         return result;
     }
     @Override
     public boolean deleteBookByTitle(String title) {
         // Tìm sách theo title
-        BookEntity bookEntity = bookRepository.findByTitle(title);
-        if (bookEntity != null) {
-            bookRepository.delete(bookEntity); // Xóa sách
+        Book book = bookRepository.findByTitle(title);
+        if (book != null) {
+            bookRepository.delete(book); // Xóa sách
             return true;
         }
         return false; // Không tìm thấy sách
     }
+
+    @Override
+    public boolean sendBookRequestCheck(String title) {
+        // Giả định rằng findByTitle trả về một Book thay vì Optional<Book>
+        // Loại bỏ khoảng trắng và ký tự xuống hàng khỏi title
+        title = title.trim();
+        Book book = bookRepository.findByTitle(title);
+
+        if (book != null) {
+            // Giả định status là String, kiểm tra nếu status khác "true"
+            if (book.getStatus() == null || !book.getStatus().equals("true")) {
+                // Set status thành "false" để biểu thị yêu cầu đã được gửi
+                book.setStatus("false");
+                bookRepository.save(book);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean acceptBookRequestCheck(String title) {
+        Book book = bookRepository.findByTitle(title);
+        if (book != null && "false".equals(book.getStatus())) {
+            // Nếu sách tồn tại và status là "false", set status thành "true"
+            book.setStatus("true");
+            bookRepository.save(book);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public List<BookDTO> getBooksWithPendingRequest() {
+        List<Book> pendingBooks = bookRepository.findByStatus("false");
+        System.out.println("Pending Books Count: " + pendingBooks.size());
+
+        return pendingBooks.stream()
+                .map(book -> bookDTOFactory.createBookDTO(book.getTitle(), book.getStatus()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean denyBookRequestCheck(String title) {
+        Book book = bookRepository.findByTitle(title);
+        if (book != null && "false".equals(book.getStatus())) {
+            book.setStatus("deny");
+            bookRepository.save(book);
+            return true;
+        }
+        return false;
+    }
+
+
+
+
 }
 
 
