@@ -1,12 +1,12 @@
-/*
-package com.project.shopapp.repositories.entity;
+package com.project.shopapp.models;
+
 
 import jakarta.persistence.*;
 import java.util.Set;
 
 @Entity
 @Table(name = "book")
-public class BookEntity {
+public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,10 +31,10 @@ public class BookEntity {
     @ManyToMany
     @JoinTable(
             name = "cate", // Tên bảng trung gian
-            joinColumns = @JoinColumn(name = "bookID", referencedColumnName = "bookID"), // Tham chiếu đến bookID của BookEntity
-            inverseJoinColumns = @JoinColumn(name = "cateID", referencedColumnName = "cateID") // Tham chiếu đến cateID của CategoryEntity
+            joinColumns = @JoinColumn(name = "bookID", referencedColumnName = "bookID"), // Tham chiếu đến bookID của Book
+            inverseJoinColumns = @JoinColumn(name = "cateID", referencedColumnName = "cateID") // Tham chiếu đến cateID của Category
     )
-    private Set<CategoryEntity> categories;
+    private Set<Category> categories;
 
     // Getters và setters
     public Long getBookID() {
@@ -85,12 +85,11 @@ public class BookEntity {
         this.publishyear = publishyear;
     }
 
-    public Set<CategoryEntity> getCategories() {
+    public Set<Category> getCategories() {
         return categories;
     }
 
-    public void setCategories(Set<CategoryEntity> categories) {
+    public void setCategories(Set<Category> categories) {
         this.categories = categories;
     }
 }
-*/

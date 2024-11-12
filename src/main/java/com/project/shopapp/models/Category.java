@@ -6,7 +6,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "category")
-public class CategoryEntity {
+public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +29,7 @@ public class CategoryEntity {
     }
 
     @ManyToMany(mappedBy = "categories")
-    private Set<BookEntity> books;
+    private Set<Book> books;
 
 
 
@@ -52,11 +52,11 @@ public class CategoryEntity {
         this.name = name;
     }
 
-    public Set<BookEntity> getBooks() {
+    public Set<Book> getBooks() {
         return books;
     }
 
-    public void setBooks(Set<BookEntity> books) {
+    public void setBooks(Set<Book> books) {
         this.books = books;
     }
 }
