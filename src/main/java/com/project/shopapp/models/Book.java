@@ -2,6 +2,9 @@ package com.project.shopapp.models;
 
 
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -102,4 +105,18 @@ public class Book {
     public void setStatus(String status) {
         this.status = status;
     }
+
+  /*  public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }*/
+
+  /*  @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> reviews = new ArrayList<>();
+
+*/
+
 }

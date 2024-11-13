@@ -78,7 +78,7 @@ public class BookServiceImpl implements IBookService {
         book.setPublishyear(bookDTO.getPublishYear());
         book.setStatus(bookDTO.getStatus());
         book.setPrice(bookDTO.getPrice());
-
+        //DTO thành Entity
         Set<Category> categories = new HashSet<>();
         if (bookDTO.getNamecategory() != null && bookDTO.getCatedescription() != null) {
             Category category = categoryRepository.findByNamecategoryAndCatedescription(
@@ -94,6 +94,7 @@ public class BookServiceImpl implements IBookService {
         book.setCategories(categories);
         book = bookRepository.save(book);
 
+        //ENtity thành DTO
         BookDTO result = new BookDTO();
         result.setBookID(book.getBookID());
         result.setTitle(book.getTitle());
@@ -113,9 +114,9 @@ public class BookServiceImpl implements IBookService {
         return result;
     }
     @Override
-    public boolean deleteBookByTitle(String title) {
+    public boolean deleteBookBybookID(Long bookID) {
         // Tìm sách theo title
-        Book book = bookRepository.findByTitle(title);
+        Book book = bookRepository.findByBookID(bookID);
         if (book != null) {
             bookRepository.delete(book); // Xóa sách
             return true;
@@ -167,12 +168,11 @@ public class BookServiceImpl implements IBookService {
     @Override
     public boolean denyBookRequestCheck(String title) {
         Book book = bookRepository.findByTitle(title);
-        if (book != null && "false".equals(book.getStatus())) {
-            book.setStatus("deny");
-            bookRepository.save(book);
+        if (book != null) {
+            bookRepository.delete(book); // Xóa sách
             return true;
         }
-        return false;
+        return false; // Không tìm thấy sách
     }
 
 

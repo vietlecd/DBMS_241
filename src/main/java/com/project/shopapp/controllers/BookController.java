@@ -23,27 +23,24 @@
             return result;
         }
         @PostMapping("/api/createbook")
-        public BookDTO createBook(
+        public String createBook(
                 @RequestBody BookDTO bookDTO) {
             // Gọi đến service để tạo mới một Book
-            return bookService.createBook(bookDTO);
+            BookDTO createdBook = bookService.createBook(bookDTO);
+            return createdBook != null ? "Book with title '" + createdBook.getTitle() + "' during the processing and returning of results when available" : "Failed to send request check the book.";
         }
+
 
 
         @DeleteMapping("/api/deletebook")
-        public String deleteBookByTitle(@RequestParam String title) {
+        public String deleteBookByTitle(@RequestParam Long bookID) {
             // Gọi đến service để xóa sách theo title
-            boolean deleted = bookService.deleteBookByTitle(title);
-            return deleted ? "Book with title '" + title + "' was deleted successfully." : "Book with title '" + title + "' not found.";
+            boolean deleted = bookService.deleteBookBybookID(bookID);
+            return deleted ? "Book with title '" + bookID + "' was deleted successfully." : "Book with title '" + bookID+ "' not found.";
         }
 
 
-        @PostMapping("/api/sendbookrequestcheck")
-        public String sendBookRequestCheck(@RequestParam String title) {
-            System.out.println("Received title: '" + title + "'");
-            boolean requestSent = bookService.sendBookRequestCheck(title);
-            return requestSent ? "Book request for title '" + title + "' sent successfully." : "Book request for title '" + title + "' failed.";
-        }
+
 
         @PostMapping("/api/acceptbookrequestcheck")
         public String acceptBookRequestCheck(@RequestParam String title) {
