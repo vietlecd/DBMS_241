@@ -17,7 +17,8 @@ public class BookDTO {
     private Long bookID;
 
     @JsonProperty("title")
-    private String bTitle;
+    private String title;
+
 
     @JsonProperty("cover_image")
     private String coverImage;
@@ -28,12 +29,30 @@ public class BookDTO {
     @JsonProperty("price")
     private String price;
 
+
+    @JsonProperty("status")
+    private String status;
+
+    @JsonProperty("namecategory")
+    private String namecategory;
+
+
     @JsonProperty("authors")
     private Set<String> authorName;
+
 
     @JsonProperty("description")
     private String description;
 
     @JsonProperty("publish_year")
     private int publishYear;
+
+
+
+
+
+
+
+
+
 }

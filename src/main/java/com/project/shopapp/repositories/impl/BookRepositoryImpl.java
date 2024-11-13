@@ -77,9 +77,11 @@ public class BookRepositoryImpl implements BookRepositoryCustom {
         for (Book book : resultList) {
             System.out.println("Book ID: " + book.getBookID() + ", Title: " + book.getTitle());
 
-            // In ra các thuộc tính của Category liên kết với Book
+
+            // In ra các thuộc tính của CategoryEntity liên kết với BookEntity
             for (Category category : book.getCategories()) {
-                System.out.println("Category Name: " + category.getName() + ", Description: " + category.getCatedescription());
+                System.out.println("Category Name: " + category.getNamecategory() + ", Description: " + category.getCatedescription());
+
             }
         }
 
