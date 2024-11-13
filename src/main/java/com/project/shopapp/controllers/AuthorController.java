@@ -18,7 +18,7 @@ public class AuthorController {
     private IAuthorService authorService;
     private AuthenticationHelper authenticationHelper;
 
-    @PostMapping("/add")
+    @PostMapping("/become")
     public ResponseEntity<String> becomeAuthor(@RequestBody AuthorDTO authorDTO, Authentication authentication) {
         String username = authenticationHelper.getUsername(authentication);
         return authorService.becomeAuthor(username, authorDTO);

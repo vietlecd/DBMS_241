@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.util.Set;
+
 @Entity
 @Table(name = "author")
 @Getter
@@ -19,6 +21,14 @@ public class Author {
     @OneToOne
     @JoinColumn(name = "user_id")
     private User userId;
+
+    @ManyToMany
+    @JoinTable(
+            name = "author_book",
+            joinColumns = @JoinColumn(name = "author_id"),
+            inverseJoinColumns = @JoinColumn(name = "book_id")
+    )
+    Set<Book> bookSet;
 
     @Column(name = "bio")
     private String bio;

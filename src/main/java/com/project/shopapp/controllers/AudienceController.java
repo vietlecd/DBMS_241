@@ -35,4 +35,6 @@ public class AudienceController {
         String myUsername = authenticationHelper.getUsername(authentication);
         return audienceService.getFollows(myUsername);
     }
+
+
 }
