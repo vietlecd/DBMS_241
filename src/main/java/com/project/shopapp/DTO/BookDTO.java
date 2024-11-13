@@ -1,107 +1,58 @@
 package com.project.shopapp.DTO;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.project.shopapp.models.Author;
+import lombok.*;
+
+import java.util.Set;
+
+@Data
+@Builder
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class BookDTO {
+    @JsonProperty("book_id")
     private Long bookID;
+
+    @JsonProperty("title")
     private String title;
 
+
+    @JsonProperty("cover_image")
     private String coverImage;
 
-    private String catedescription;
+    @JsonProperty("category_description")
+    private String cateDescription;
+
+    @JsonProperty("price")
     private String price;
 
-    public String getStatus() {
-        return status;
-    }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
+    @JsonProperty("status")
     private String status;
 
+    @JsonProperty("namecategory")
     private String namecategory;
 
-    public String getDescription() {
-        return description;
-    }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    @JsonProperty("authors")
+    private Set<String> authorName;
 
+
+    @JsonProperty("description")
     private String description;
 
-    public String getNamecategory() {
-        return namecategory;
-    }
-
-    public void setNamecategory(String namecategory) {
-        this.namecategory = namecategory;
-    }
-
-    public String getCatedescription() {
-        return catedescription;
-    }
-
-    public void setCatedescription(String catedescription) {
-        this.catedescription = catedescription;
-    }
-
+    @JsonProperty("publish_year")
     private int publishYear;
 
-    // Getter và Setter cho bookID
-    public Long getBookID() {
-        return bookID;
-    }
-
-    public void setBookID(Long bookID) {
-        this.bookID = bookID;
-    }
 
 
 
 
 
 
-    // Getter và Setter cho bDescription
 
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    // Getter và Setter cho coverImage
-    public String getCoverImage() {
-        return coverImage;
-    }
-
-    public void setCoverImage(String coverImage) {
-        this.coverImage = coverImage;
-    }
-
-    // Getter và Setter cho categoryName
-
-
-
-    // Getter và Setter cho price
-    public String getPrice() {
-        return price;
-    }
-
-    public void setPrice(String price) {
-        this.price = price;
-    }
-
-    // Getter và Setter cho publishYear
-    public int getPublishYear() {
-        return publishYear;
-    }
-
-    public void setPublishYear(int publishYear) {
-        this.publishYear = publishYear;
-    }
 }

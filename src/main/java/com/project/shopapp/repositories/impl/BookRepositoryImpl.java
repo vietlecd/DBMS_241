@@ -26,9 +26,9 @@ public class BookRepositoryImpl implements BookRepositoryCustom {
         // Khởi tạo chuỗi JPQL cho truy vấn
         StringBuilder jpql = new StringBuilder("SELECT DISTINCT b FROM Book b");
 
-        // Kiểm tra nếu tham số "name" có mặt thì thêm JOIN với CategoryEntity
+        // Kiểm tra nếu tham số "name" có mặt thì thêm JOIN với Category
         if (params.containsKey("name")) {
-            jpql.append(" JOIN b.categories c"); // Thêm JOIN với CategoryEntity nếu có name
+            jpql.append(" JOIN b.categories c"); // Thêm JOIN với Category nếu có name
         }
 
         jpql.append(" WHERE 1=1");
@@ -77,9 +77,11 @@ public class BookRepositoryImpl implements BookRepositoryCustom {
         for (Book book : resultList) {
             System.out.println("Book ID: " + book.getBookID() + ", Title: " + book.getTitle());
 
+
             // In ra các thuộc tính của CategoryEntity liên kết với BookEntity
             for (Category category : book.getCategories()) {
                 System.out.println("Category Name: " + category.getNamecategory() + ", Description: " + category.getCatedescription());
+
             }
         }
 

@@ -1,13 +1,16 @@
 package com.project.shopapp.repositories;
 
+import com.project.shopapp.responses.BaseProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.project.shopapp.models.*;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByUsername(String username);
 
@@ -15,6 +18,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUsername(String username);
     //SELECT * FROM users WHERE phoneNumber=?
 
-    @Query("SELECT u.username FROM User u WHERE u.id IN :friendIds")
-    List<String> findUsernamesByIds(@Param("friendIds") List<Integer> friendIds);
+    @Query("SELECT u.username AS username, u.fullName AS fullName, u.phoneNumber AS phoneNumber " +
+            "FROM User u JOIN u.friends f WHERE f.username = :username")
+    List<BaseProjection> findFriendsByUsername(@Param("username") String username);
 }

@@ -32,6 +32,7 @@ public class Category {
         this.catedescription = catedescription;
     }
 
+
     // Getters và setters
     public Long getCateID() {
         return cateID;
