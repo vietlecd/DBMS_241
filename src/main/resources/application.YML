@@ -31,7 +31,7 @@ jwt:
   secretKey: ${JWT_SECRET_KEY}
 
 vnp:
-  tmnCode: ${vnp_TmnCode}
-  secretCode: ${vnp_secretKey}
+  tmnCode: ${vnp_TmnCode} #
+  secretCode: ${vnp_SecretKey}
 
 

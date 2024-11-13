@@ -1,7 +1,9 @@
 package com.project.shopapp.configurations;
 
 import jakarta.servlet.http.HttpServletRequest;
+
 import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -15,8 +17,8 @@ import java.util.*;
 public class VNPayConfig {
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
     public static String vnp_Returnurl = "/api/vnpay-payment";
-    public static String vnp_TmnCode = "CFFPCQMR";
-    public static String vnp_HashSecret = "RQVXVKUPTO4HAVSJGLMDI0XXW603FEY0";
+    public static String vnp_TmnCode = System.getenv("vnp_TmnCode");
+    public static String vnp_HashSecret = System.getenv("vnp_SecretKey");
     public static String vnp_apiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
 
     public static String md5(String message) {
