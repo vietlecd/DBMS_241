@@ -30,3 +30,8 @@ jwt:
   expiration: 2592000 # 30 days
   secretKey: ${JWT_SECRET_KEY}
 
+vnp:
+  tmnCode: ${vnp_TmnCode}
+  secretCode: ${vnp_secretKey}
+
+
