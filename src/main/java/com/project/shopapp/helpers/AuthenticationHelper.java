@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AuthenticationHelper {
-    private User getUser(Authentication authentication) {
+    public User getUser(Authentication authentication) {
         if (authentication != null && authentication.getPrincipal() instanceof User) {
             return (User) authentication.getPrincipal();
         }

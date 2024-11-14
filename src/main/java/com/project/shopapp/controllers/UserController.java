@@ -3,10 +3,13 @@ package com.project.shopapp.controllers;
 import com.project.shopapp.DTO.UserDTO;
 import com.project.shopapp.DTO.UserLoginDTO;
 import com.project.shopapp.components.CookieUtil;
+import com.project.shopapp.helpers.AuthenticationHelper;
 import com.project.shopapp.models.User;
+import com.project.shopapp.services.IClaimService;
 import com.project.shopapp.services.IUserService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +21,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("${api.prefix}/users")
+@AllArgsConstructor
 public class UserController {
 
-    @Autowired
+    private IClaimService claimService;
     private IUserService userService;
+    private AuthenticationHelper authenticationHelper;
     @PostMapping("/register")
     public ResponseEntity<?> createUser(@Valid @RequestBody UserDTO userDTO,
                                         BindingResult result){
@@ -52,6 +57,7 @@ public class UserController {
             String token = userService.login(userLoginDTO.getUsername(), userLoginDTO.getPassword());
 
             CookieUtil.setTokenCookie(token, response);
+
             // Trả về token trong response
             return ResponseEntity.ok("Login successful");
         } catch (Exception e) {

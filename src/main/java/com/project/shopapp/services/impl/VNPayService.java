@@ -2,13 +2,15 @@ package com.project.shopapp.services.impl;
 
 import com.project.shopapp.configurations.VNPayConfig;
 import com.project.shopapp.models.Payment;
+import com.project.shopapp.models.Point;
 import com.project.shopapp.models.User;
 import com.project.shopapp.repositories.PaymentRepository;
+import com.project.shopapp.repositories.DepositRepository;
+import com.project.shopapp.services.IDepositService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
@@ -136,6 +138,8 @@ import java.util.*;
     public class VNPayService {
 
         private final PaymentRepository paymentRepository;
+        private final DepositRepository depositRepository;
+        private final IDepositService pointService;
 
         public String createOrder(int total, String urlReturn, HttpServletRequest request, User user) {
             String vnp_Version = "2.1.0";
@@ -224,8 +228,14 @@ import java.util.*;
 
             if (optionalPayment.isPresent()) {
                 Payment payment = optionalPayment.get();
+                User user = payment.getUserId();
                 if ("00".equals(request.getParameter("vnp_TransactionStatus"))) {
                     payment.setStatus("SUCCESS");
+                    //Set Point
+                    int total = Integer.parseInt(payment.getPayAmount());
+                    Point point = pointService.depositPoint(total, user);
+                    pointService.createDeposit(payment, point);
+                    //***********************//
                 } else {
                     payment.setStatus("FAILED");
                 }
