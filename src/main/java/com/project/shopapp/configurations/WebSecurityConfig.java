@@ -42,6 +42,9 @@ public class WebSecurityConfig {
                             )
                             .permitAll()
 
+                            .requestMatchers(GET,
+                                    String.format("%s/view_advertisement", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
+
                             .requestMatchers(POST,
                                     String.format("%s/submitOrder", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR, Role.ADMIN)
 

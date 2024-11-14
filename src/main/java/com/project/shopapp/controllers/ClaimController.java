@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ClaimController {
     private IClaimService claimService;
     private AuthenticationHelper authenticationHelper;
-    @GetMapping("view_advertisement")
+    @GetMapping("/view_advertisement")
     public ResponseEntity<?> viewAds (Authentication authentication) {
         User user = authenticationHelper.getUser(authentication);
         return claimService.claimAdPoint(user);

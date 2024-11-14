@@ -17,6 +17,10 @@ import java.time.LocalDate;
 @Table(name = "claim")
 @IdClass(ClaimId.class)
 public class Claim{
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private Long id;
+
     @Id
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -27,8 +31,11 @@ public class Claim{
     @JoinColumn(name = "point_id")
     private Point pointId;
 
-    @Column(name = "claim_type")
-    private String claimType;  //LOGIN_STREAK or AD_VIEWS or REVIEWS;
+//    @Column(name = "claim_type")
+//    private String claimType;  //LOGIN_STREAK or AD_VIEWS or REVIEWS;
+
+//    @Column(name = "streak_count")
+//    private Integer streakCount;
 
     @Column(name = "claim_date")
     private LocalDate claimDate;

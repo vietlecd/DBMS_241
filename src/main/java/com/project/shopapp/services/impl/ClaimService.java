@@ -7,6 +7,7 @@ import com.project.shopapp.repositories.ClaimRepository;
 import com.project.shopapp.repositories.PointRepository;
 import com.project.shopapp.services.IClaimService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +16,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
 public class ClaimService implements IClaimService {
-    private final ClaimRepository claimRepository;
-    private final PointRepository pointRepository;
+    @Autowired
+    private ClaimRepository claimRepository;
+    @Autowired
+    private PointRepository pointRepository;
 
     @Override
     public ResponseEntity<?> claimStreakPoint(User user) {
@@ -27,9 +29,6 @@ public class ClaimService implements IClaimService {
 
         Point claimPoints = getOrCreateUserPoint(user);
 
-        int streakDays = calculateStreakDay(user);
-        int pointAward = calculateStreakPoints(streakDays);
-
         LocalDate today = LocalDate.now();
         LocalDate lastClaimDate = (streakClaim.getClaimDate() != null) ? streakClaim.getClaimDate() : null;
 
@@ -37,7 +36,18 @@ public class ClaimService implements IClaimService {
             return ResponseEntity.badRequest().body("Streak points already claimed today.");
         }
 
-        streakClaim.setPointId(claimPoints);
+        int pointAward;
+        if (lastClaimDate != null && lastClaimDate.plusDays(1).isEqual(today)) {
+
+            streakClaim.setStreakCount(streakClaim.getStreakCount() + 1);
+            pointAward = calculateStreakPoints(streakClaim.getStreakCount());
+        } else {
+
+            streakClaim.setStreakCount(1);
+            pointAward = calculateStreakPoints(1);
+        }
+
+
         streakClaim.setClaimDate(today);
         claimRepository.save(streakClaim);
 
@@ -51,8 +61,9 @@ public class ClaimService implements IClaimService {
     @Override
     public ResponseEntity<?> claimAdPoint(User user) {
         int adPointValue = 50;
-        Claim adClaim = getOrCreateClaim(user, "AD_VIEW");
         Point claimPoints = getOrCreateUserPoint(user);
+        Claim adClaim = getOrCreateClaim(user, "AD_VIEW");
+
 
         LocalDate today = LocalDate.now();
         LocalDate lastClaimDate = (adClaim.getClaimDate() != null) ? adClaim.getClaimDate() : null;
@@ -67,30 +78,14 @@ public class ClaimService implements IClaimService {
             claimPoints.setViewCount(claimPoints.getViewCount() + 1);
             claimPoints.setAmount(claimPoints.getAmount() + adPointValue);
 
+
             claimRepository.save(adClaim);
             pointRepository.save(claimPoints);
 
             return ResponseEntity.ok("Claimed 50 points for ad view " + claimPoints.getViewCount() + ".");
         } else {
-            return ResponseEntity.badRequest().body("Max 5 ads per day reached.");
+            return ResponseEntity.badRequest().body("Nap do, xem chua quai ba!!!!!!!!!!!!!!!");
         }
-    }
-
-    private Integer calculateStreakDay(User user) {
-        List<Claim> claims = claimRepository.findByUserId(user.getId());
-        Integer streakDays = 1;
-        for (int i = 1; i < claims.size(); i++) {
-            LocalDate previousDate = claims.get(i - 1).getClaimDate();
-            LocalDate currentDate = claims.get(i).getClaimDate();
-
-            if (currentDate.minusDays(1).equals(previousDate)) {
-                streakDays++;
-            } else {
-                break;
-            }
-        }
-
-        return (streakDays > 28) ? 0 : streakDays;
     }
 
     private int calculateStreakPoints(int streakDays) {
@@ -110,14 +105,16 @@ public class ClaimService implements IClaimService {
         Point point = getOrCreateUserPoint(user);
         if (claim == null) {
             claim = new Claim();
+            claim.setClaimType(claimType);
             claim.setUserId(user);
             claim.setPointId(point);
-            claim.setClaimType(claimType);
             claim.setClaimDate(LocalDate.now());
+            claim.setStreakCount(0);
             claimRepository.save(claim);
         }
         return claim;
     }
+
 
     private Point getOrCreateUserPoint(User user) {
         Point userPoint = pointRepository.findByUserIdAndType(user, "CLAIM");

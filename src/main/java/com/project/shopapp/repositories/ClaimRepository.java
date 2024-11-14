@@ -11,10 +11,8 @@ import java.util.List;
 
 @Repository
 public interface ClaimRepository extends JpaRepository<Claim, Integer> {
-//    @Query("SELECT c FROM Claim c WHERE c.userId.id = :userId")
-    @Query("SELECT c FROM Claim c JOIN c.userId u WHERE u.id = :userId")
-    List<Claim> findByUserId(@Param("userId") Integer userId);
 
+    @Query("SELECT c FROM Claim c WHERE c.userId = :user AND c.claimType = :claimType")
+    Claim findByUserIdAndClaimType(@Param("user") User user, @Param("claimType") String claimType);
 
-    Claim findByUserIdAndClaimType(User user, String claimType);
 }
