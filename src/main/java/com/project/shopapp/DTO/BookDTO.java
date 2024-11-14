@@ -37,8 +37,8 @@ public class BookDTO {
     private Set<String> namecategory;
 
 
-/*    @JsonProperty("authors")
-    private Set<String> authorName;*/
+     @JsonProperty("authors")
+    private Set<String> authorName;
 
 
     @JsonProperty("description")

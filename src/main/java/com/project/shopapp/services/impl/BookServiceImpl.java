@@ -5,7 +5,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.project.shopapp.DTO.BookDTO;
-import com.project.shopapp.components.BookDTOFactory;
 import com.project.shopapp.models.Book;
 import com.project.shopapp.models.Category;
 import com.project.shopapp.repositories.BookRepository;
@@ -35,9 +34,7 @@ public class BookServiceImpl implements IBookService {
 
     @Autowired
     private BookRepository bookRepository;
-
-
-
+    @Autowired
     private AuthorRepository authorRepository;
     @Autowired
     private CategoryRepository categoryRepository;
@@ -93,7 +90,7 @@ public class BookServiceImpl implements IBookService {
         book.setPrice(bookDTO.getPrice());
 
         // Xử lý tác giả (Author) và thêm vào Book
-       /* Set<Author> authors = new HashSet<>();
+       Set<Author> authors = new HashSet<>();
         for (String username : bookDTO.getAuthorName()) {
             Optional<Author> existingAuthor = authorRepository.findAuthorByFullname(username);
 
@@ -105,7 +102,7 @@ public class BookServiceImpl implements IBookService {
             }
         }
 
-        book.setAuthorList(authors);*/
+        book.setAuthorList(authors);
 
         // Xử lý danh mục (Category) và thêm vào Book
         Set<Category> categories = new HashSet<>();
@@ -145,6 +142,7 @@ public class BookServiceImpl implements IBookService {
         result.setStatus(book.getStatus());
        result.setNamecategory(bookDTO.getNamecategory());
        result.setCatedescription(bookDTO.getCatedescription());
+       result.setAuthorName(bookDTO.getAuthorName());
 
         // Lấy danh sách tên tác giả từ danh sách Author trong Book
 

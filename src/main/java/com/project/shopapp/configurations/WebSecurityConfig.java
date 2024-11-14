@@ -37,9 +37,13 @@ public class WebSecurityConfig {
                     requests
                             .requestMatchers(
                                     String.format("%s/users/register", apiPrefix),
-                                    String.format("%s/users/login", apiPrefix)
+                                    String.format("%s/users/login", apiPrefix),
+                                    String.format("%s/vnpay-payment", apiPrefix)
                             )
                             .permitAll()
+                            .requestMatchers(POST,
+                                    String.format("%s/submitOrder", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
+
                             .requestMatchers(POST,
                                     String.format("%s/author/add", apiPrefix)).hasAnyRole(Role.USER)
 
