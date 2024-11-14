@@ -13,18 +13,18 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BookDTO {
-    @JsonProperty("book_id")
+    @JsonProperty("bookID")
     private Long bookID;
 
     @JsonProperty("title")
     private String title;
 
 
-    @JsonProperty("cover_image")
-    private String coverImage;
+    @JsonProperty("coverimage")
+    private String coverimage;
 
-    @JsonProperty("category_description")
-    private String cateDescription;
+    @JsonProperty("catedescription")
+    private String catedescription;
 
     @JsonProperty("price")
     private String price;
@@ -34,18 +34,18 @@ public class BookDTO {
     private String status;
 
     @JsonProperty("namecategory")
-    private String namecategory;
+    private Set<String> namecategory;
 
 
-    @JsonProperty("authors")
-    private Set<String> authorName;
+/*    @JsonProperty("authors")
+    private Set<String> authorName;*/
 
 
     @JsonProperty("description")
     private String description;
 
-    @JsonProperty("publish_year")
-    private int publishYear;
+    @JsonProperty("publishyear")
+    private int publishyear;
 
 
 

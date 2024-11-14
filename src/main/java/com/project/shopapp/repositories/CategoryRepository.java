@@ -2,9 +2,9 @@ package com.project.shopapp.repositories;
 
 import com.project.shopapp.models.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-@Repository
+import java.util.Optional;
+
 public interface CategoryRepository extends JpaRepository<Category, Long> {
-    Category findByNamecategoryAndCatedescription(String namecategory, String catedescription);
+    Optional<Category> findByNamecategory(String namecategory);
 }
