@@ -32,8 +32,6 @@
             return createdBook != null ? "Book with title '" + createdBook.getTitle() + "' during the processing and returning of results when available" : "Failed to send request check the book.";
         }
 
-
-
         @DeleteMapping("/api/deletebook")
         public String deleteBookByTitle(@RequestParam Long bookID) {
 
