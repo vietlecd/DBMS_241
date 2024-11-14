@@ -5,7 +5,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.project.shopapp.DTO.BookDTO;
-import com.project.shopapp.components.BookDTOFactory;
 import com.project.shopapp.models.Book;
 import com.project.shopapp.models.Category;
 import com.project.shopapp.repositories.BookRepository;
@@ -35,9 +34,7 @@ public class BookServiceImpl implements IBookService {
 
     @Autowired
     private BookRepository bookRepository;
-
-
-
+    @Autowired
     private AuthorRepository authorRepository;
     @Autowired
     private CategoryRepository categoryRepository;
