@@ -13,12 +13,16 @@ public class Category {
     @Column(name = "cateID")
     private Long cateID;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "namecategory")
+    private String namecategory;
+
+
 
     @Column(name = "catedescription")
     private String catedescription;
 
+    @ManyToMany(mappedBy = "categories")
+    private Set<Book> books;
 
     public String getCatedescription() {
         return catedescription;
@@ -27,12 +31,6 @@ public class Category {
     public void setCatedescription(String catedescription) {
         this.catedescription = catedescription;
     }
-
-    @ManyToMany(mappedBy = "categories")
-    private Set<Book> books;
-
-
-
 
 
     // Getters và setters
@@ -44,13 +42,7 @@ public class Category {
         this.cateID = cateID;
     }
 
-    public String getName() {
-        return name;
-    }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public Set<Book> getBooks() {
         return books;
@@ -59,4 +51,13 @@ public class Category {
     public void setBooks(Set<Book> books) {
         this.books = books;
     }
+
+    public String getNamecategory() {
+        return namecategory;
+    }
+
+    public void setNamecategory(String namecategory) {
+        this.namecategory = namecategory;
+    }
+
 }

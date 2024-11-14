@@ -9,6 +9,14 @@ import java.util.Map;
 public interface IBookService {
     List<BookDTO> findAll(Map<String, Object> params);
     BookDTO createBook(BookDTO bookDTO);
-       boolean deleteBookByTitle(String title);
+
+    boolean deleteBookBybookID(Long bookID);
+    // Thêm các phương thức mới
+    boolean sendBookRequestCheck(String title);
+    boolean acceptBookRequestCheck(String title);
+   /* List<BookDTO> getBooksWithPendingRequest();*/
+    boolean denyBookRequestCheck(String title);
     List<BookProjection> getBooksByAuthor(String authorUsername);
+
+
 }
