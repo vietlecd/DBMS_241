@@ -10,7 +10,6 @@ import com.project.shopapp.models.Category;
 import com.project.shopapp.repositories.BookRepository;
 
 
-import com.project.shopapp.repositories.CategoryRepository;
 
 import com.project.shopapp.DTO.BookDTO;
 import com.project.shopapp.models.Author;
@@ -18,6 +17,7 @@ import com.project.shopapp.models.Book;
 import com.project.shopapp.models.Category;
 import com.project.shopapp.repositories.AuthorRepository;
 import com.project.shopapp.repositories.BookRepository;
+import com.project.shopapp.repositories.CategoryRepository;
 import com.project.shopapp.responses.BookProjection;
 
 import com.project.shopapp.services.IBookService;
@@ -38,6 +38,7 @@ public class BookServiceImpl implements IBookService {
     private AuthorRepository authorRepository;
     @Autowired
     private CategoryRepository categoryRepository;
+
     @Override
     public List<BookDTO> findAll(Map<String, Object> params) {
         // Fetch list of Book using JPA with filters
@@ -106,25 +107,21 @@ public class BookServiceImpl implements IBookService {
 
         // Xử lý danh mục (Category) và thêm vào Book
         Set<Category> categories = new HashSet<>();
-        for (String catename : bookDTO.getNamecategory()) {
-            Optional<Category> existingCategory = categoryRepository.findByNamecategory(catename);
+        for (String namecategory : bookDTO.getNamecategory()) {
+            List<Category> existingCategories = categoryRepository.findByNamecategory(namecategory);
 
-            if (existingCategory.isPresent()) {
-                // Nếu category tồn tại, thêm nó vào tập categories
-                Category category = existingCategory.get();
+            if (!existingCategories.isEmpty()) {
+                // Nếu category tồn tại, lấy danh mục đầu tiên và thêm nó vào tập categories
+                Category category = existingCategories.get(0);
                 categories.add(category);
                 category.getBooks().add(book);
-            } else {
-                // Nếu không tồn tại, tạo mới category và thêm vào tập categories
-                Category newCategory = new Category();
-                newCategory.setNamecategory(catename);
-                newCategory.setCatedescription(bookDTO.getCatedescription()); // Giả định rằng catedescription có thể lấy từ bookDTO
-                newCategory = categoryRepository.save(newCategory);
-
-                categories.add(newCategory);
-                newCategory.getBooks().add(book);
             }
         }
+
+
+// Gán danh sách categories vào book
+
+
 
         book.setCategories(categories);
 
