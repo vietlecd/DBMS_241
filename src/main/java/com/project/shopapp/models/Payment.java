@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Set;
+
 @Entity
 @Table(name = "payment")
 @Getter
@@ -32,4 +34,14 @@ public class Payment {
 
     @Column(name = "status")
     private String status;  // Status of the payment (e.g., "PENDING", "SUCCESS", "FAILED")
+
+    @ManyToMany
+    @JoinTable (
+            name = "deposit_withdraw",
+            joinColumns = @JoinColumn(name = "payment_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "point_id", referencedColumnName = "id")
+    )
+    private Set<Point> pointSet;
+
+
 }
