@@ -26,13 +26,17 @@
         }
 
         @PostMapping("/createbook")
-        public String createBook(@RequestBody BookDTO bookDTO) {
+        public BookDTO createBook(@RequestBody BookDTO bookDTO) {
             // Gọi đến service để tạo mới một Book
-            BookDTO createdBook = bookService.createBook(bookDTO);
-            return createdBook != null ? "Book with title '" + createdBook.getTitle() + "' during the processing and returning of results when available" : "Failed to send request check the book.";
+            return bookService.createBook(bookDTO);
         }
 
-        @DeleteMapping("/api/deletebook")
+
+
+
+        @DeleteMapping("/deletebook")
+
+
         public String deleteBookByTitle(@RequestParam Long bookID) {
 
             // Gọi đến service để xóa sách theo title
@@ -43,20 +47,17 @@
 
 
 
-        @PostMapping("/api/acceptbookrequestcheck")
-        public String acceptBookRequestCheck(@RequestParam String title) {
-            boolean requestAccepted = bookService.acceptBookRequestCheck(title.trim());
-            return requestAccepted ? "Book request for title '" + title + "' accepted." : "Book request for title '" + title + "' not found or already accepted.";
+        @PostMapping("/acceptbookrequestcheck")
+        public String acceptBookRequestCheck(@RequestParam Long bookID) {
+            boolean requestAccepted = bookService.acceptBookRequestCheck(bookID);
+            return requestAccepted ? "Book request for title '" + bookID + "' accepted." : "Book request for title '" + bookID + "' not found or already accepted.";
         }
 
-       /* @GetMapping("/api/pendingbookrequests")
-        public List<BookDTO> getBooksWithPendingRequest() {
-            return bookService.getBooksWithPendingRequest();
-        }*/
-        @PostMapping("/api/denybookrequestcheck")
-        public String denyBookRequestCheck(@RequestParam String title) {
-            boolean requestDenied = bookService.denyBookRequestCheck(title.trim());
-            return requestDenied ? "Book request for title '" + title + "' denied." : "Book request for title '" + title + "' not found or already denied.";
+
+        @PostMapping("/denybookrequestcheck")
+        public String denyBookRequestCheck(@RequestParam Long bookID) {
+            boolean requestDenied = bookService.denyBookRequestCheck(bookID);
+            return requestDenied ? "Book request for title '" +  bookID + "' denied." : "Book request for title '" + bookID + "' not found or already denied.";
         }
 
         @GetMapping("/findBookAuthor/{authorName}")

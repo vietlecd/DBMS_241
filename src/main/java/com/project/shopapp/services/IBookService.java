@@ -12,10 +12,10 @@ public interface IBookService {
 
     boolean deleteBookBybookID(Long bookID);
     // Thêm các phương thức mới
-    boolean sendBookRequestCheck(String title);
-    boolean acceptBookRequestCheck(String title);
+
+    boolean acceptBookRequestCheck(Long bookID);
    /* List<BookDTO> getBooksWithPendingRequest();*/
-    boolean denyBookRequestCheck(String title);
+    boolean denyBookRequestCheck(Long bookID);
     List<BookProjection> getBooksByAuthor(String authorUsername);
 
 

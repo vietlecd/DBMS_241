@@ -1,0 +1,5 @@
+export SERVER_PORT=8080
+export DB_URL="jdbc:mysql://104.214.171.0:3306/online_book"
+export DB_USERNAME="root"
+export DB_PASSWORD="mypassword"
+export JWT_SECRET_KEY="TaqlmGv1iEDMRiFp/pHuID1+T84IABfuA0xXh4GhiUI="
