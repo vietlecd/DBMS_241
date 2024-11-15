@@ -39,6 +39,10 @@ public class User extends BaseEntity implements UserDetails {
     @JoinColumn(name = "role_id")
     private Role role;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Review> reviews;
+
+
     @ManyToMany
     @JoinTable(
             name = "audience",

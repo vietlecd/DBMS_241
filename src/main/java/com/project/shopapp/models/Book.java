@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -47,17 +49,10 @@ public class Book {
             inverseJoinColumns = @JoinColumn(name = "cateID", referencedColumnName = "cateID") // Tham chiếu đến cateID của CategoryEntity
     )
     private Set<Category> categories;
-    /*public List<Review> getReviews() {
-        return reviews;
-    }
-
-    public void setReviews(List<Review> reviews) {
-        this.reviews = reviews;
-    }
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Review> reviews = new ArrayList<>();
-  */
+    private List<Review> comments = new ArrayList<>();
+
 
 
 

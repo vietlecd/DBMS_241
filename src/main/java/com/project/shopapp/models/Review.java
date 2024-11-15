@@ -1,10 +1,15 @@
-/*
+
 
 package com.project.shopapp.models;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Table(name = "review")
+@Getter
+@Setter
 public class Review {
 
     @Id
@@ -13,46 +18,20 @@ public class Review {
     private Long reviewID;
 
     @Column(name = "rating")
-    private int rating;
+    private Long rating;
     @Column(name = "comment")
     private String comment;
 
-    public Long getReviewID() {
-        return reviewID;
-    }
-
-    public void setReviewID(Long reviewID) {
-        this.reviewID = reviewID;
-    }
-
-    public int getRating() {
-        return rating;
-    }
-
-    public void setRating(int rating) {
-        this.rating = rating;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    public Book getBook() {
-        return book;
-    }
-
-    public void setBook(Book book) {
-        this.book = book;
-    }
+    @ManyToOne
+    @JoinColumn(name = "bookID", nullable = false)
+    private Book book;
 
     @ManyToOne
-    @JoinColumn(name = "book_id", nullable = false)
-    private Book book;
+    @JoinColumn(name = "user_id")
+    private User user;
+    @Column(name = "evaluate")
+    private String evaluate;
+
 
 
 }
-*/

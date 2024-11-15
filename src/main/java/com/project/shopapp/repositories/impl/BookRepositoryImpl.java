@@ -27,7 +27,7 @@ public class BookRepositoryImpl implements BookRepositoryCustom {
         StringBuilder jpql = new StringBuilder("SELECT DISTINCT b FROM Book b");
 
         // Kiểm tra nếu tham số "name" có mặt thì thêm JOIN với Category
-        if (params.containsKey("name")) {
+        if (params.containsKey("namecategory")) {
             jpql.append(" JOIN b.categories c"); // Thêm JOIN với Category nếu có name
         }
 
@@ -37,10 +37,10 @@ public class BookRepositoryImpl implements BookRepositoryCustom {
         params.forEach((key, value) -> {
             if (value != null) {
                 String cleanedValue = value.toString().replaceAll("[\\n\\r]+", "").trim();
-                if ("name".equals(key)) {
+                if ("namecategory".equals(key)) {
                     // Điều kiện đặc biệt cho tham số "name" (tìm theo tên của category)
-                    jpql.append(" AND c.name LIKE :name");
-                    params.put("name", cleanedValue);
+                    jpql.append(" AND c.namecategory LIKE :namecategory");
+                    params.put("namecategory", cleanedValue);
                 } else if (isNumeric(cleanedValue)) {
                     jpql.append(" AND b.").append(key).append(" = :").append(key);
                     params.put(key, cleanedValue);
