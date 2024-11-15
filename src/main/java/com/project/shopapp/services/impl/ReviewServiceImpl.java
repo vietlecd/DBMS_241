@@ -101,7 +101,7 @@ public class ReviewServiceImpl implements IReviewService {
 
                     // Lấy username từ đối tượng User liên kết với Review
 
-                    dto.setUsername(username);
+                    dto.setUsername(review.getUser().getUsername());
 
 
                     // Gán thêm thuộc tính evaluate nếu có
