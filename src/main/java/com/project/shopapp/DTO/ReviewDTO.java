@@ -17,9 +17,11 @@ public class ReviewDTO {
     @JsonProperty("rating")
     private Long rating;
     @JsonProperty("comments")
-    private Set<String> comments;
-    @JsonProperty("reviewname")
-    private String reviewname;
+    private String comment;
+    @JsonProperty("username")
+    private String username;
+    @JsonProperty("evaluate")
+    private String evaluate;
 
 
 

@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-
+@Table(name = "review")
 @Getter
 @Setter
 public class Review {
@@ -26,9 +26,12 @@ public class Review {
     @JoinColumn(name = "bookID", nullable = false)
     private Book book;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id")
-    private User userId;
+    private User user;
+    @Column(name = "evaluate")
+    private String evaluate;
+
 
 
 }
