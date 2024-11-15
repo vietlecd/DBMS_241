@@ -27,7 +27,7 @@ public class CookieUtil {
     public static void setTokenCookie(String token, HttpServletResponse response) {
         ResponseCookie cookie = ResponseCookie.from(TOKEN_COOKIE_NAME, token)
                 .httpOnly(true)
-                .secure(true)
+                .secure(false)
                 .path("/")
                 .maxAge(COOKIE_EXPIRATION)
                 .sameSite("None")

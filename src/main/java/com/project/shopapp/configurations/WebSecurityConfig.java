@@ -41,6 +41,10 @@ public class WebSecurityConfig {
                                     String.format("%s/vnpay-payment", apiPrefix)
                             )
                             .permitAll()
+
+                            .requestMatchers(GET,
+                                    String.format("%s/view_advertisement", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
+
                             .requestMatchers(POST,
                                     String.format("%s/review/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
                             .requestMatchers(GET,
@@ -50,6 +54,7 @@ public class WebSecurityConfig {
 
                             .requestMatchers(POST,
                                     String.format("%s/submitOrder", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
+
 
                             .requestMatchers(POST,
                                     String.format("%s/author/add", apiPrefix)).hasAnyRole(Role.USER)

@@ -8,6 +8,7 @@ import com.project.shopapp.models.Role;
 import com.project.shopapp.models.User;
 import com.project.shopapp.repositories.RoleRepository;
 import com.project.shopapp.repositories.UserRepository;
+import com.project.shopapp.services.IClaimService;
 import com.project.shopapp.services.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -28,6 +29,7 @@ public class UserService implements IUserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenUtil jwtTokenUtil;
     private final AuthenticationManager authenticationManager;
+    private final IClaimService claimService;
     @Override
     public User createUser(UserDTO userDTO) throws Exception {
         //register user
@@ -84,6 +86,17 @@ public class UserService implements IUserService {
 
         //authenticate with Java Spring security
         authenticationManager.authenticate(authenticationToken);
+
+        //Streak Login
+        if(!existingUser.getRole().getName().equals("ADMIN")) {
+            claimService.claimStreakPoint(existingUser);
+        } else {
+            //USER VA TAC GIA ONLY ???????????
+            return jwtTokenUtil.generateToken(existingUser);
+        }
+
+        //*****************************//
+
         return jwtTokenUtil.generateToken(existingUser);
     }
 }
