@@ -6,6 +6,7 @@ import com.project.shopapp.models.Payment;
 import com.project.shopapp.models.User;
 import com.project.shopapp.repositories.PaymentRepository;
 import com.project.shopapp.repositories.UserRepository;
+import com.project.shopapp.services.IVNPayService;
 import com.project.shopapp.services.impl.VNPayService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
@@ -14,16 +15,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
 @RequestMapping("${api.prefix}")
 public class VNPayController {
-    private VNPayService vnPayService;
     private AuthenticationHelper authenticationHelper;
     private UserRepository userRepository;
     private PaymentRepository paymentRepository;
+    private IVNPayService vnPayService;
 
     @PostMapping("/submitOrder")
     public ResponseEntity<?> submidOrder(@RequestParam("amount") int orderTotal,
@@ -62,5 +64,11 @@ public class VNPayController {
         return paymentStatus == 1
                 ? ResponseEntity.ok(paymentDTO)  // Trạng thái thành công
                 : ResponseEntity.badRequest().body("Transaction failed");  // Trạng thái thất bại
+    }
+
+    @GetMapping("/payments")
+    public ResponseEntity<?> getPaymentsByUser(Authentication authentication) {
+        User user = authenticationHelper.getUser(authentication);
+        return vnPayService.getPaymentsByUser(user);
     }
 }

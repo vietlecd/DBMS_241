@@ -37,7 +37,7 @@
         @DeleteMapping("/deletebook")
 
 
-        public String deleteBookByTitle(@RequestParam Long bookID) {
+        public String deleteBookByTitle(@RequestParam Integer bookID) {
 
             // Gọi đến service để xóa sách theo title
             boolean deleted = bookService.deleteBookBybookID(bookID);
@@ -48,14 +48,14 @@
 
 
         @PostMapping("/acceptbookrequestcheck")
-        public String acceptBookRequestCheck(@RequestParam Long bookID) {
+        public String acceptBookRequestCheck(@RequestParam Integer bookID) {
             boolean requestAccepted = bookService.acceptBookRequestCheck(bookID);
             return requestAccepted ? "Book request for title '" + bookID + "' accepted." : "Book request for title '" + bookID + "' not found or already accepted.";
         }
 
 
         @PostMapping("/denybookrequestcheck")
-        public String denyBookRequestCheck(@RequestParam Long bookID) {
+        public String denyBookRequestCheck(@RequestParam Integer bookID) {
             boolean requestDenied = bookService.denyBookRequestCheck(bookID);
             return requestDenied ? "Book request for title '" +  bookID + "' denied." : "Book request for title '" + bookID + "' not found or already denied.";
         }

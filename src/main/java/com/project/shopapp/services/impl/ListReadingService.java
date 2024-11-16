@@ -25,7 +25,7 @@ public class ListReadingService implements IListReadingService {
     private ListReadingRepository listReadingRepository;
 
     @Override
-    public ResponseEntity<?> addList(User user, Long bookId) {
+    public ResponseEntity<?> addList(User user, Integer bookId) {
         Book book = bookRepository.findByBookID(bookId);
         if (book == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cannot find that book");
@@ -54,7 +54,7 @@ public class ListReadingService implements IListReadingService {
     }
 
     @Override
-    public ResponseEntity<?> deList(User user, Long bookId) {
+    public ResponseEntity<?> deList(User user, Integer bookId) {
         Book book = bookRepository.findByBookID(bookId);
         if (book == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cannot find that book");
