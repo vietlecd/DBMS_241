@@ -13,7 +13,7 @@ import java.util.Set;
 @Repository
 public interface ListReadingRepository extends JpaRepository<ListReading, Integer> {
     @Query("SELECT lr FROM ListReading lr JOIN lr.bookSet b WHERE lr.userId.id = :userId AND b.bookID = :bookId")
-    Set<ListReading> findAllByUserIdAndBookId(@Param("userId") Integer userId, @Param("bookId") Long bookId);
+    Set<ListReading> findAllByUserIdAndBookId(@Param("userId") Integer userId, @Param("bookId") Integer bookId);
 
     Optional<ListReading> findFirstByUserId(User user);
 

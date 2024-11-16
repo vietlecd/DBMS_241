@@ -20,9 +20,8 @@ import java.util.Optional;
 public interface BookRepository extends JpaRepository<Book, Long>, BookRepositoryCustom {
     Book findByTitle(String title);
 
-
     List<Book> findByStatus(String status);
-    Book findByBookID(Long bookID);
+    Book findByBookID(Integer bookID);
 
 
     @Query("SELECT b.bookID AS bookId, b.title AS title, b.coverimage AS coverImage, b.description AS description, " +
