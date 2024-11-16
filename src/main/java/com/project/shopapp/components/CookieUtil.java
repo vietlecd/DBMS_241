@@ -36,4 +36,13 @@ public class CookieUtil {
         response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     }
 
+    public static void deleteTokenCookie(HttpServletResponse response) {
+        Cookie cookie = new Cookie(TOKEN_COOKIE_NAME, null);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(0); // Hết hạn ngay lập tức
+        response.addCookie(cookie);
+    }
+
 }

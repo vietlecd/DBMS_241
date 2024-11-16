@@ -6,14 +6,12 @@ import com.project.shopapp.models.User;
 import com.project.shopapp.repositories.ClaimRepository;
 import com.project.shopapp.repositories.PointRepository;
 import com.project.shopapp.services.IClaimService;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class ClaimService implements IClaimService {
@@ -23,7 +21,10 @@ public class ClaimService implements IClaimService {
     private PointRepository pointRepository;
 
     @Override
-    public ResponseEntity<?> claimStreakPoint(User user) {
+    public void claimStreakPoint(User user) {
+        if (user == null || user.getRole().getName().equals("ADMIN")) {
+            return;
+        }
 
         Claim streakClaim = getOrCreateClaim(user);
 
@@ -35,7 +36,7 @@ public class ClaimService implements IClaimService {
 
 
         if (lastClaimDate != null && lastClaimDate.isEqual(today)) {
-            return ResponseEntity.badRequest().body("Streak points already claimed today.");
+            return;
         }
 
         int streakCount;
@@ -64,8 +65,6 @@ public class ClaimService implements IClaimService {
         // Cập nhật điểm cho người dùng
         claimPoints.setAmount(claimPoints.getAmount() + pointAward);
         pointRepository.save(claimPoints);
-
-        return ResponseEntity.ok("Nhan StreakPoint:  " + pointAward + " points.");
     }
 
     @Override
