@@ -1,7 +1,6 @@
 package com.project.shopapp.DTO;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.project.shopapp.models.Author;
 import lombok.*;
 
 import java.util.Set;
@@ -12,26 +11,13 @@ import java.util.Set;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class BookDTO {
-    @JsonProperty("bookID")
-    private Long bookID;
-
+public class ListReadingDTO {
     @JsonProperty("title")
     private String title;
 
 
     @JsonProperty("coverimage")
     private String coverimage;
-
-    @JsonProperty("catedescription")
-    private String catedescription;
-
-    @JsonProperty("price")
-    private String price;
-
-
-    @JsonProperty("status")
-    private String status;
 
     @JsonProperty("namecategory")
     private Set<String> namecategory;
@@ -46,13 +32,4 @@ public class BookDTO {
 
     @JsonProperty("publishyear")
     private int publishyear;
-
-
-
-
-
-
-
-
-
 }

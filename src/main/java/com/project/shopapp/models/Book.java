@@ -54,8 +54,8 @@ public class Book {
     private List<Review> comments = new ArrayList<>();
 
 
-
-
+    @ManyToMany(mappedBy = "bookSet")
+    private List<ListReading> listReadings;
 
     @ManyToMany(mappedBy = "bookSet")
     Set<Author> authorList;

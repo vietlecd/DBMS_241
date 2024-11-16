@@ -52,7 +52,6 @@ public class VNPayController {
         Payment payment = paymentOpt.get();
         int paymentStatus = vnPayService.orderReturn(request);
 
-        // Tạo một đối tượng PaymentDTO với các thông tin cần trả về
         PaymentDTO paymentDTO = PaymentDTO.builder()
                 .orderInfo(payment.getVnpTxnRef())
                 .paymentTime(payment.getPayTime())
@@ -60,7 +59,6 @@ public class VNPayController {
                 .totalPrice(payment.getPayAmount())
                 .build();
 
-        // Trả về JSON và xác định trạng thái HTTP
         return paymentStatus == 1
                 ? ResponseEntity.ok(paymentDTO)  // Trạng thái thành công
                 : ResponseEntity.badRequest().body("Transaction failed");  // Trạng thái thất bại
