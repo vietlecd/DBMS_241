@@ -25,16 +25,7 @@ import java.util.Optional;
 public class AuthorService implements IAuthorService {
     private UserRepository userRepository;
     private AuthorRepository authorRepository;
-    private static final Logger logger = LoggerFactory.getLogger(AuthorService.class);
-    public ResponseEntity<String> becomeAuthor(String myUsername, AuthorDTO authorDTO) {
-        User user;
-
-        try {
-            user = userRepository.findByUsername(myUsername)
-                    .orElseThrow(() -> new DataNotFoundException("User not found: " + myUsername));
-        } catch (DataNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<String> becomeAuthor(User user, AuthorDTO authorDTO) {
 
         try {
             if (!authorRepository.existsAuthorByUserId(user)) {
@@ -66,7 +57,7 @@ public class AuthorService implements IAuthorService {
 
         try {
             user = userRepository.findByUsername(username)
-                    .orElseThrow(() -> new DataNotFoundException("User not found: " + username));
+                    .orElseThrow(() -> new DataNotFoundException("Author not found: " + username));
         } catch (DataNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
@@ -97,7 +88,7 @@ public class AuthorService implements IAuthorService {
 
         try {
             user = userRepository.findByUsername(username)
-                    .orElseThrow(() -> new DataNotFoundException("User not found: " + username));
+                    .orElseThrow(() -> new DataNotFoundException("Author not found: " + username));
         } catch (DataNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
@@ -119,7 +110,7 @@ public class AuthorService implements IAuthorService {
 
         try {
             user = userRepository.findByUsername(username)
-                    .orElseThrow(() -> new DataNotFoundException("User not found: " + username));
+                    .orElseThrow(() -> new DataNotFoundException("Author not found: " + username));
         } catch (DataNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }

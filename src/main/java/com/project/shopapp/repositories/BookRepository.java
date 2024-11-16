@@ -14,6 +14,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long>, BookRepositoryCustom {
@@ -22,6 +23,7 @@ public interface BookRepository extends JpaRepository<Book, Long>, BookRepositor
 
     List<Book> findByStatus(String status);
     Book findByBookID(Long bookID);
+
 
     @Query("SELECT b.bookID AS bookId, b.title AS title, b.coverimage AS coverImage, b.description AS description, " +
             "b.publishyear AS publishYear, b.price AS price, a.userId.fullName AS authorName, " +

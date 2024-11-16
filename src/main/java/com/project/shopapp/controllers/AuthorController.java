@@ -2,6 +2,7 @@ package com.project.shopapp.controllers;
 
 import com.project.shopapp.DTO.AuthorDTO;
 import com.project.shopapp.helpers.AuthenticationHelper;
+import com.project.shopapp.models.User;
 import com.project.shopapp.responses.BaseProjection;
 import com.project.shopapp.services.IAuthorService;
 import lombok.AllArgsConstructor;
@@ -20,22 +21,22 @@ public class AuthorController {
 
     @PostMapping("/become")
     public ResponseEntity<String> becomeAuthor(@RequestBody AuthorDTO authorDTO, Authentication authentication) {
-        String username = authenticationHelper.getUsername(authentication);
-        return authorService.becomeAuthor(username, authorDTO);
+        User user = authenticationHelper.getUser(authentication);
+        return authorService.becomeAuthor(user, authorDTO);
     }
 
-    @PostMapping("/accept/{username}")
-    public ResponseEntity<String> acceptedAuthor(@PathVariable String username) {
+    @PostMapping("/accept")
+    public ResponseEntity<String> acceptedAuthor(@RequestParam String username) {
         return authorService.acceptedAuthor(username);
     }
 
-    @PostMapping("/deny/{username}")
-    public ResponseEntity<String> deniedAuthor(@PathVariable String username) {
+    @PostMapping("/deny")
+    public ResponseEntity<String> deniedAuthor(@RequestParam String username) {
         return authorService.deniedAuthor(username);
     }
 
-    @DeleteMapping("/delete/{username}")
-    public ResponseEntity<String> deleteAuthor(@PathVariable String username) {
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteAuthor(@RequestParam String username) {
         return authorService.deleteAuthor(username);
     }
 
