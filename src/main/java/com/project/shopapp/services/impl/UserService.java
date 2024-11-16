@@ -1,6 +1,7 @@
 package com.project.shopapp.services.impl;
 
 import com.project.shopapp.DTO.UserDTO;
+import com.project.shopapp.components.CookieUtil;
 import com.project.shopapp.components.JwtTokenUtil;
 import com.project.shopapp.customexceptions.DataNotFoundException;
 import com.project.shopapp.customexceptions.PermissionDenyException;
@@ -10,13 +11,16 @@ import com.project.shopapp.repositories.RoleRepository;
 import com.project.shopapp.repositories.UserRepository;
 import com.project.shopapp.services.IClaimService;
 import com.project.shopapp.services.IUserService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Optional;
 
@@ -88,15 +92,10 @@ public class UserService implements IUserService {
         authenticationManager.authenticate(authenticationToken);
 
         //Streak Login
-        if(!existingUser.getRole().getName().equals("ADMIN")) {
-            claimService.claimStreakPoint(existingUser);
-        } else {
-            //USER VA TAC GIA ONLY ???????????
-            return jwtTokenUtil.generateToken(existingUser);
-        }
-
+        claimService.claimStreakPoint(existingUser);
         //*****************************//
 
         return jwtTokenUtil.generateToken(existingUser);
     }
+
 }
