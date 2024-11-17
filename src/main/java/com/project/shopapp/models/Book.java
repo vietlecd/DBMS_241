@@ -57,7 +57,7 @@ public class Book {
     private List<BookMark> bookmarks = new ArrayList<>();
 
     @Column(name = "totalpage")
-    private int totalpage;
+    private Integer totalpage;
 
 
 

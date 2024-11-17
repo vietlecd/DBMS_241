@@ -34,17 +34,18 @@ public class BookmarkController {
     }
 
     // Endpoint to find all bookmarks by book ID
-/*    @GetMapping("/get/{bookID}")
+    @GetMapping("/get/{bookID}")
     public List<BookmarkDTO> getBookmarksByBookId(@PathVariable Long bookID, Authentication authentication) {
         String username = authenticationHelper.getUsername(authentication);
         return bookmarkService.findBookmarksByBookId(bookID, username);
     }
 
-    // Endpoint to update a bookmark
-    @PutMapping("/update/{bookmarkID}")
-    public BookmarkDTO updateBookmark(
-            @PathVariable Long bookmarkID,
-            @RequestBody BookmarkDTO bookmarkDTO) {
-        return bookmarkService.updateBookmark(bookmarkID, bookmarkDTO);*/
+
+    // Endpoint to delete a bookmark by bookmark ID
+    @DeleteMapping("/delete/{bookID}")
+    public ResponseEntity<?> deleteBookmarkById(@PathVariable Long bookID, Authentication authentication) {
+        User user = authenticationHelper.getUser(authentication);
+        return bookmarkService.deleteBookmarkById(bookID, user);
     }
 
+}

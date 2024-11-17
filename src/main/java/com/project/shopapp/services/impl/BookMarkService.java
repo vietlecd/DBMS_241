@@ -66,32 +66,73 @@ public class BookMarkService implements IBookMarkService {
         );
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(savedbookmarkDTO);
     }
-/*
 
-    public List<BookmarkDTO> getAllBookmarks() {
-        // Lấy toàn bộ danh sách bookmark và chuyển đổi sang DTO
-        return bookmarksRepository.findAll()
-                .stream()
-                .map(this::toDTO)
-                .collect(Collectors.toList());
-    }
 
-    public List<BookmarkDTO> getBookmarksByBook(Long id) {
-        // Lấy danh sách bookmark theo sách (id)
-        return bookmarksRepository.findById(id)
-                .stream()
-                .map(this::toDTO)
-                .collect(Collectors.toList());
-    }
 
-    public void deleteBookmark(Long markID) {
-        // Kiểm tra và xóa bookmark theo markID
-        if (!bookmarksRepository.existsById(markID)) {
-            throw new IllegalArgumentException("Không tìm thấy bookmark với ID: " + markID);
+ @Override
+    public List<BookmarkDTO> findBookmarksByBookId(Long bookID, String username)
+    {
+        // Tạo mới bookmark với sách và số trang
+        Optional<Book> optionalBook = bookRepository.findById(bookID);
+        if (!optionalBook.isPresent()) {
+            throw new RuntimeException("Không tìm thấy Book với ID: " + bookID);
         }
-        bookmarksRepository.deleteById(markID);
+
+
+        // Lấy danh sách bookmark theo sách (id)
+
+        return bookmarksRepository.findByBook_BookID(bookID)
+                .stream()
+                .map(bookMark -> {
+                    BookmarkDTO dto = new BookmarkDTO();
+
+                    // Gán giá trị cho rating
+                    dto.setPageNumber(bookMark.getPageNumber());
+
+                    // Sử dụng trực tiếp Set<String> từ review.getComments()
+
+
+                    // Lấy username từ đối tượng User liên kết với Review
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                    dto.setCreateDate(bookMark.getCreateDate().format(formatter));
+
+                    dto.setUsername(bookMark.getUser().getUsername());
+
+
+                    // Gán thêm thuộc tính evaluate nếu có
+
+
+                    return dto;
+                })
+                .collect(Collectors.toList());
+
     }
-*/
+
+    @Override
+    public ResponseEntity<?> deleteBookmarkById(Long bookID, User user) {
+        // Tìm danh sách bookmark theo Book ID
+        List<BookMark> bookmarks = bookmarksRepository.findByBook_BookID(bookID);
+
+        // Kiểm tra xem danh sách có rỗng không
+        if (bookmarks.isEmpty()) {
+            return new ResponseEntity<>("Không tìm thấy Bookmark với Book ID: " + bookID, HttpStatus.BAD_REQUEST);
+        }
+
+        // Tìm kiếm và xóa bookmark thuộc về người dùng hiện tại
+        for (BookMark bookmark : bookmarks) {
+            if (bookmark.getUser().getId().equals(user.getId())) {
+                // Xóa bookmark
+                bookmarksRepository.delete(bookmark);
+                return ResponseEntity.ok("Bookmark đã được xóa thành công.");
+            }
+        }
+
+        // Nếu không tìm thấy bookmark của user
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Bạn không có quyền xóa Bookmark này.");
+    }
+
+
+
 
 
 }
