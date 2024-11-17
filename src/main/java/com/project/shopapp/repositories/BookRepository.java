@@ -23,15 +23,23 @@ public interface BookRepository extends JpaRepository<Book, Long>, BookRepositor
     List<Book> findByStatus(String status);
     Book findByBookID(Integer bookID);
 
+    @Query("SELECT b FROM Book b " +
+            "WHERE b.status = 'true' AND b.bookID = :bookID")
+    Book findBookByBookIDAndStatus(@Param("bookID") Integer bookID);
 
     @Query("SELECT b.bookID AS bookId, b.title AS title, b.coverimage AS coverImage, b.description AS description, " +
-            "b.publishyear AS publishYear, b.price AS price, a.userId.fullName AS authorName, " +
-            "GROUP_CONCAT(c.catedescription) AS categories " +
+            "b.publishyear AS publishYear, b.price AS price, " +
+            "a.userId.fullName AS authorName, c.namecategory AS categories " +
             "FROM Book b " +
             "JOIN b.categories c " +
-            "JOIN Author a " +
-            "WHERE a.userId.fullName = :authorName " +
-            "GROUP BY b.bookID, b.title, b.coverimage, b.description, b.publishyear, b.price, a.userId.fullName")
+            "JOIN b.authorList a " +
+            "WHERE a.userId.fullName = :authorName AND b.status = 'true'")
     List<BookProjection> findBookByAuthorName(@Param("authorName") String authorName);
+
+    @Query("SELECT b.book.bookID AS bookId, b.book.title AS title, b.book.coverimage AS coverImage, b.book.description AS description, " +
+            "b.book.publishyear AS publishYear, b.book.price AS price, c.userId.fullName AS authorName " +
+            "FROM Pay b JOIN b.point c " +
+            "WHERE c.userId.id = :userId")
+    List<BookProjection> findBookBoughtByUserId(@Param("userId") Integer userId);
 
 }

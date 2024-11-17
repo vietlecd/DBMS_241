@@ -5,23 +5,22 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.project.shopapp.DTO.BookDTO;
-import com.project.shopapp.models.Book;
-import com.project.shopapp.models.Category;
-import com.project.shopapp.repositories.BookRepository;
-
+import com.project.shopapp.models.*;
+import com.project.shopapp.repositories.*;
 
 
 import com.project.shopapp.DTO.BookDTO;
-import com.project.shopapp.models.Author;
 import com.project.shopapp.models.Book;
 import com.project.shopapp.models.Category;
-import com.project.shopapp.repositories.AuthorRepository;
 import com.project.shopapp.repositories.BookRepository;
-import com.project.shopapp.repositories.CategoryRepository;
 import com.project.shopapp.responses.BookProjection;
 
+import com.project.shopapp.responses.Impl.BookProjectionImpl;
 import com.project.shopapp.services.IBookService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,14 +29,13 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@AllArgsConstructor
 public class BookServiceImpl implements IBookService {
 
-    @Autowired
     private BookRepository bookRepository;
-    @Autowired
     private AuthorRepository authorRepository;
-    @Autowired
     private CategoryRepository categoryRepository;
+    private PointPayRepository pointPayRepository;
 
     @Override
     public List<BookDTO> findAll(Map<String, Object> params) {
@@ -80,7 +78,7 @@ public class BookServiceImpl implements IBookService {
         return result;
     }
     @Override
-    public BookDTO createBook(BookDTO bookDTO) {
+    public ResponseEntity<?> createBook(BookDTO bookDTO) {
         // Tạo một đối tượng Book từ BookDTO
         Book book = new Book();
         book.setTitle(bookDTO.getTitle());
@@ -101,6 +99,8 @@ public class BookServiceImpl implements IBookService {
                 authors.add(author);
 
                 author.getBookSet().add(book);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tac gia chua dang ki ten");
             }
         }
 
@@ -148,7 +148,7 @@ public class BookServiceImpl implements IBookService {
         // Lấy thông tin danh mục nếu tồn tại
 
 
-        return result;
+        return ResponseEntity.ok(result);
     }
 
 
@@ -184,8 +184,6 @@ public class BookServiceImpl implements IBookService {
         return false;
     }
 
-
-
     @Override
     public boolean denyBookRequestCheck(Integer bookID) {
         Book book = bookRepository.findByBookID(bookID);
@@ -202,11 +200,38 @@ public class BookServiceImpl implements IBookService {
         }
         return false; // Không tìm thấy sách
     }
-    public List<BookProjection> getBooksByAuthor(String authorName) {
-        return bookRepository.findBookByAuthorName(authorName);
+    @Override
+    public ResponseEntity<?> getBooksByAuthor(String authorName) {
+
+        List<BookProjection> rawResults = bookRepository.findBookByAuthorName(authorName);
+
+        if (rawResults.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not found any book by author's name: " + authorName);
+        }
+
+        Map<Integer, BookProjection> groupedBooks = new HashMap<>();
+
+        rawResults.forEach(result -> {
+            if (!groupedBooks.containsKey(result.getBookID())) {
+                groupedBooks.put(result.getBookID(), new BookProjectionImpl(result));
+            }
+            groupedBooks.get(result.getBookID()).getCategories().add(result.getCategories().get(0));
+        });
+
+        return ResponseEntity.ok(new ArrayList<>(groupedBooks.values()));
     }
 
 
+    @Override
+    public ResponseEntity<?> getBookBought(User user) {
+        List<BookProjection> booKBought = bookRepository.findBookBoughtByUserId(user.getId());
 
 
+        if (booKBought.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Khong tim thay sach nao da mua");
+        }
+
+        return ResponseEntity.ok(booKBought);
+
+    }
 }

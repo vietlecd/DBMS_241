@@ -1,14 +1,16 @@
 package com.project.shopapp.services;
 
 import com.project.shopapp.DTO.BookDTO;
+import com.project.shopapp.models.User;
 import com.project.shopapp.responses.BookProjection;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.Map;
 
 public interface IBookService {
     List<BookDTO> findAll(Map<String, Object> params);
-    BookDTO createBook(BookDTO bookDTO);
+    ResponseEntity<?> createBook(BookDTO bookDTO);
 
     boolean deleteBookBybookID(Integer bookID);
     // Thêm các phương thức mới
@@ -16,7 +18,9 @@ public interface IBookService {
     boolean acceptBookRequestCheck(Integer bookID);
    /* List<BookDTO> getBooksWithPendingRequest();*/
     boolean denyBookRequestCheck(Integer bookID);
-    List<BookProjection> getBooksByAuthor(String authorUsername);
+    ResponseEntity<?> getBooksByAuthor(String authorUsername);
+
+    ResponseEntity<?> getBookBought(User user);
 
 
 
