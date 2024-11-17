@@ -27,7 +27,7 @@ api:
   prefix: api
 
 jwt:
-  expiration: 2592000 # 30 days
+  expiration: 360 # 1 hour
   secretKey: ${JWT_SECRET_KEY}
 
 vnp:

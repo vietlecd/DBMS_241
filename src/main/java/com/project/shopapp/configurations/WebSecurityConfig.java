@@ -38,9 +38,11 @@ public class WebSecurityConfig {
                             .requestMatchers(
                                     String.format("%s/users/register", apiPrefix),
                                     String.format("%s/users/login", apiPrefix),
-                                    String.format("%s/vnpay-payment", apiPrefix)
+                                    String.format("%s/vnpay-payment", apiPrefix),
+                                    String.format("%s/refreshToken",apiPrefix)
                             )
                             .permitAll()
+
                             .requestMatchers(POST,
                                     String.format("%s/users/logout", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR, Role.ADMIN)
                             .requestMatchers(POST,
