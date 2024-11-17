@@ -47,6 +47,10 @@ public class BookDTO {
     @JsonProperty("publishyear")
     private int publishyear;
 
+    @JsonProperty("totalpage")
+    private int totalpage;
+
+
 
 
 

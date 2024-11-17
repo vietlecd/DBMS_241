@@ -87,8 +87,9 @@ public class BookServiceImpl implements IBookService {
         book.setDescription(bookDTO.getDescription());
         book.setCoverimage(bookDTO.getCoverimage());
         book.setPublishyear(bookDTO.getPublishyear());
-        book.setStatus(bookDTO.getStatus());
+        book.setStatus("false");
         book.setPrice(bookDTO.getPrice());
+        book.setTotalpage(bookDTO.getTotalpage());
 
         // Xử lý tác giả (Author) và thêm vào Book
        Set<Author> authors = new HashSet<>();
@@ -136,10 +137,11 @@ public class BookServiceImpl implements IBookService {
         result.setCoverimage(book.getCoverimage());
         result.setPublishyear(book.getPublishyear());
         result.setPrice(book.getPrice());
-        result.setStatus(book.getStatus());
+
        result.setNamecategory(bookDTO.getNamecategory());
        result.setCatedescription(bookDTO.getCatedescription());
        result.setAuthorName(bookDTO.getAuthorName());
+       result.setTotalpage(book.getTotalpage());
 
         // Lấy danh sách tên tác giả từ danh sách Author trong Book
 

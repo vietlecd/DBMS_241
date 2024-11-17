@@ -53,6 +53,13 @@ public class Book {
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> comments = new ArrayList<>();
 
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BookMark> bookmarks = new ArrayList<>();
+
+    @Column(name = "totalpage")
+    private int totalpage;
+
+
 
     @ManyToMany(mappedBy = "bookSet")
     private List<ListReading> listReadings;

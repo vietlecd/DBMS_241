@@ -59,6 +59,9 @@ public class WebSecurityConfig {
                                     String.format("%s/review/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
                             .requestMatchers(PUT,
                                     String.format("%s/review/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
+                            .
+                            requestMatchers(POST,
+                                    String.format("%s/bookmark/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
 
                             .requestMatchers(POST,
                                     String.format("%s/submitOrder", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
