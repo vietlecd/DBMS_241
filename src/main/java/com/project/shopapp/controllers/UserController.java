@@ -49,7 +49,7 @@ public class UserController {
         }
     }
     @PostMapping("/login")
-    public ResponseEntity<String> login(
+    public ResponseEntity<String> login (
             @Valid @RequestBody UserLoginDTO userLoginDTO,
             HttpServletResponse response) {
         // Kiểm tra thông tin đăng nhập và sinh token
@@ -63,5 +63,14 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletResponse response) {
+
+        // Xoa Cokie
+        CookieUtil.deleteTokenCookie(response);
+
+        return ResponseEntity.ok("Logged out successfully");
     }
 }

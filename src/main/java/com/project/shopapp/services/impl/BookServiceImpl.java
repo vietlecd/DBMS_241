@@ -153,9 +153,9 @@ public class BookServiceImpl implements IBookService {
 
 
     @Override
-    public boolean deleteBookBybookID(Long bookID) {
+    public boolean deleteBookBybookID(Integer bookID) {
         // Tìm sách theo bookID
-        Book book = bookRepository.findById(bookID).orElse(null);
+        Book book = bookRepository.findByBookID(bookID);
 
         if (book != null) {
             // Xóa tất cả các liên kết giữa Book và Category trong bảng trung gian
@@ -173,7 +173,7 @@ public class BookServiceImpl implements IBookService {
 
 
     @Override
-    public boolean acceptBookRequestCheck(Long bookID) {
+    public boolean acceptBookRequestCheck(Integer bookID) {
         Book book = bookRepository.findByBookID(bookID);
         if (book != null && "false".equals(book.getStatus())) {
             // Nếu sách tồn tại và status là "false", set status thành "true"
@@ -187,8 +187,8 @@ public class BookServiceImpl implements IBookService {
 
 
     @Override
-    public boolean denyBookRequestCheck(Long bookID) {
-        Book book = bookRepository.findById(bookID).orElse(null);
+    public boolean denyBookRequestCheck(Integer bookID) {
+        Book book = bookRepository.findByBookID(bookID);
 
         if (book != null) {
             // Xóa tất cả các liên kết giữa Book và Category trong bảng trung gian

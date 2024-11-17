@@ -14,7 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 public class BookDTO {
     @JsonProperty("bookID")
-    private Long bookID;
+    private Integer bookID;
 
     @JsonProperty("title")
     private String title;

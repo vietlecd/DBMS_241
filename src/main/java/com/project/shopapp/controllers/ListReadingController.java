@@ -15,13 +15,13 @@ public class ListReadingController {
     private AuthenticationHelper authenticationHelper;
     private IListReadingService listReadingService;
     @PostMapping("/add")
-    public ResponseEntity<?> addList(@RequestParam(name = "bookId") Long bookId, Authentication authentication){
+    public ResponseEntity<?> addList(@RequestParam(name = "bookId") Integer bookId, Authentication authentication){
         User user = authenticationHelper.getUser(authentication);
         return listReadingService.addList(user, bookId);
     }
 
     @DeleteMapping("/delist")
-    public ResponseEntity<?> deList(@RequestParam(name = "bookId") Long bookId, Authentication authentication) {
+    public ResponseEntity<?> deList(@RequestParam(name = "bookId") Integer bookId, Authentication authentication) {
         User user = authenticationHelper.getUser(authentication);
         return listReadingService.deList(user, bookId);
     }
