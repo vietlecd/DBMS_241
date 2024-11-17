@@ -3,7 +3,7 @@ package com.project.shopapp.responses;
 import java.util.List;
 
 public interface BookProjection {
-    Long getBookID();
+    Integer getBookID();
     String getTitle();
     String getCoverImage();
     String getDescription();

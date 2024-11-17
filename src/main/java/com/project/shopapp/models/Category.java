@@ -23,8 +23,6 @@ public class Category {
     @Column(name = "namecategory")
     private String namecategory;
 
-
-
     @Column(name = "catedescription")
     private String catedescription;
 

@@ -42,6 +42,15 @@ public class WebSecurityConfig {
                                     String.format("%s/refreshToken",apiPrefix)
                             )
                             .permitAll()
+                            .requestMatchers(POST,
+                                    String.format("%s/acceptBook/**", apiPrefix)).hasAnyRole(Role.ADMIN)
+                            .requestMatchers(POST,
+                                    String.format("%s/denyBook/**", apiPrefix)).hasAnyRole(Role.ADMIN)
+
+                            .requestMatchers(GET,
+                                    String.format("%s/findBookBought/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
+                            .requestMatchers(GET,
+                                    String.format("%s/findBookAuthor/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
 
                             .requestMatchers(POST,
                                     String.format("%s/users/logout", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR, Role.ADMIN)

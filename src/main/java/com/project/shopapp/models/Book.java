@@ -13,8 +13,6 @@ import java.util.Set;
 
 @Entity
 @Table(name = "book")
-
-
 @Getter
 @Setter
 
