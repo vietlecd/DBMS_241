@@ -30,7 +30,7 @@ public class PointPayService implements IPayService {
 
     @Override
     public ResponseEntity<?> payForBook(User user, Integer bookId) {
-        Book book = bookRepository.findByBookID(bookId);
+        Book book = bookRepository.findBookByBookIDAndStatus(bookId);
         Optional<Point> pointOptional = pointRepository.findByUserId(user.getId());
 
 
