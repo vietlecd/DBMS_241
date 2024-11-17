@@ -12,7 +12,8 @@ import java.util.List;
 
 public interface IBookMarkService {
     ResponseEntity<?> addBookmarkToBook(Long bookID, BookmarkDTO bookmarkDTO, User user);
-    List<BookmarkDTO> findBookmarksByBookId(Long bookID, String username);
-    ResponseEntity<?> deleteBookmarkById(Long bookmarkID, User user);
+    ResponseEntity<?> findBookmarksByBookId(Long bookID, String username);
+    ResponseEntity<?> deleteBookmarkByBookIdAndPageNumber(Long bookID, int pageNumber, User user);
+
 
 }

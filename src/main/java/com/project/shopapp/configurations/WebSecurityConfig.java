@@ -83,6 +83,8 @@ public class WebSecurityConfig {
 
                             .requestMatchers(DELETE,
                                     String.format("%s/bookmark/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
+                            .requestMatchers(GET,
+                                    String.format("%s/bookmark/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
 
 
                             .requestMatchers(POST,

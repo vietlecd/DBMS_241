@@ -50,7 +50,7 @@
 
 
 
-        @PostMapping("/acceptBook")
+        @PostMapping("/acceptbook")
         public String acceptBookRequestCheck(@RequestParam Integer bookID) {
             boolean requestAccepted = bookService.acceptBookRequestCheck(bookID);
             return requestAccepted ? "Book request for title '" + bookID + "' accepted." : "Book request for title '" + bookID + "' not found or already accepted.";

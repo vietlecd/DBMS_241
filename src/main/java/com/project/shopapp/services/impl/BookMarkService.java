@@ -69,68 +69,52 @@ public class BookMarkService implements IBookMarkService {
 
 
 
- @Override
-    public List<BookmarkDTO> findBookmarksByBookId(Long bookID, String username)
-    {
-        // Tạo mới bookmark với sách và số trang
+    @Override
+    public ResponseEntity<?> findBookmarksByBookId(Long bookID, String username) {
+        // Tìm kiếm book theo ID
         Optional<Book> optionalBook = bookRepository.findById(bookID);
         if (!optionalBook.isPresent()) {
-            throw new RuntimeException("Không tìm thấy Book với ID: " + bookID);
+            return new ResponseEntity<>("Không tìm thấy Book với ID: " + bookID, HttpStatus.BAD_REQUEST);
         }
 
-
-        // Lấy danh sách bookmark theo sách (id)
-
-        return bookmarksRepository.findByBook_BookID(bookID)
+        // Lấy danh sách bookmarks theo Book ID
+        List<BookmarkDTO> bookmarkDTOs = bookmarksRepository.findByBook_BookID(bookID)
                 .stream()
                 .map(bookMark -> {
                     BookmarkDTO dto = new BookmarkDTO();
 
-                    // Gán giá trị cho rating
+                    // Gán giá trị cho pageNumber
                     dto.setPageNumber(bookMark.getPageNumber());
 
-                    // Sử dụng trực tiếp Set<String> từ review.getComments()
-
-
-                    // Lấy username từ đối tượng User liên kết với Review
+                    // Định dạng createDate
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                     dto.setCreateDate(bookMark.getCreateDate().format(formatter));
 
+                    // Gán username từ User liên kết
                     dto.setUsername(bookMark.getUser().getUsername());
 
-
-                    // Gán thêm thuộc tính evaluate nếu có
-
+                    // Gán thêm các thuộc tính khác nếu cần
 
                     return dto;
                 })
                 .collect(Collectors.toList());
 
+        // Trả về danh sách bookmarks dưới dạng ResponseEntity
+        return ResponseEntity.ok(bookmarkDTOs);
     }
 
     @Override
-    public ResponseEntity<?> deleteBookmarkById(Long bookID, User user) {
-        // Tìm danh sách bookmark theo Book ID
-        List<BookMark> bookmarks = bookmarksRepository.findByBook_BookID(bookID);
+    public ResponseEntity<?> deleteBookmarkByBookIdAndPageNumber(Long bookID, int pageNumber, User user) {
+        Optional<BookMark> optionalBookmark = bookmarksRepository.findByBook_BookIDAndPageNumberAndUser_Id(bookID, pageNumber, user.getId());
 
-        // Kiểm tra xem danh sách có rỗng không
-        if (bookmarks.isEmpty()) {
-            return new ResponseEntity<>("Không tìm thấy Bookmark với Book ID: " + bookID, HttpStatus.BAD_REQUEST);
+        if (!optionalBookmark.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Không tìm thấy Bookmark với Book ID: " + bookID + " và Page Number: " + pageNumber);
         }
 
-        // Tìm kiếm và xóa bookmark thuộc về người dùng hiện tại
-        for (BookMark bookmark : bookmarks) {
-            if (bookmark.getUser().getId().equals(user.getId())) {
-                // Xóa bookmark
-                bookmarksRepository.delete(bookmark);
-                return ResponseEntity.ok("Bookmark đã được xóa thành công.");
-            }
-        }
-
-        // Nếu không tìm thấy bookmark của user
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Bạn không có quyền xóa Bookmark này.");
+        bookmarksRepository.delete(optionalBookmark.get());
+        return ResponseEntity.ok("Bookmark đã được xóa thành công.");
     }
-
 
 
 

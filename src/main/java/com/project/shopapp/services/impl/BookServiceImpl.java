@@ -85,6 +85,7 @@ public class BookServiceImpl implements IBookService {
         book.setDescription(bookDTO.getDescription());
         book.setCoverimage(bookDTO.getCoverimage());
         book.setPublishyear(bookDTO.getPublishyear());
+
         book.setStatus("false");
         book.setPrice(bookDTO.getPrice());
         book.setTotalpage(bookDTO.getTotalpage());
@@ -178,6 +179,10 @@ public class BookServiceImpl implements IBookService {
         if (book != null && "false".equals(book.getStatus())) {
             // Nếu sách tồn tại và status là "false", set status thành "true"
             book.setStatus("true");
+            if (book.getAuthorList() == null || !book.getAuthorList().equals(book.get)) {
+                // Nếu không phải hoặc chưa có tác giả, set username làm tác giả
+                book.setAuthor(username);
+            }
             bookRepository.save(book);
             return true;
         }
