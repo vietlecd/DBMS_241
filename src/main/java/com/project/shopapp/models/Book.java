@@ -1,6 +1,7 @@
 package com.project.shopapp.models;
 
 
+import com.project.shopapp.repositories.ReportRepository;
 import jakarta.persistence.*;
 
 import lombok.Getter;
@@ -50,6 +51,16 @@ public class Book {
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BookMark> bookmarks = new ArrayList<>();
+
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Report> reports = new ArrayList<>();
+
+    @Column(name = "totalpage")
+    private Integer totalpage;
+
 
 
     @ManyToMany(mappedBy = "bookSet")

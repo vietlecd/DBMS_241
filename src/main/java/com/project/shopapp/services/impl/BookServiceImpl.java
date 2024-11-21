@@ -36,6 +36,8 @@ public class BookServiceImpl implements IBookService {
     private AuthorRepository authorRepository;
     private CategoryRepository categoryRepository;
     private PointPayRepository pointPayRepository;
+    private UserRepository userRepository;
+    private RoleRepository roleRepository;
 
     @Override
     public List<BookDTO> findAll(Map<String, Object> params) {
@@ -87,23 +89,49 @@ public class BookServiceImpl implements IBookService {
         book.setPublishyear(bookDTO.getPublishyear());
         book.setStatus("false");
         book.setPrice(bookDTO.getPrice());
+        book.setTotalpage(bookDTO.getTotalpage());
+
+
 
         // Xử lý tác giả (Author) và thêm vào Book
-       Set<Author> authors = new HashSet<>();
-        for (String username : bookDTO.getAuthorName()) {
+        Set<Author> authors = new HashSet<>();
+        for (String username : bookDTO.getUsername()) {
             Optional<Author> existingAuthor = authorRepository.findAuthorByFullname(username);
 
             if (existingAuthor.isPresent()) {
-                Author author = existingAuthor.get();
-                authors.add(author);
-
-                author.getBookSet().add(book);
+                // Nếu tác giả đã tồn tại, thêm vào danh sách authors
+                authors.add(existingAuthor.get());
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tac gia chua dang ki ten");
+                // Nếu tác giả chưa tồn tại, tạo mới Author
+                Optional<Role> roleOptional = roleRepository.findById(0); // Lấy Role với ID = 0
+                if (!roleOptional.isPresent()) {
+                    throw new RuntimeException("Không tìm thấy Role với id = 0");
+                }
+                Role role = roleOptional.get();
+
+                // Tạo mới User
+                User user = new User();
+                user.setUsername(username);
+                user.setRole(role); // Gán Role cho User
+                userRepository.save(user); // Lưu User vào cơ sở dữ liệu
+
+                // Tạo mới Author
+                Author newAuthor = new Author();
+                newAuthor.setUserId(user); // Gán User cho Author
+
+                // Lưu Author vào cơ sở dữ liệu
+                newAuthor = authorRepository.save(newAuthor);
+
+                // Thêm Author vào danh sách authors
+                authors.add(newAuthor);
             }
         }
 
+
+        // Gán danh sách authors vào book
         book.setAuthorList(authors);
+
+
 
         // Xử lý danh mục (Category) và thêm vào Book
         Set<Category> categories = new HashSet<>();
@@ -136,10 +164,11 @@ public class BookServiceImpl implements IBookService {
         result.setCoverimage(book.getCoverimage());
         result.setPublishyear(book.getPublishyear());
         result.setPrice(book.getPrice());
-        result.setStatus(book.getStatus());
-       result.setNamecategory(bookDTO.getNamecategory());
-       result.setCatedescription(bookDTO.getCatedescription());
-       result.setAuthorName(bookDTO.getAuthorName());
+
+        result.setNamecategory(bookDTO.getNamecategory());
+        result.setCatedescription(bookDTO.getCatedescription());
+
+        result.setTotalpage(book.getTotalpage());
 
         // Lấy danh sách tên tác giả từ danh sách Author trong Book
 
@@ -176,6 +205,7 @@ public class BookServiceImpl implements IBookService {
         if (book != null && "false".equals(book.getStatus())) {
             // Nếu sách tồn tại và status là "false", set status thành "true"
             book.setStatus("true");
+
             bookRepository.save(book);
             return true;
         }
