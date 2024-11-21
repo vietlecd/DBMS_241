@@ -43,6 +43,8 @@ public class WebSecurityConfig {
                             )
                             .permitAll()
                             .requestMatchers(POST,
+                                    String.format("%s/uploadToGoogleDrive/**", apiPrefix)).hasAnyRole(Role.ADMIN)
+                            .requestMatchers(POST,
                                     String.format("%s/acceptBook/**", apiPrefix)).hasAnyRole(Role.ADMIN)
                             .requestMatchers(POST,
                                     String.format("%s/denyBook/**", apiPrefix)).hasAnyRole(Role.ADMIN)
