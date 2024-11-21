@@ -37,7 +37,7 @@ public class BookDTO {
     private Set<String> namecategory;
 
 
-    @JsonProperty("authors")
+   @JsonProperty("authors")
     private Set<String> authorName;
 
 
@@ -46,6 +46,12 @@ public class BookDTO {
 
     @JsonProperty("publishyear")
     private int publishyear;
+
+    @JsonProperty("totalpage")
+    private int totalpage;
+
+    @JsonProperty("username")
+    private Set<String> username;
 
 
 

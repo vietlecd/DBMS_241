@@ -74,9 +74,26 @@ public class WebSecurityConfig {
                             .requestMatchers(POST,
                                     String.format("%s/review/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
                             .requestMatchers(GET,
-                                    String.format("%s/review/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
+                                    String.format("%s/review/**", apiPrefix)).hasAnyRole(Role.ADMIN)
                             .requestMatchers(PUT,
                                     String.format("%s/review/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
+                            .
+                            requestMatchers(POST,
+                                    String.format("%s/bookmark/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
+
+                            .requestMatchers(DELETE,
+                                    String.format("%s/bookmark/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
+                            .requestMatchers(GET,
+                                    String.format("%s/bookmark/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
+
+                            .requestMatchers(POST,
+                            String.format("%s/report/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
+
+                            .requestMatchers(DELETE,
+                                    String.format("%s/report/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
+                            .requestMatchers(GET,
+                                    String.format("%s/report/**", apiPrefix)).hasAnyRole(Role.ADMIN)
+
 
                             .requestMatchers(POST,
                                     String.format("%s/submitOrder", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
