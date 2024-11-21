@@ -6,10 +6,15 @@
     import com.project.shopapp.responses.BookProjection;
     import com.project.shopapp.services.IBookService;
     import org.springframework.beans.factory.annotation.Autowired;
+    import org.springframework.http.HttpStatus;
+    import org.springframework.http.MediaType;
     import org.springframework.http.ResponseEntity;
     import org.springframework.security.core.Authentication;
     import org.springframework.web.bind.annotation.*;
+    import org.springframework.web.multipart.MultipartFile;
 
+    import java.io.IOException;
+    import java.security.GeneralSecurityException;
     import java.util.List;
     import java.util.Map;
 
@@ -25,29 +30,31 @@
         @GetMapping("/book")
         public List<BookDTO> getBook(
                 @RequestParam Map<String, Object> params) {
-
             // Gọi đến service để lấy danh sách BookDTO dựa trên tham số truyền vào
             List<BookDTO> result = bookService.findAll(params);
             return result;
         }
 
-        @PostMapping("/createbook")
-        public ResponseEntity<?> createBook(@RequestBody BookDTO bookDTO) {
-            // Gọi đến service để tạo mới một Book
-            return bookService.createBook(bookDTO);
+
+        @PostMapping(value = "/createbook", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+        public ResponseEntity<?> createBook(
+                @ModelAttribute BookDTO bookDTO,
+                @RequestPart("pdf") MultipartFile pdf
+        ) {
+            try {
+                return bookService.createBook(bookDTO, pdf);
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+            }
         }
 
         @DeleteMapping("/deletebook")
-
-
         public String deleteBookByTitle(@RequestParam Integer bookID) {
 
             // Gọi đến service để xóa sách theo title
             boolean deleted = bookService.deleteBookBybookID(bookID);
             return deleted ? "Book with title '" + bookID + "' was deleted successfully." : "Book with title '" + bookID+ "' not found.";
         }
-
-
 
 
         @PostMapping("/acceptbook")
