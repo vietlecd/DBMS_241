@@ -1,10 +1,16 @@
 package com.project.shopapp.services.impl;
 
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import com.project.shopapp.DTO.BookDTO;
+import com.project.shopapp.customexceptions.DataNotFoundException;
+import com.project.shopapp.helpers.UploadDriveHelper;
 import com.project.shopapp.models.*;
 import com.project.shopapp.repositories.*;
 
@@ -15,6 +21,7 @@ import com.project.shopapp.models.Category;
 import com.project.shopapp.repositories.BookRepository;
 import com.project.shopapp.responses.BookProjection;
 
+import com.project.shopapp.responses.DriveResponse;
 import com.project.shopapp.responses.Impl.BookProjectionImpl;
 import com.project.shopapp.services.IBookService;
 import lombok.AllArgsConstructor;
@@ -23,6 +30,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -38,6 +46,7 @@ public class BookServiceImpl implements IBookService {
     private PointPayRepository pointPayRepository;
     private UserRepository userRepository;
     private RoleRepository roleRepository;
+    private DriveService driveService;
 
     @Override
     public List<BookDTO> findAll(Map<String, Object> params) {
@@ -80,7 +89,8 @@ public class BookServiceImpl implements IBookService {
         return result;
     }
     @Override
-    public ResponseEntity<?> createBook(BookDTO bookDTO) {
+    public ResponseEntity<?> createBook(BookDTO bookDTO, MultipartFile pdf) {
+
         // Tạo một đối tượng Book từ BookDTO
         Book book = new Book();
         book.setTitle(bookDTO.getTitle());
@@ -91,6 +101,29 @@ public class BookServiceImpl implements IBookService {
         book.setPrice(bookDTO.getPrice());
         book.setTotalpage(bookDTO.getTotalpage());
 
+        if (pdf.isEmpty()) {
+            throw new DataNotFoundException("khong tim thay filePDF");
+        }
+
+        File pdfFile = new File(pdf.getOriginalFilename());
+        try (FileOutputStream fos = new FileOutputStream(pdfFile)) {
+            fos.write(pdf.getBytes());
+
+            DriveResponse res = driveService.uploadImageToDrive(pdfFile);
+
+            book.setPdf(res.getUrl());
+
+            if (res != null) {
+                pdfFile.delete();
+            }
+
+            System.out.println("File uploaded successfully: " + res.getUrl());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Lỗi ghi file PDF");
+        } catch (GeneralSecurityException e) {
+            throw new RuntimeException(e);
+        }
 
 
         // Xử lý tác giả (Author) và thêm vào Book
@@ -169,7 +202,6 @@ public class BookServiceImpl implements IBookService {
         result.setCatedescription(bookDTO.getCatedescription());
 
         result.setTotalpage(book.getTotalpage());
-
         // Lấy danh sách tên tác giả từ danh sách Author trong Book
 
         // Lấy thông tin danh mục nếu tồn tại

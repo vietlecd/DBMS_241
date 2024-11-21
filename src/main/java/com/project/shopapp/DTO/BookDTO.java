@@ -19,7 +19,6 @@ public class BookDTO {
     @JsonProperty("title")
     private String title;
 
-
     @JsonProperty("coverimage")
     private String coverimage;
 
@@ -35,11 +34,6 @@ public class BookDTO {
 
     @JsonProperty("namecategory")
     private Set<String> namecategory;
-
-
-   @JsonProperty("authors")
-    private Set<String> authorName;
-
 
     @JsonProperty("description")
     private String description;

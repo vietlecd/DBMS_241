@@ -4,13 +4,14 @@ import com.project.shopapp.DTO.BookDTO;
 import com.project.shopapp.models.User;
 import com.project.shopapp.responses.BookProjection;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
 
 public interface IBookService {
     List<BookDTO> findAll(Map<String, Object> params);
-    ResponseEntity<?> createBook(BookDTO bookDTO);
+    ResponseEntity<?> createBook(BookDTO bookDTO, MultipartFile pdf);
 
     boolean deleteBookBybookID(Integer bookID);
     // Thêm các phương thức mới
