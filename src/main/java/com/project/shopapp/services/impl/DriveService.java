@@ -45,7 +45,6 @@ public class DriveService {
         DriveResponse res = new DriveResponse();
 
         try{
-            String folderId = System.getenv("drive_url");
             Drive drive = createDriveService();
             com.google.api.services.drive.model.File fileMetaData = new com.google.api.services.drive.model.File();
             fileMetaData.setName(file.getName());
