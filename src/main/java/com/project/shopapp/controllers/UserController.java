@@ -1,28 +1,17 @@
 package com.project.shopapp.controllers;
 
-import com.project.shopapp.DTO.UserDTO;
-import com.project.shopapp.DTO.UserLoginDTO;
+import com.project.shopapp.DTO.UpdateUserDTO;
 import com.project.shopapp.components.CookieUtil;
 import com.project.shopapp.components.JwtTokenUtil;
+import com.project.shopapp.helpers.AuthenticationHelper;
 import com.project.shopapp.models.User;
-import com.project.shopapp.repositories.UserRepository;
 import com.project.shopapp.services.IUserService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("${api.prefix}/users")
@@ -30,57 +19,16 @@ import java.util.Optional;
 public class UserController {
 
     private IUserService userService;
-
-    @PostMapping("/register")
-    public ResponseEntity<?> createUser(@Valid @RequestBody UserDTO userDTO,
-                                        BindingResult result){
-        try{
-            if(result.hasErrors()){
-                List<String> errorMessages = result.getFieldErrors()
-                        .stream()
-                        .map(FieldError::getDefaultMessage)
-                        .toList();
-                return ResponseEntity.badRequest().body(errorMessages);
-            }
-            if(!userDTO.getPassword().equals(userDTO.getRetypePassword())){
-                return ResponseEntity.badRequest().body("Password not match");
-            }
-            userService.createUser(userDTO);//return ResponseEntity.ok("Register successfully");
-            return ResponseEntity.ok("Registered successful");
-        }
-        catch (Exception ex){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage()); //rule 5
-        }
-    }
-    @PostMapping("/login")
-    public ResponseEntity<String> login (
-            @Valid @RequestBody UserLoginDTO userLoginDTO,
-            HttpServletResponse response) {
-        // Kiểm tra thông tin đăng nhập và sinh token
-        try {
-            String token = userService.login(userLoginDTO.getUsername(), userLoginDTO.getPassword());
-
-            CookieUtil.setTokenCookie(token, response);
-
-            // Trả về token trong response
-            return ResponseEntity.ok("Login successful");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    private AuthenticationHelper authenticationHelper;
+    @GetMapping("")
+    public ResponseEntity<?> userInfo(Authentication authentication) {
+        User user = authenticationHelper.getUser(authentication);
+        return userService.userInfo(user);
     }
 
-    @PostMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletResponse response) {
-
-        // Xoa Cokie
-        CookieUtil.deleteTokenCookie(response);
-
-        return ResponseEntity.ok("Logged out successfully");
+    @PutMapping("/update")
+    public ResponseEntity<?> updateUser(@RequestBody UpdateUserDTO updateUserDTO, Authentication authentication) {
+        User user = authenticationHelper.getUser(authentication);
+        return userService.updateUser(updateUserDTO, user);
     }
-
-    @GetMapping("/refreshToken")
-    public ResponseEntity<?> refreshToken(HttpServletRequest request, HttpServletResponse response) {
-        return userService.refreshToken(request, response);
-    }
-
 }

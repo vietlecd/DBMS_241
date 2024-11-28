@@ -46,4 +46,5 @@ mvnw.cmd
 shopapp.sql
 shopapp.iml
 .mvn
+cred
 cred.json
