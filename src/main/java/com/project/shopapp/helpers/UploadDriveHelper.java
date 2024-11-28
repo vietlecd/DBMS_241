@@ -5,7 +5,10 @@ import com.project.shopapp.customexceptions.DataNotFoundException;
 //import com.project.shopapp.services.impl.DriveService;
 import com.project.shopapp.responses.DriveResponse;
 import com.project.shopapp.services.impl.DriveService;
+import org.springframework.beans.NullValueInNestedPathException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,24 +22,28 @@ public class UploadDriveHelper {
     @Autowired
     private DriveService driveService;
 
-    public DriveResponse upDrive(MultipartFile file) {
-        if (file.isEmpty()) {
+    public String upDrive(MultipartFile pdf) throws IOException {
+        if (pdf.isEmpty()) {
             throw new DataNotFoundException("khong tim thay filePDF");
         }
 
-        File pdfFile = new File(file.getOriginalFilename());
+        File pdfFile = new File(pdf.getOriginalFilename());
         try (FileOutputStream fos = new FileOutputStream(pdfFile)) {
-            fos.write(file.getBytes());
+            fos.write(pdf.getBytes());
 
-        DriveResponse res = driveService.uploadImageToDrive(pdfFile);
+            DriveResponse res = driveService.uploadImageToDrive(pdfFile);
 
-//        if (res != null) {
-//            pdfFile.delete();
-//        }
-
-        return res;
-
-        } catch (IOException | GeneralSecurityException e) {
-            throw new RuntimeException(e);
-        }}
+            if (res != null) {
+                return res.getUrl();
+            }
+        } catch (IOException | GeneralSecurityException | NullPointerException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error uploading PDF to drive", e);
+        } finally {
+            if (pdfFile.exists()) {
+                pdfFile.delete();
+            }
+        }
+        return null;
+    }
 }

@@ -22,7 +22,7 @@ spring:
 api:
   prefix: api
 jwt:
-  expiration: 360
+  expiration: 360000
   secretKey: ${JWT_SECRET_KEY}
 vnp:
   tmnCode: ${vnp_TmnCode}

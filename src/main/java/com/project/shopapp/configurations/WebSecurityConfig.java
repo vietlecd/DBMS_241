@@ -104,8 +104,8 @@ public class WebSecurityConfig {
                                     String.format("%s/submitOrder", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
 
 
-                            .requestMatchers(POST,
-                                    String.format("%s/author/add", apiPrefix)).hasAnyRole(Role.USER)
+//                            .requestMatchers(POST,
+//                                    String.format("%s/author/add", apiPrefix)).hasAnyRole(Role.USER)
 
                             .requestMatchers(POST,
                                     String.format("%s/users/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
@@ -114,14 +114,16 @@ public class WebSecurityConfig {
                                     String.format("%s/author/getAuthorRequest", apiPrefix)).hasAnyRole(Role.ADMIN)
 
                             .requestMatchers(POST,
-                                    String.format("%s/author/**", apiPrefix)).hasAnyRole(Role.ADMIN)
+                                    String.format("%s/author/become", apiPrefix)).hasAnyRole(Role.USER)
 
-                            .requestMatchers(DELETE,
-                                    String.format("%s/author/**", apiPrefix)).hasAnyRole(Role.ADMIN)
+//                            .requestMatchers(POST,
+//                                    String.format("%s/author/**", apiPrefix)).hasAnyRole(Role.ADMIN)
+//
+//                            .requestMatchers(DELETE,
+//                                    String.format("%s/author/**", apiPrefix)).hasAnyRole(Role.ADMIN)
 
                             .requestMatchers(GET,
                                     String.format("%s/author/**", apiPrefix)).hasAnyRole(Role.USER, Role.ADMIN, Role.AUTHOR)
-
 
                             .requestMatchers(GET,
                                     String.format("%s/categories**", apiPrefix)).hasAnyRole(Role.USER, Role.ADMIN, Role.AUTHOR)

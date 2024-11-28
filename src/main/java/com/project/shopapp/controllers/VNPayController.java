@@ -1,5 +1,6 @@
 package com.project.shopapp.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.shopapp.DTO.PaymentDTO;
 import com.project.shopapp.helpers.AuthenticationHelper;
 import com.project.shopapp.models.Payment;
@@ -9,12 +10,15 @@ import com.project.shopapp.repositories.UserRepository;
 import com.project.shopapp.services.IVNPayService;
 import com.project.shopapp.services.impl.VNPayService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,11 +43,11 @@ public class VNPayController {
 
         String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
         String vnpayUrl = vnPayService.createOrder(orderTotal, baseUrl, request, user.get());
-        return ResponseEntity.ok("redirect:" + vnpayUrl);
+        return ResponseEntity.ok(vnpayUrl);
     }
 
     @GetMapping("/vnpay-payment")
-    public ResponseEntity<?> getOrder(HttpServletRequest request, Authentication authentication) {
+    public ResponseEntity<?> getOrder(HttpServletRequest request, HttpServletResponse response) {
         String vnp_TxnRef = request.getParameter("vnp_TxnRef");
         Optional<Payment> paymentOpt = paymentRepository.findByVnpTxnRef(vnp_TxnRef);
 
@@ -55,15 +59,35 @@ public class VNPayController {
         int paymentStatus = vnPayService.orderReturn(request);
 
         PaymentDTO paymentDTO = PaymentDTO.builder()
-                .orderInfo(payment.getVnpTxnRef())
                 .paymentTime(payment.getPayTime())
                 .transactionId(request.getParameter("vnp_TransactionNo"))
                 .totalPrice(payment.getPayAmount())
                 .build();
 
-        return paymentStatus == 1
-                ? ResponseEntity.ok(paymentDTO)  // Trạng thái thành công
-                : ResponseEntity.badRequest().body("Transaction failed");  // Trạng thái thất bại
+        ObjectMapper objectMapper = new ObjectMapper();
+        String paymentJson = "";
+        try {
+            paymentJson = objectMapper.writeValueAsString(paymentDTO);
+        } catch (IOException e) {
+            return ResponseEntity.status(500).body("Error serializing PaymentDTO");
+        }
+
+        String redirectUrl = paymentStatus == 1 ? "http://localhost:5173/success" : "http://localhost:5173/fail";
+
+        try {
+            String encode = URLEncoder.encode(paymentJson, "UTF-8");
+
+            if (paymentStatus == 1) {
+                response.sendRedirect( redirectUrl + "?paymentInfo=" + encode);
+                return null;
+            } else {
+                response.sendRedirect(redirectUrl);
+                return null;
+            }
+        } catch (IOException e) {
+            return ResponseEntity.status(500).body("Error redirecting");
+
+        }
     }
 
     @GetMapping("/payments")

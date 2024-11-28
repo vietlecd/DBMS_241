@@ -35,7 +35,6 @@
             return result;
         }
 
-
         @PostMapping(value = "/createbook", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
         public ResponseEntity<?> createBook(
                 @ModelAttribute BookDTO bookDTO,
@@ -56,13 +55,11 @@
             return deleted ? "Book with title '" + bookID + "' was deleted successfully." : "Book with title '" + bookID+ "' not found.";
         }
 
-
         @PostMapping("/acceptbook")
         public String acceptBookRequestCheck(@RequestParam Integer bookID) {
             boolean requestAccepted = bookService.acceptBookRequestCheck(bookID);
             return requestAccepted ? "Book request for title '" + bookID + "' accepted." : "Book request for title '" + bookID + "' not found or already accepted.";
         }
-
 
         @PostMapping("/denyBook")
         public String denyBookRequestCheck(@RequestParam Integer bookID) {
@@ -79,6 +76,12 @@
         public ResponseEntity<?> findBookBought(Authentication authentication) {
             User user = authenticationHelper.getUser(authentication);
             return bookService.getBookBought(user);
+        }
+
+        @GetMapping("/findBookWritten")
+        public ResponseEntity<?> findBookWritten(Authentication authentication) {
+            User user = authenticationHelper.getUser(authentication);
+            return bookService.getBookWritten(user);
         }
 
     }
