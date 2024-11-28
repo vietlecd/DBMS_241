@@ -1,27 +1,34 @@
 package com.project.shopapp.controllers;
 
+import com.project.shopapp.DTO.UpdateUserDTO;
 import com.project.shopapp.components.CookieUtil;
 import com.project.shopapp.components.JwtTokenUtil;
+import com.project.shopapp.helpers.AuthenticationHelper;
+import com.project.shopapp.models.User;
+import com.project.shopapp.services.IUserService;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("${api.prefix}/users")
+@AllArgsConstructor
 public class UserController {
-    private JwtTokenUtil jwtTokenUtil;
-    @GetMapping
-    public ResponseEntity<?> userInfo(HttpServletRequest request) {
-        String token = CookieUtil.getTokenCookieName(request);
 
-        if (token == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or missing token");
-        }
+    private IUserService userService;
+    private AuthenticationHelper authenticationHelper;
+    @GetMapping("")
+    public ResponseEntity<?> userInfo(Authentication authentication) {
+        User user = authenticationHelper.getUser(authentication);
+        return userService.userInfo(user);
+    }
 
-        String username = jwtTokenUtil.extractUsername(token);
-        return ResponseEntity.ok("User: " + username);
+    @PutMapping("/update")
+    public ResponseEntity<?> updateUser(@RequestBody UpdateUserDTO updateUserDTO, Authentication authentication) {
+        User user = authenticationHelper.getUser(authentication);
+        return userService.updateUser(updateUserDTO, user);
     }
 }

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.project.shopapp.models.Author;
 import lombok.*;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -47,9 +49,13 @@ public class BookDTO {
     @JsonProperty("username")
     private Set<String> username;
 
-
-
-
+    public void setNamecategory(@JsonProperty("namecategory") String namecategoryString) {
+        if (namecategoryString != null && !namecategoryString.isEmpty()) {
+            this.namecategory = new HashSet<>(Arrays.asList(namecategoryString.split(",\\s*")));
+        } else {
+            this.namecategory = new HashSet<>();
+        }
+    }
 
 
 

@@ -16,9 +16,7 @@ import java.util.Set;
 @Table(name = "book")
 @Getter
 @Setter
-
 public class Book {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "bookID")
@@ -63,8 +61,6 @@ public class Book {
 
     @Column(name = "totalpage")
     private Integer totalpage;
-
-
 
     @ManyToMany(mappedBy = "bookSet")
     private List<ListReading> listReadings;

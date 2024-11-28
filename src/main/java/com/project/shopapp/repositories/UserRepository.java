@@ -21,4 +21,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u.username AS username, u.fullName AS fullName, u.phoneNumber AS phoneNumber " +
             "FROM User u JOIN u.friends f WHERE f.username = :username")
     List<BaseProjection> findFriendsByUsername(@Param("username") String username);
+
+    Optional<User> findByPhoneNumber(String phoneNumber);
 }

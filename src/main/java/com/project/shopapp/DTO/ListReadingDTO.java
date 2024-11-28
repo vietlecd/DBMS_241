@@ -16,7 +16,7 @@ public class ListReadingDTO {
     private String title;
 
 
-    @JsonProperty("coverimage")
+    @JsonProperty("coverImage")
     private String coverimage;
 
     @JsonProperty("namecategory")

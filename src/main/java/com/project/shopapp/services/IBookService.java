@@ -6,12 +6,13 @@ import com.project.shopapp.responses.BookProjection;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 public interface IBookService {
     List<BookDTO> findAll(Map<String, Object> params);
-    ResponseEntity<?> createBook(BookDTO bookDTO, MultipartFile pdf);
+    ResponseEntity<?> createBook(BookDTO bookDTO, MultipartFile pdf) throws IOException;
 
     boolean deleteBookBybookID(Integer bookID);
     // Thêm các phương thức mới
@@ -23,6 +24,5 @@ public interface IBookService {
 
     ResponseEntity<?> getBookBought(User user);
 
-
-
+    ResponseEntity<?> getBookWritten(User user);
 }

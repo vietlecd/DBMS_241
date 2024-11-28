@@ -3,7 +3,7 @@ package com.project.shopapp.controllers;
 import com.project.shopapp.DTO.UserDTO;
 import com.project.shopapp.DTO.UserLoginDTO;
 import com.project.shopapp.components.CookieUtil;
-import com.project.shopapp.services.IUserService;
+import com.project.shopapp.services.IAuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -21,7 +21,7 @@ import java.util.List;
 @AllArgsConstructor
 public class AuthController {
 
-    private IUserService userService;
+    private IAuthService userService;
 
     @PostMapping("/register")
     public ResponseEntity<?> createUser(@Valid @RequestBody UserDTO userDTO,
