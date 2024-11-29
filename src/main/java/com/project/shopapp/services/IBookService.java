@@ -13,7 +13,6 @@ import java.util.Map;
 public interface IBookService {
     List<BookDTO> findAll(Map<String, Object> params);
     ResponseEntity<?> createBook(BookDTO bookDTO, MultipartFile pdf) throws IOException;
-
     boolean deleteBookBybookID(Integer bookID);
     // Thêm các phương thức mới
 

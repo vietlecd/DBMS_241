@@ -23,7 +23,6 @@ public class BookmarkController {
     @Autowired
     private AuthenticationHelper authenticationHelper;
 
-    // Endpoint to add a bookmark to a book
     @PostMapping("/add/{bookID}")
     public ResponseEntity<?> addBookmarkToBook(
             @PathVariable Long bookID,
@@ -33,7 +32,6 @@ public class BookmarkController {
         return bookmarkService.addBookmarkToBook(bookID, bookmarkDTO, user);
     }
 
-    // Endpoint to find all bookmarks by book ID
     @GetMapping("/get/{bookID}")
     public ResponseEntity<?> getBookmarksByBookId(@PathVariable Long bookID, Authentication authentication) {
         String username = authenticationHelper.getUsername(authentication);

@@ -31,7 +31,7 @@ import java.util.Collections;
 @Service
 public class DriveService {
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
-    //private static final String SERVICE_ACOUNT_KEY_PATH = getPathToGoodleCredentials();
+    private static final String SERVICE_ACOUNT_KEY_PATH = getPathToGoodleCredentials();
     @Value("${google-drive.folder-id}")
     private String folderId;
 

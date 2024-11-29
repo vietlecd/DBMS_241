@@ -154,7 +154,6 @@ public class BookServiceImpl implements IBookService {
         return null;
     }
 
-
     @Override
     public boolean deleteBookBybookID(Integer bookID) {
         Book book = bookRepository.findByBookID(bookID);
@@ -169,8 +168,6 @@ public class BookServiceImpl implements IBookService {
         }
         return false;
     }
-
-
 
     @Override
     public boolean acceptBookRequestCheck(Integer bookID) {
@@ -195,7 +192,6 @@ public class BookServiceImpl implements IBookService {
         return false;
     }
 
-
     @Override
     public ResponseEntity<?> getBooksByAuthor(String authorName) {
 
@@ -216,7 +212,6 @@ public class BookServiceImpl implements IBookService {
 
         return ResponseEntity.ok(new ArrayList<>(groupedBooks.values()));
     }
-
 
     @Override
     public ResponseEntity<?> getBookBought(User user) {
