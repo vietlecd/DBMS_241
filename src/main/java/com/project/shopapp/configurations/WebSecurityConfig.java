@@ -43,7 +43,7 @@ public class WebSecurityConfig {
                             )
                             .permitAll()
                             .requestMatchers(POST,
-                                    String.format("%s/createbook/**", apiPrefix)).hasAnyRole(Role.ADMIN, Role.AUTHOR, Role.USER)
+                                    String.format("%s/createBook/**", apiPrefix)).hasAnyRole(Role.ADMIN, Role.AUTHOR)
 
                             .requestMatchers(POST,
                                     String.format("%s/uploadToGoogleDrive/**", apiPrefix)).hasAnyRole(Role.ADMIN, Role.AUTHOR, Role.USER)
@@ -79,7 +79,7 @@ public class WebSecurityConfig {
                             .requestMatchers(POST,
                                     String.format("%s/review/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
                             .requestMatchers(GET,
-                                    String.format("%s/review/**", apiPrefix)).hasAnyRole(Role.ADMIN)
+                                    String.format("%s/review/**", apiPrefix)).hasAnyRole(Role.ADMIN, Role.AUTHOR)
                             .requestMatchers(PUT,
                                     String.format("%s/review/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
                             .
@@ -99,6 +99,8 @@ public class WebSecurityConfig {
                             .requestMatchers(GET,
                                     String.format("%s/report/**", apiPrefix)).hasAnyRole(Role.ADMIN)
 
+                            .requestMatchers(GET,
+                                    String.format("%s/findBookWritten", apiPrefix)).hasAnyRole(Role.AUTHOR, Role.USER, Role.ADMIN)
 
                             .requestMatchers(POST,
                                     String.format("%s/submitOrder", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)

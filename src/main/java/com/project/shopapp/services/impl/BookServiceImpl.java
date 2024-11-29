@@ -19,6 +19,7 @@ import com.project.shopapp.DTO.BookDTO;
 import com.project.shopapp.models.Book;
 import com.project.shopapp.models.Category;
 import com.project.shopapp.repositories.BookRepository;
+import com.project.shopapp.responses.BookAuthorResponse;
 import com.project.shopapp.responses.BookProjection;
 
 import com.project.shopapp.responses.DriveResponse;
@@ -100,6 +101,8 @@ public class BookServiceImpl implements IBookService {
         book.setStatus("false");
         book.setPrice(bookDTO.getPrice());
         book.setTotalpage(bookDTO.getTotalpage());
+        book.setAuthorName(bookDTO.getAuthorName());
+
 
         if (pdf.isEmpty()) {
             throw new DataNotFoundException("khong tim thay filePDF");
@@ -113,7 +116,9 @@ public class BookServiceImpl implements IBookService {
             Optional<Author> existingAuthor = authorRepository.findAuthorByFullname(username);
 
             if (existingAuthor.isPresent()) {
-                authors.add(existingAuthor.get());
+                Author author = existingAuthor.get();
+                authors.add(author);
+                author.getBookSet().add(book);
             } else {
                 Role role = new Role();
                 role.setId(0);
@@ -128,6 +133,7 @@ public class BookServiceImpl implements IBookService {
                 newAuthor = authorRepository.save(newAuthor);
 
                 authors.add(newAuthor);
+                newAuthor.getBookSet().add(book);
             }
         }
         book.setAuthorList(authors);
@@ -226,7 +232,7 @@ public class BookServiceImpl implements IBookService {
 
     @Override
     public ResponseEntity<?> getBookWritten(User user) {
-        List<BookProjection> bookList = bookRepository.findBookByAuthorId(user.getId());
+        List<BookAuthorResponse> bookList = bookRepository.findBooksByUserId(user.getId());
 
         if (bookList.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Khong tim thay sach nao da viet");

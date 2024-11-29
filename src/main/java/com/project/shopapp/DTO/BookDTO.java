@@ -30,6 +30,8 @@ public class BookDTO {
     @JsonProperty("price")
     private String price;
 
+    @JsonProperty("authorname")
+    private String authorName;
 
     @JsonProperty("status")
     private String status;

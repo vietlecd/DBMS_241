@@ -25,6 +25,9 @@ public class Book {
     @Column(name = "title")
     private String title;
 
+    @Column(name = "authorName")
+    private String authorName;
+
     @Column(name = "pdf")
     private String pdf;
 

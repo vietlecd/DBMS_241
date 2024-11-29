@@ -34,7 +34,7 @@
             return result;
         }
 
-        @PostMapping(value = "/createbook", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+        @PostMapping(value = "/createBook", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
         public ResponseEntity<?> createBook(
                 @ModelAttribute BookDTO bookDTO,
                 @RequestPart("pdf") MultipartFile pdf
@@ -46,7 +46,7 @@
             }
         }
 
-        @DeleteMapping("/deletebook")
+        @DeleteMapping("/deleteBook")
         public String deleteBookByTitle(@RequestParam Integer bookID) {
 
             // Gọi đến service để xóa sách theo title
@@ -54,7 +54,7 @@
             return deleted ? "Book with title '" + bookID + "' was deleted successfully." : "Book with title '" + bookID+ "' not found.";
         }
 
-        @PostMapping("/acceptbook")
+        @PostMapping("/acceptBook")
         public String acceptBookRequestCheck(@RequestParam Integer bookID) {
             boolean requestAccepted = bookService.acceptBookRequestCheck(bookID);
             return requestAccepted ? "Book request for title '" + bookID + "' accepted." : "Book request for title '" + bookID + "' not found or already accepted.";
