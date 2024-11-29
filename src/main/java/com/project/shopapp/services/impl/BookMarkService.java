@@ -48,8 +48,6 @@ public class BookMarkService implements IBookMarkService {
         bookmark.setBook(book);
         bookmark.setUser(user);
 
-
-
         bookmarksRepository.save(bookmark);
         book.getBookmarks().add(bookmark);
 
