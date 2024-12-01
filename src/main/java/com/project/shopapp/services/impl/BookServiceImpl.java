@@ -234,6 +234,7 @@ public class BookServiceImpl implements IBookService {
     public ResponseEntity<?> getBookWritten(User user) {
         List<BookAuthorResponse> bookList = bookRepository.findBooksByUserId(user.getId());
 
+
         if (bookList.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Khong tim thay sach nao da viet");
         }

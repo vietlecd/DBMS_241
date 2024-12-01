@@ -43,17 +43,6 @@ public interface BookRepository extends JpaRepository<Book, Long>, BookRepositor
             "WHERE c.userId.id = :userId")
     List<BookProjection> findBookBoughtByUserId(@Param("userId") Integer userId);
 
-//    @Query("SELECT b.bookID AS bookId, b.title AS title, b.coverimage AS coverImage, b.description AS description, " +
-//            "b.publishyear AS publishYear, b.price AS price, " +
-//            "c.namecategory AS categories " +
-//            "FROM Book b " +
-//            "JOIN b.categories c " +
-//            "JOIN b.authorList a " +
-//            "WHERE a.userId.id = :authorId AND b.status = 'true'")
-//    List<BookProjection> findBookByAuthorId(@Param("authorId") Integer authorId);
-
-//    @Query("SELECT b FROM Book b JOIN b.authorList a WHERE a.userId.id = :userId")
-//    List<Book> findBooksByUserId(@Param("userId") Integer userId);
 
     @Query("SELECT new com.project.shopapp.responses.BookAuthorResponse(b.bookID, b.title, b.description, b.coverimage, b.publishyear, b.price, a.id, u.id) " +
             "FROM Book b " +
@@ -62,5 +51,14 @@ public interface BookRepository extends JpaRepository<Book, Long>, BookRepositor
             "WHERE u.id = :userId AND b.status='true'")
     List<BookAuthorResponse> findBooksByUserId(@Param("userId") Integer userId);
 
+
+    @Query("SELECT b.bookID AS bookId, b.title AS title, b.coverimage AS coverImage, b.description AS description, " +
+            "b.publishyear AS publishYear, b.price AS price, " +
+            "a.userId.fullName AS authorName, c.namecategory AS categories " +
+            "FROM Book b " +
+            "JOIN b.categories c " +
+            "JOIN b.authorList a " +
+            "WHERE a.userId = :authorId AND b.status = 'true'")
+    List<BookProjection> findBookByAuthorId(@Param("authorId") Integer authorId);
 
 }
