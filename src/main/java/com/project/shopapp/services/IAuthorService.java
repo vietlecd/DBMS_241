@@ -10,6 +10,9 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 public interface IAuthorService {
+
+    ResponseEntity<?> infoAuthor(User user);
+
     ResponseEntity<String> becomeAuthor(User user, AuthorDTO authorDTO);
 
     ResponseEntity<String> acceptedAuthor(String username);

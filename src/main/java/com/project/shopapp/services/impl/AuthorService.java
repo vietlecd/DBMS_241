@@ -7,6 +7,7 @@ import com.project.shopapp.models.Role;
 import com.project.shopapp.models.User;
 import com.project.shopapp.repositories.AuthorRepository;
 import com.project.shopapp.repositories.UserRepository;
+import com.project.shopapp.responses.AuthorResponse;
 import com.project.shopapp.responses.BaseProjection;
 import com.project.shopapp.services.IAuthorService;
 import lombok.AllArgsConstructor;
@@ -25,6 +26,24 @@ import java.util.Optional;
 public class AuthorService implements IAuthorService {
     private UserRepository userRepository;
     private AuthorRepository authorRepository;
+
+    @Override
+    public ResponseEntity<?> infoAuthor(User user) {
+        Optional<Author> author = authorRepository.findByUserId(user.getId());
+        if (author.isPresent()) {
+            AuthorResponse res = AuthorResponse.builder()
+                    .id_card(author.get().getIdCard())
+                    .bio(author.get().getBio())
+                    .fullName(author.get().getUserId().getFullName())
+                    .build();
+
+            return ResponseEntity.ok(res);
+        } else {
+            throw new DataNotFoundException("Khong co author nay");
+        }
+    }
+
+    @Override
     public ResponseEntity<String> becomeAuthor(User user, AuthorDTO authorDTO) {
 
         try {
@@ -52,6 +71,7 @@ public class AuthorService implements IAuthorService {
         return new ResponseEntity<>("Thêm request thành cong", HttpStatus.ACCEPTED);
     }
 
+    @Override
     public ResponseEntity<String> acceptedAuthor(String username) {
         User user;
 
@@ -83,6 +103,7 @@ public class AuthorService implements IAuthorService {
         return new ResponseEntity<>("Them thanh cong author", HttpStatus.ACCEPTED);
     }
 
+    @Override
     public ResponseEntity<String> deniedAuthor(String username) {
         User user;
 
@@ -105,6 +126,7 @@ public class AuthorService implements IAuthorService {
         return new ResponseEntity<>("Them tu choi Author thanh cong", HttpStatus.ACCEPTED);
     }
 
+    @Override
     public ResponseEntity<String> deleteAuthor(String username) {
         User user;
 
@@ -132,6 +154,7 @@ public class AuthorService implements IAuthorService {
         return new ResponseEntity<>("No author found", HttpStatus.FORBIDDEN);
     }
 
+    @Override
     public List<BaseProjection> getAuThor() {
         try {
             return authorRepository.findAllAuthors();
@@ -141,6 +164,7 @@ public class AuthorService implements IAuthorService {
         }
     }
 
+    @Override
     public List<BaseProjection> getAuthorRequest() {
         try {
             return authorRepository.findAllAuthorRequests();

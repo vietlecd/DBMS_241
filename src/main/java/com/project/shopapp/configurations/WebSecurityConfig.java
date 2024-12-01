@@ -113,6 +113,9 @@ public class WebSecurityConfig {
                                     String.format("%s/users/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
 
                             .requestMatchers(GET,
+                                    String.format("%s/author/info", apiPrefix)).hasAnyRole(Role.ADMIN, Role.USER, Role.AUTHOR)
+
+                            .requestMatchers(GET,
                                     String.format("%s/author/getAuthorRequest", apiPrefix)).hasAnyRole(Role.ADMIN)
 
                             .requestMatchers(POST,

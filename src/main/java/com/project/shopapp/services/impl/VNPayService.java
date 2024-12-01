@@ -26,7 +26,6 @@ import java.util.*;
 public class VNPayService implements IVNPayService {
 
     private final PaymentRepository paymentRepository;
-    private final DepositRepository depositRepository;
     private final IDepositService pointService;
 
     public String createOrder(int total, String urlReturn, HttpServletRequest request, User user) {
