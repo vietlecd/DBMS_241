@@ -1,13 +1,8 @@
 package com.project.shopapp.services;
 
 import com.project.shopapp.DTO.BookmarkDTO;
-
-import com.project.shopapp.DTO.ReviewDTO;
 import com.project.shopapp.models.User;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 
 public interface IBookMarkService {

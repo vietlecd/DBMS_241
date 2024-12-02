@@ -4,7 +4,6 @@ import com.project.shopapp.responses.BaseProjection;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
-import java.util.Map;
 
 public interface IAudienceService {
     ResponseEntity<String> sendFollow(String myUsername, String friendUsername);

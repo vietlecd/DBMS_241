@@ -1,38 +1,23 @@
 package com.project.shopapp.services.impl;
 
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.security.GeneralSecurityException;
-import java.util.*;
-import java.util.stream.Collectors;
-
 import com.project.shopapp.DTO.BookDTO;
 import com.project.shopapp.customexceptions.DataNotFoundException;
 import com.project.shopapp.helpers.UploadDriveHelper;
 import com.project.shopapp.models.*;
 import com.project.shopapp.repositories.*;
-
-
-import com.project.shopapp.DTO.BookDTO;
-import com.project.shopapp.models.Book;
-import com.project.shopapp.models.Category;
-import com.project.shopapp.repositories.BookRepository;
 import com.project.shopapp.responses.BookAuthorResponse;
 import com.project.shopapp.responses.BookProjection;
-
-import com.project.shopapp.responses.DriveResponse;
 import com.project.shopapp.responses.Impl.BookProjectionImpl;
 import com.project.shopapp.services.IBookService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -91,49 +76,40 @@ public class BookServiceImpl implements IBookService {
         return result;
     }
     @Override
-    public ResponseEntity<?> createBook(BookDTO bookDTO, MultipartFile pdf) throws IOException {
+    public ResponseEntity<?> createBook(BookDTO bookDTO, MultipartFile pdf, MultipartFile image, User user) throws IOException {
 
         Book book = new Book();
         book.setTitle(bookDTO.getTitle());
         book.setDescription(bookDTO.getDescription());
-        book.setCoverimage(bookDTO.getCoverimage());
         book.setPublishyear(bookDTO.getPublishyear());
         book.setStatus("false");
         book.setPrice(bookDTO.getPrice());
         book.setTotalpage(bookDTO.getTotalpage());
-        book.setAuthorName(bookDTO.getAuthorName());
-
+        book.setUploader(user);
 
         if (pdf.isEmpty()) {
             throw new DataNotFoundException("khong tim thay filePDF");
         }
 
+        if (image.isEmpty()) {
+            throw new DataNotFoundException("khong tim thay image");
+        }
+
         String file = uploadDriveHelper.upDrive(pdf);
+        String img = uploadDriveHelper.upDrive(image);
         book.setPdf(file);
+        book.setCoverimage(img);
 
         Set<Author> authors = new HashSet<>();
         for (String username : bookDTO.getUsername()) {
-            Optional<Author> existingAuthor = authorRepository.findAuthorByFullname(username);
+            Optional<Author> existingAuthor = authorRepository.findAuthorByUsername(username);
 
             if (existingAuthor.isPresent()) {
                 Author author = existingAuthor.get();
                 authors.add(author);
                 author.getBookSet().add(book);
             } else {
-                Role role = new Role();
-                role.setId(0);
-
-                User user = new User();
-                user.setUsername(username);
-                user.setRole(role);
-                userRepository.save(user);
-
-                Author newAuthor = new Author();
-                newAuthor.setUserId(user);
-                newAuthor = authorRepository.save(newAuthor);
-
-                authors.add(newAuthor);
-                newAuthor.getBookSet().add(book);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Khong tim thay ten username cua author tren");
             }
         }
         book.setAuthorList(authors);

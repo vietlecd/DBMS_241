@@ -1,8 +1,6 @@
 package com.project.shopapp.services;
 
 import com.project.shopapp.DTO.PaymentDTO;
-import com.project.shopapp.models.Book;
-import com.project.shopapp.models.Payment;
 import com.project.shopapp.models.User;
 import org.springframework.http.ResponseEntity;
 

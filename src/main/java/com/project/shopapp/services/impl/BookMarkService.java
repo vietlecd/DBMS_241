@@ -2,7 +2,6 @@ package com.project.shopapp.services.impl;
 
 
 import com.project.shopapp.DTO.BookmarkDTO;
-import com.project.shopapp.DTO.ReviewDTO;
 import com.project.shopapp.models.Book;
 import com.project.shopapp.models.BookMark;
 import com.project.shopapp.models.User;

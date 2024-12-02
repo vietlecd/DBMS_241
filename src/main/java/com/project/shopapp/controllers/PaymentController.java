@@ -5,7 +5,6 @@ import com.project.shopapp.helpers.AuthenticationHelper;
 import com.project.shopapp.models.User;
 import com.project.shopapp.services.IPayService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;

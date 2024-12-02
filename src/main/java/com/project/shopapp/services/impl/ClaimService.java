@@ -7,7 +7,6 @@ import com.project.shopapp.repositories.ClaimRepository;
 import com.project.shopapp.repositories.PointRepository;
 import com.project.shopapp.services.IClaimService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 

@@ -1,6 +1,5 @@
 package com.project.shopapp.repositories;
 
-import com.project.shopapp.DTO.PaymentDTO;
 import com.project.shopapp.models.Payment;
 import com.project.shopapp.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;

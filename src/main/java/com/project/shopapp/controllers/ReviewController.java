@@ -4,9 +4,7 @@ package com.project.shopapp.controllers;
 
 import com.project.shopapp.DTO.ReviewDTO;
 import com.project.shopapp.helpers.AuthenticationHelper;
-import com.project.shopapp.models.Review;
 import com.project.shopapp.models.User;
-import com.project.shopapp.services.IBookService;
 import com.project.shopapp.services.IReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

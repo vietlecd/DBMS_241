@@ -1,14 +1,14 @@
 package com.project.shopapp.services.impl;
 
-import com.project.shopapp.DTO.BookDTO;
 import com.project.shopapp.DTO.ListReadingDTO;
-import com.project.shopapp.models.*;
-import com.project.shopapp.repositories.BookListRepository;
+import com.project.shopapp.models.Book;
+import com.project.shopapp.models.Category;
+import com.project.shopapp.models.ListReading;
+import com.project.shopapp.models.User;
 import com.project.shopapp.repositories.BookRepository;
 import com.project.shopapp.repositories.ListReadingRepository;
 import com.project.shopapp.services.IListReadingService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;

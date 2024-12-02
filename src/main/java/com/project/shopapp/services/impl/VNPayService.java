@@ -2,12 +2,11 @@ package com.project.shopapp.services.impl;
 
 import com.project.shopapp.DTO.PaymentDTO;
 import com.project.shopapp.configurations.VNPayConfig;
-import com.project.shopapp.models.Pay;
 import com.project.shopapp.models.Payment;
 import com.project.shopapp.models.Point;
 import com.project.shopapp.models.User;
-import com.project.shopapp.repositories.PaymentRepository;
 import com.project.shopapp.repositories.DepositRepository;
+import com.project.shopapp.repositories.PaymentRepository;
 import com.project.shopapp.services.IDepositService;
 import com.project.shopapp.services.IVNPayService;
 import jakarta.servlet.http.HttpServletRequest;

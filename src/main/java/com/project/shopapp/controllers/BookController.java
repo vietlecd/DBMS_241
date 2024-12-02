@@ -3,7 +3,6 @@
     import com.project.shopapp.DTO.BookDTO;
     import com.project.shopapp.helpers.AuthenticationHelper;
     import com.project.shopapp.models.User;
-    import com.project.shopapp.responses.BookProjection;
     import com.project.shopapp.services.IBookService;
     import org.springframework.beans.factory.annotation.Autowired;
     import org.springframework.http.HttpStatus;
@@ -13,8 +12,6 @@
     import org.springframework.web.bind.annotation.*;
     import org.springframework.web.multipart.MultipartFile;
 
-    import java.io.IOException;
-    import java.security.GeneralSecurityException;
     import java.util.List;
     import java.util.Map;
 
@@ -37,14 +34,18 @@
         @PostMapping(value = "/createBook", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
         public ResponseEntity<?> createBook(
                 @ModelAttribute BookDTO bookDTO,
-                @RequestPart("pdf") MultipartFile pdf
+                Authentication authentication,
+                @RequestPart("pdf") MultipartFile pdf,
+                @RequestPart("image") MultipartFile image
         ) {
             try {
-                return bookService.createBook(bookDTO, pdf);
+                User user = authenticationHelper.getUser(authentication);
+                return bookService.createBook(bookDTO, pdf, image, user);
             } catch (Exception e) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
             }
         }
+
 
         @DeleteMapping("/deleteBook")
         public String deleteBookByTitle(@RequestParam Integer bookID) {

@@ -1,14 +1,10 @@
 package com.project.shopapp.controllers;
 
 import com.project.shopapp.DTO.UpdateUserDTO;
-import com.project.shopapp.components.CookieUtil;
-import com.project.shopapp.components.JwtTokenUtil;
 import com.project.shopapp.helpers.AuthenticationHelper;
 import com.project.shopapp.models.User;
 import com.project.shopapp.services.IUserService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;

@@ -2,7 +2,6 @@ package com.project.shopapp.helpers;
 
 import com.project.shopapp.models.User;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 @Component

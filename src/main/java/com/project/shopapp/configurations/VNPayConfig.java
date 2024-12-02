@@ -1,9 +1,7 @@
 package com.project.shopapp.configurations;
 
 import jakarta.servlet.http.HttpServletRequest;
-
 import org.springframework.stereotype.Component;
-import org.springframework.beans.factory.annotation.Value;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;

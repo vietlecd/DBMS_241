@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface PointPayRepository extends JpaRepository<Pay, Integer> {
     @Query("SELECT p FROM Pay p WHERE p.point.userId = :user")
