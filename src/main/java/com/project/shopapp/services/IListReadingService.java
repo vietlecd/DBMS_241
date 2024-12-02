@@ -1,7 +1,6 @@
 package com.project.shopapp.services;
 
 import com.project.shopapp.models.User;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.http.ResponseEntity;
 
 public interface IListReadingService {

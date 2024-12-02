@@ -1,7 +1,6 @@
 package com.project.shopapp.models;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.Set;
@@ -38,5 +37,4 @@ public class Author {
 
     @Column(name = "status")
     private Integer status;
-
 }

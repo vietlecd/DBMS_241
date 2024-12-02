@@ -2,8 +2,6 @@ package com.project.shopapp.DTO;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 import java.io.Serializable;
 

@@ -3,16 +3,11 @@ package com.project.shopapp.controllers;
 import com.project.shopapp.DTO.BookmarkDTO;
 import com.project.shopapp.helpers.AuthenticationHelper;
 import com.project.shopapp.models.User;
-
-
 import com.project.shopapp.services.IBookMarkService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("${api.prefix}/bookmark")

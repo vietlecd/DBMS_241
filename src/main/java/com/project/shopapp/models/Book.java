@@ -1,12 +1,9 @@
 package com.project.shopapp.models;
 
 
-import com.project.shopapp.repositories.ReportRepository;
 import jakarta.persistence.*;
-
 import lombok.Getter;
 import lombok.Setter;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +22,9 @@ public class Book {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "authorName")
-    private String authorName;
+    @ManyToOne
+    @JoinColumn(name = "uploader")
+    private User uploader;
 
     @Column(name = "pdf")
     private String pdf;
@@ -70,6 +68,5 @@ public class Book {
 
     @ManyToMany(mappedBy = "bookSet")
     Set<Author> authorList;
-
 
 }

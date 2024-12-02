@@ -9,7 +9,6 @@ import com.project.shopapp.repositories.BookRepository;
 import com.project.shopapp.repositories.PointPayRepository;
 import com.project.shopapp.repositories.PointRepository;
 import com.project.shopapp.services.IPayService;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

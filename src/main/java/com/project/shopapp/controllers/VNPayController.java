@@ -8,18 +8,15 @@ import com.project.shopapp.models.User;
 import com.project.shopapp.repositories.PaymentRepository;
 import com.project.shopapp.repositories.UserRepository;
 import com.project.shopapp.services.IVNPayService;
-import com.project.shopapp.services.impl.VNPayService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.net.URLEncoder;
-import java.util.List;
 import java.util.Optional;
 
 @RestController

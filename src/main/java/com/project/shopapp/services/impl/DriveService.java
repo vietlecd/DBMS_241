@@ -3,26 +3,16 @@ package com.project.shopapp.services.impl;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.FileContent;
-import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
-import com.google.auth.http.HttpCredentialsAdapter;
-import com.google.auth.oauth2.GoogleCredentials;
-import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.project.shopapp.responses.DriveResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import com.google.auth.oauth2.GoogleCredentials;
-import com.google.api.services.drive.Drive;
-import com.google.api.services.drive.DriveScopes;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
@@ -31,15 +21,15 @@ import java.util.Collections;
 @Service
 public class DriveService {
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
-    private static final String SERVICE_ACOUNT_KEY_PATH = getPathToGoodleCredentials();
+//    private static final String SERVICE_ACOUNT_KEY_PATH = getPathToGoodleCredentials();
     @Value("${google-drive.folder-id}")
     private String folderId;
 
-    private static String getPathToGoodleCredentials() {
-        String currentDirectory = System.getProperty("user.dir");
-        Path filePath = Paths.get(currentDirectory, "cred.json");
-        return filePath.toString();
-    }
+//    private static String getPathToGoodleCredentials() {
+//        String currentDirectory = System.getProperty("user.dir");
+//        Path filePath = Paths.get(currentDirectory, "cred.json");
+//        return filePath.toString();
+//    }
 
     public DriveResponse uploadImageToDrive(File file) throws GeneralSecurityException, IOException {
         DriveResponse res = new DriveResponse();

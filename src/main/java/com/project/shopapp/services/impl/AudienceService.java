@@ -1,19 +1,16 @@
 package com.project.shopapp.services.impl;
 
 import com.project.shopapp.customexceptions.DataNotFoundException;
-import com.project.shopapp.models.Author;
 import com.project.shopapp.models.User;
 import com.project.shopapp.repositories.AuthorRepository;
 import com.project.shopapp.repositories.UserRepository;
 import com.project.shopapp.responses.BaseProjection;
 import com.project.shopapp.services.IAudienceService;
-import com.project.shopapp.services.IAuthorService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 
 @Service

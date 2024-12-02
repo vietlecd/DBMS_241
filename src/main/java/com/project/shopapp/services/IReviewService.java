@@ -3,7 +3,6 @@ package com.project.shopapp.services;
 
 
 import com.project.shopapp.DTO.ReviewDTO;
-import com.project.shopapp.models.Review;
 import com.project.shopapp.models.User;
 import org.springframework.http.ResponseEntity;
 

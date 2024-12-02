@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class BookDTOFactory {
-
     public BookDTO createBookDTO(String title, String status) {
         BookDTO bookDTO = new BookDTO();
         bookDTO.setTitle(title);
