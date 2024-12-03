@@ -102,12 +102,11 @@ public class BookServiceImpl implements IBookService {
 
         Set<Author> authors = new HashSet<>();
         for (String username : bookDTO.getUsername()) {
-            Optional<Author> existingAuthor = authorRepository.findAuthorByUsername(username);
+            Author existingAuthor = authorRepository.findAuthorByUser_Username(username);
 
-            if (existingAuthor.isPresent()) {
-                Author author = existingAuthor.get();
-                authors.add(author);
-                author.getBookSet().add(book);
+            if (existingAuthor != null) {
+                authors.add(existingAuthor);
+                existingAuthor.getBookSet().add(book);
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Khong tim thay ten username cua author tren");
             }
@@ -195,16 +194,16 @@ public class BookServiceImpl implements IBookService {
         return ResponseEntity.ok(new ArrayList<>(groupedBooks.values()));
     }
 
-    @Override
-    public ResponseEntity<?> getBookBought(User user) {
-        List<BookProjection> booKBought = bookRepository.findBookBoughtByUserId(user.getId());
-        if (booKBought.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Khong tim thay sach nao da mua");
-        }
-
-        return ResponseEntity.ok(booKBought);
-
-    }
+//    @Override
+//    public ResponseEntity<?> getBookBought(User user) {
+//        List<BookProjection> booKBought = bookRepository.findBookBoughtByUserId(user.getId());
+//        if (booKBought.isEmpty()) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Khong tim thay sach nao da mua");
+//        }
+//
+//        return ResponseEntity.ok(booKBought);
+//
+//    }
 
     @Override
     public ResponseEntity<?> getBookWritten(User user) {

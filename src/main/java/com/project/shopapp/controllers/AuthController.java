@@ -52,10 +52,8 @@ public class AuthController {
         try {
             String token = userService.login(userLoginDTO.getUsername(), userLoginDTO.getPassword());
 
-            CookieUtil.setTokenCookie(token, response);
-
             // Trả về token trong response
-            return ResponseEntity.ok("Login successful");
+            return ResponseEntity.ok(token);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

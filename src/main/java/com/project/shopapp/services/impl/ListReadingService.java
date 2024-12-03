@@ -93,7 +93,7 @@ public class ListReadingService implements IListReadingService {
                                 .map(Category::getNamecategory)
                                 .collect(Collectors.toSet()))
                         .authorName(book.getAuthorList().stream()
-                                .map(author -> author.getUserId().getFullName())
+                                .map(author -> author.getUser().getFullName())
                                 .collect(Collectors.toSet()))
                         .description(book.getDescription())
                         .publishyear(book.getPublishyear())

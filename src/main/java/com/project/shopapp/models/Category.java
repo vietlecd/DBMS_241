@@ -30,7 +30,4 @@ public class Category {
     private Set<Book> books;
 
 
-
-
-
 }

@@ -91,7 +91,7 @@ public class WebSecurityConfig {
                                     String.format("%s/bookmark/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
 
                             .requestMatchers(POST,
-                            String.format("%s/report/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
+                                    String.format("%s/report/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
 
                             .requestMatchers(DELETE,
                                     String.format("%s/report/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)

@@ -13,14 +13,7 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByUsername(String username);
-
     boolean existsByPhoneNumber(String phoneNumber);
+
     Optional<User> findByUsername(String username);
-    //SELECT * FROM users WHERE phoneNumber=?
-
-    @Query("SELECT u.username AS username, u.fullName AS fullName, u.phoneNumber AS phoneNumber " +
-            "FROM User u JOIN u.friends f WHERE f.username = :username")
-    List<BaseProjection> findFriendsByUsername(@Param("username") String username);
-
-    Optional<User> findByPhoneNumber(String phoneNumber);
 }

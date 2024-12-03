@@ -45,14 +45,13 @@ public class User extends BaseEntity implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Review> reviews;
 
-
     @ManyToMany
     @JoinTable(
             name = "audience",
             joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "friend_id")
+            inverseJoinColumns = @JoinColumn(name = "author_id")
     )
-    private Set<User> friends;
+    private Set<Author> followedAuthor;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -81,5 +80,15 @@ public class User extends BaseEntity implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public void followAuthor(Author author){
+        this.followedAuthor.add(author);
+        author.getFollowers().add(this);
+    }
+
+    public void unfollowAuthor(Author author) {
+        this.followedAuthor.add(author);
+        author.getFollowers().add(this);
     }
 }
