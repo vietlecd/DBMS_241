@@ -14,14 +14,14 @@ public interface IBookService {
     ResponseEntity<?> createBook(BookDTO bookDTO, MultipartFile pdf, MultipartFile image, User user) throws IOException;
 
     boolean deleteBookBybookID(Integer bookID);
-    // Thêm các phương thức mới
 
     boolean acceptBookRequestCheck(Integer bookID);
-   /* List<BookDTO> getBooksWithPendingRequest();*/
+
     boolean denyBookRequestCheck(Integer bookID);
-    ResponseEntity<?> getBooksByAuthor(String authorUsername);
 
-//    ResponseEntity<?> getBookBought(User user);
+    ResponseEntity<?> getBookBought(String username);
 
-    ResponseEntity<?> getBookWritten(User user);
+    ResponseEntity<?> getBooksByAuthor(String authorName);
+
+    ResponseEntity<?> getBookWritten(String username);
 }

@@ -26,7 +26,7 @@ public class DepositService implements IDepositService {
         } else {
             newPoint = amount;
             exPoint = Point.builder()
-                    .userId(user)
+                    .user(user)
                     .amount(newPoint)
                     .type("DEPOSIT")
                     .build();

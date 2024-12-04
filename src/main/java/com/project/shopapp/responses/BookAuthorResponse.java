@@ -9,13 +9,10 @@ import lombok.*;
 @Builder
 @Data
 public class BookAuthorResponse {
-    private Integer bookID;
     private String title;
     private String description;
     private String coverimage;
     private Integer publishyear;
     private String price;
-    private Integer authorId;
-    private Integer userId;
-
+    private String username;
 }

@@ -37,20 +37,16 @@ public class WebSecurityConfig {
                             .requestMatchers(
                                     String.format("%s/users/register", apiPrefix),
                                     String.format("%s/users/login", apiPrefix),
-                                    String.format("%s/vnpay-payment", apiPrefix),
+                                    String.format("%s/payment_return", apiPrefix),
                                     String.format("%s/refreshToken",apiPrefix)
                             )
                             .permitAll()
                             .requestMatchers(POST,
                                     String.format("%s/createBook/**", apiPrefix)).hasAnyRole(Role.ADMIN, Role.AUTHOR)
-
-                            .requestMatchers(POST,
-                                    String.format("%s/uploadToGoogleDrive/**", apiPrefix)).hasAnyRole(Role.ADMIN, Role.AUTHOR, Role.USER)
                             .requestMatchers(POST,
                                     String.format("%s/acceptBook/**", apiPrefix)).hasAnyRole(Role.ADMIN)
                             .requestMatchers(POST,
                                     String.format("%s/denyBook/**", apiPrefix)).hasAnyRole(Role.ADMIN)
-
                             .requestMatchers(GET,
                                     String.format("%s/findBookBought/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
                             .requestMatchers(GET,
@@ -62,7 +58,6 @@ public class WebSecurityConfig {
                                     String.format("%s/payment/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
                             .requestMatchers(GET,
                                     String.format("%s/payment/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
-
                             .requestMatchers(POST,
                                     String.format("%s/list/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
 
@@ -104,10 +99,6 @@ public class WebSecurityConfig {
                             .requestMatchers(POST,
                                     String.format("%s/submitOrder", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
 
-
-//                            .requestMatchers(POST,
-//                                    String.format("%s/author/add", apiPrefix)).hasAnyRole(Role.USER)
-
                             .requestMatchers(POST,
                                     String.format("%s/users/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
 
@@ -119,12 +110,6 @@ public class WebSecurityConfig {
 
                             .requestMatchers(POST,
                                     String.format("%s/author/become", apiPrefix)).hasAnyRole(Role.USER)
-
-//                            .requestMatchers(POST,
-//                                    String.format("%s/author/**", apiPrefix)).hasAnyRole(Role.ADMIN)
-//
-//                            .requestMatchers(DELETE,
-//                                    String.format("%s/author/**", apiPrefix)).hasAnyRole(Role.ADMIN)
 
                             .requestMatchers(GET,
                                     String.format("%s/author/**", apiPrefix)).hasAnyRole(Role.USER, Role.ADMIN, Role.AUTHOR)

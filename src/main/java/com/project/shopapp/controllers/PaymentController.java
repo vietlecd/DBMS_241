@@ -1,6 +1,7 @@
 package com.project.shopapp.controllers;
 
 import com.project.shopapp.DTO.PaymentDTO;
+import com.project.shopapp.customexceptions.DataNotFoundException;
 import com.project.shopapp.helpers.AuthenticationHelper;
 import com.project.shopapp.models.User;
 import com.project.shopapp.services.IPayService;
@@ -20,9 +21,10 @@ public class PaymentController {
 
     @PostMapping("/create")
     public ResponseEntity<?> payForBook(@RequestParam Integer bookId, Authentication authentication) {
-        User user = authenticationHelper.getUser(authentication);
 
-        return payService.payForBook(user, bookId);
+            User user = authenticationHelper.getUser(authentication);
+            return payService.payForBook(user, bookId);
+
     }
 
     @GetMapping("/get")

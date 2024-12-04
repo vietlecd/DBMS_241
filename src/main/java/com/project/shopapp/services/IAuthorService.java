@@ -19,6 +19,8 @@ public interface IAuthorService {
     ResponseEntity<String> deleteAuthor(String username);
     List<AuthorResponse> getAuThor();
 
+    List<Author> getAuthorByName(String authorName);
+
     List<AuthorResponse> getAuthorRequest();
 
 

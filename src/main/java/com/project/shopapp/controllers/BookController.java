@@ -1,6 +1,8 @@
     package com.project.shopapp.controllers;
 
     import com.project.shopapp.DTO.BookDTO;
+    import com.project.shopapp.customexceptions.DataNotFoundException;
+    import com.project.shopapp.customexceptions.InvalidParamException;
     import com.project.shopapp.helpers.AuthenticationHelper;
     import com.project.shopapp.models.User;
     import com.project.shopapp.services.IBookService;
@@ -29,6 +31,15 @@
                 @RequestParam Map<String, Object> params) {
             List<BookDTO> result = bookService.findAll(params);
             return result;
+        }
+
+        @GetMapping("/bookByAuthor")
+        public ResponseEntity<?> searchBookByAuthor(@RequestParam String authorName) {
+            try {
+                return bookService.getBooksByAuthor(authorName);
+            } catch (DataNotFoundException e) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+            }
         }
 
         @PostMapping(value = "/createBook", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -67,21 +78,25 @@
             return requestDenied ? "Book request for title '" +  bookID + "' denied." : "Book request for title '" + bookID + "' not found or already denied.";
         }
 
-        @GetMapping("/findBookAuthor")
-        public ResponseEntity<?> findBookAuthor(@RequestParam String authorName) {
-            return bookService.getBooksByAuthor(authorName);
+        @GetMapping("/findBookBought")
+        public ResponseEntity<?> findBookBought(Authentication authentication) {
+            try {
+                String username = authenticationHelper.getUsername(authentication);
+                return bookService.getBookBought(username);
+            } catch (DataNotFoundException e) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+            }
         }
-
-//        @GetMapping("/findBookBought")
-//        public ResponseEntity<?> findBookBought(Authentication authentication) {
-//            User user = authenticationHelper.getUser(authentication);
-//            return bookService.getBookBought(user);
-//        }
 
         @GetMapping("/findBookWritten")
         public ResponseEntity<?> findBookWritten(Authentication authentication) {
-            User user = authenticationHelper.getUser(authentication);
-            return bookService.getBookWritten(user);
+            try {
+                String username = authenticationHelper.getUsername(authentication);
+                return bookService.getBookWritten(username);
+            } catch (DataNotFoundException e) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+            }
+
         }
 
     }

@@ -1,5 +1,6 @@
 package com.project.shopapp.services.impl;
 
+import com.project.shopapp.customexceptions.DataNotFoundException;
 import com.project.shopapp.models.Claim;
 import com.project.shopapp.models.Point;
 import com.project.shopapp.models.User;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 @Service
 public class ClaimService implements IClaimService {
@@ -135,10 +137,10 @@ public class ClaimService implements IClaimService {
 
 
     private Point getOrCreateUserPoint(User user) {
-        Point userPoint = pointRepository.findByUserIdAndType(user, "CLAIM");
+        Point userPoint = pointRepository.findByUserAndType(user, "CLAIM");
         if (userPoint == null) {
             userPoint = Point.builder()
-                    .userId(user)
+                    .user(user)
                     .amount(0)
                     .viewCount(0)
                     .type("CLAIM")

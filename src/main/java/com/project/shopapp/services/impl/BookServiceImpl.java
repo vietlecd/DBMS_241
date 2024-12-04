@@ -3,13 +3,15 @@ package com.project.shopapp.services.impl;
 
 import com.project.shopapp.DTO.BookDTO;
 import com.project.shopapp.customexceptions.DataNotFoundException;
+import com.project.shopapp.helpers.AuthorHelper;
+import com.project.shopapp.helpers.BookResponseHelper;
 import com.project.shopapp.helpers.UploadDriveHelper;
 import com.project.shopapp.models.*;
 import com.project.shopapp.repositories.*;
 import com.project.shopapp.responses.BookAuthorResponse;
-import com.project.shopapp.responses.BookProjection;
-import com.project.shopapp.responses.Impl.BookProjectionImpl;
 import com.project.shopapp.services.IBookService;
+import com.project.shopapp.utils.CheckExistedUtils;
+import com.project.shopapp.utils.StringSimilarityUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,14 +29,12 @@ import java.util.stream.Collectors;
 public class BookServiceImpl implements IBookService {
 
     private BookRepository bookRepository;
-    private AuthorRepository authorRepository;
+    private BookResponseHelper bookResponseHelper;
     private CategoryRepository categoryRepository;
-    private PointPayRepository pointPayRepository;
-    private UserRepository userRepository;
-    private RoleRepository roleRepository;
-    private DriveService driveService;
     private UploadDriveHelper uploadDriveHelper;
-    private AuthorRepositoryCustom authorRepositoryCustom;
+    private AuthorHelper authorHelper;
+    private CheckExistedUtils checkExistedUtils;
+    private AuthorRepository authorRepository;
 
     @Override
     public List<BookDTO> findAll(Map<String, Object> params) {
@@ -68,6 +68,7 @@ public class BookServiceImpl implements IBookService {
             // Set giá trị tên và mô tả của danh mục vào BookDTO
 
             book.setCatedescription(categoryDescriptions);
+            book.setPdf(item.getPdf());
             //book.setNamecategory(categoryNames);
 
 
@@ -88,13 +89,8 @@ public class BookServiceImpl implements IBookService {
         book.setTotalpage(bookDTO.getTotalpage());
         book.setUploader(user);
 
-        if (pdf.isEmpty()) {
-            throw new DataNotFoundException("khong tim thay filePDF");
-        }
-
-        if (image.isEmpty()) {
-            throw new DataNotFoundException("khong tim thay image");
-        }
+        checkExistedUtils.checkFileExists(image, "image");
+        checkExistedUtils.checkFileExists(pdf, "pdf");
 
         String file = uploadDriveHelper.upDrive(pdf);
         String img = uploadDriveHelper.upDrive(image);
@@ -103,11 +99,12 @@ public class BookServiceImpl implements IBookService {
 
         Set<Author> authors = new HashSet<>();
         for (String username : bookDTO.getUsername()) {
-            Author existingAuthor = authorRepositoryCustom.getAuthorByUsernameAndStatus(username, 1);
+            Optional<Author> existingAuthor = authorHelper.getAuthorByUsernameAndStatus(username, 0);
 
-            if (existingAuthor != null) {
-                authors.add(existingAuthor);
-                existingAuthor.getBookSet().add(book);
+            if (existingAuthor.isPresent()) {
+                Author author = existingAuthor.get();
+                authors.add(author);
+                author.getBookSet().add(book);
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Khong tim thay ten username cua author tren");
             }
@@ -175,46 +172,43 @@ public class BookServiceImpl implements IBookService {
     }
 
     @Override
-    public ResponseEntity<?> getBooksByAuthor(String authorName) {
-
-        List<BookProjection> rawResults = bookRepository.findBookByAuthorName(authorName);
-
-        if (rawResults.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not found any book by author's name: " + authorName);
-        }
-
-        Map<Integer, BookProjection> groupedBooks = new HashMap<>();
-
-        rawResults.forEach(result -> {
-            if (!groupedBooks.containsKey(result.getBookID())) {
-                groupedBooks.put(result.getBookID(), new BookProjectionImpl(result));
-            }
-            groupedBooks.get(result.getBookID()).getCategories().add(result.getCategories().get(0));
-        });
-
-        return ResponseEntity.ok(new ArrayList<>(groupedBooks.values()));
+    public ResponseEntity<?> getBookBought(String username) {
+        List<Book> bookList = bookRepository.findBookBought(username);
+        List<BookAuthorResponse> res = bookResponseHelper.bookListGet(bookList);
+        return ResponseEntity.ok(res);
     }
 
-//    @Override
-//    public ResponseEntity<?> getBookBought(User user) {
-//        List<BookProjection> booKBought = bookRepository.findBookBoughtByUserId(user.getId());
-//        if (booKBought.isEmpty()) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Khong tim thay sach nao da mua");
-//        }
-//
-//        return ResponseEntity.ok(booKBought);
-//
-//    }
+    @Override
+    public ResponseEntity<?> getBookWritten(String username) {
+        List<Book> bookList = bookRepository.findBooksByUsername(username);
+        List<BookAuthorResponse> res = bookResponseHelper.bookListGet(bookList);
+        return ResponseEntity.ok(res);
+    }
 
     @Override
-    public ResponseEntity<?> getBookWritten(User user) {
-        List<BookAuthorResponse> bookList = bookRepository.findBooksByUserId(user.getId());
+    public ResponseEntity<?> getBooksByAuthor(String authorName) {
+        List<Author> authors = authorRepository.findAll();
 
+        List<Author> matchedAuthors = new ArrayList<>();
+        double similarityThreshold = 0.8;
 
-        if (bookList.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Khong tim thay sach nao da viet");
+        for (Author author : authors) {
+            double similarity = StringSimilarityUtil.calculateSimilarity(authorName, author.getUser().getFullName());
+            if (similarity >= similarityThreshold) {
+                matchedAuthors.add(author);
+            }
         }
 
-        return ResponseEntity.ok(bookList);
+        checkExistedUtils.checkObjectExisted(matchedAuthors, "Author");
+
+        List<Book> books = new ArrayList<>();
+        for (Author author : matchedAuthors) {
+            books.addAll(bookRepository.findBooksByUsername(author.getUser().getUsername()));
+        }
+
+        List<BookAuthorResponse> responses = bookResponseHelper.bookListGet(books);
+
+        return ResponseEntity.ok(responses);
+
     }
 }

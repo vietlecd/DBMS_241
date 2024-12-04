@@ -2,8 +2,7 @@ package com.project.shopapp.models;
 
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +12,9 @@ import java.util.Set;
 @Table(name = "book")
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,6 +44,8 @@ public class Book {
     private Integer publishyear;
     @Column(name = "status")
     private String status;
+
+
 
     @ManyToMany
     @JoinTable(

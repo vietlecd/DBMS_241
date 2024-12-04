@@ -19,8 +19,8 @@ public class Pay {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "point_id", referencedColumnName = "id")
-    private Point point;
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "book_id", referencedColumnName = "bookID")
