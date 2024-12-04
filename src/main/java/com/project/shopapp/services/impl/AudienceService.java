@@ -6,6 +6,7 @@ import com.project.shopapp.customexceptions.PermissionDenyException;
 import com.project.shopapp.models.Author;
 import com.project.shopapp.models.User;
 import com.project.shopapp.repositories.AuthorRepository;
+import com.project.shopapp.repositories.AuthorRepositoryCustom;
 import com.project.shopapp.repositories.UserRepository;
 import com.project.shopapp.responses.BaseProjection;
 import com.project.shopapp.services.IAudienceService;
@@ -22,7 +23,7 @@ import java.util.Set;
 @AllArgsConstructor
 public class AudienceService implements IAudienceService{
     private UserRepository userRepository;
-    private AuthorRepository authorRepository;
+    private AuthorRepositoryCustom authorRepositoryCustom;
 
     @Override
     public ResponseEntity<String> sendFollow(User user, String authorUsername) throws InvalidParamException {
@@ -43,7 +44,7 @@ public class AudienceService implements IAudienceService{
     }
 
     private Author findAuthor(User user, String authorUsername) throws InvalidParamException {
-        Author author = authorRepository.findAuthorByUser_Username(authorUsername);
+        Author author = authorRepositoryCustom.getAuthorByUsernameAndStatus(authorUsername, 1);
         if (author == null) {
             throw new DataNotFoundException("Author not found: " + authorUsername);
         }

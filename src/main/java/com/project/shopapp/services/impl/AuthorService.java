@@ -4,18 +4,21 @@ import com.project.shopapp.DTO.AuthorDTO;
 import com.project.shopapp.models.Author;
 import com.project.shopapp.customexceptions.DataNotFoundException;
 import com.project.shopapp.customexceptions.InvalidParamException;
+import com.project.shopapp.models.Role;
 import com.project.shopapp.models.User;
 import com.project.shopapp.repositories.AuthorRepository;
 import com.project.shopapp.repositories.AuthorRepositoryCustom;
 import com.project.shopapp.repositories.UserRepository;
 import com.project.shopapp.responses.AuthorResponse;
-import com.project.shopapp.responses.BaseProjection;
 import com.project.shopapp.services.IAuthorService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -56,89 +59,51 @@ public class AuthorService implements IAuthorService {
         else
            throw new InvalidParamException("Author has been existed");
     }
+    @Override
+    public ResponseEntity<String> acceptedAuthor(String username) {
+        Author author = authorRepositoryCustom.getAuthorByUsernameAndStatus(username, 0);
+        if (author != null && author.getStatus() == 0) {;
+            author.setStatus(1);
+            authorRepository.save(author);
+        } else {
+            throw new DataNotFoundException("Author not found" + username);
+        }
+
+        return new ResponseEntity<>("Add author successfully", HttpStatus.ACCEPTED);
+    }
 //
-//    @Override
-//    public ResponseEntity<String> acceptedAuthor(String username) {
-//        Author author = authorRepository.findAuthorByUsername(username);
-//
-//        try {
-//            user = userRepository.findByUsername(username)
-//                    .orElseThrow(() -> new DataNotFoundException("Author not found: " + username));
-//        } catch (DataNotFoundException e) {
-//            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-//        }
-//
-//        Optional<Author> author = authorRepository.findByUserId(user.getId());
-//        if (author.isPresent() && author.get().getStatus() == 0) {
-//            Author author1 = author.get();
-//            author1.setStatus(1);
-//            authorRepository.save(author1);
-//
-//            Role authorRole = new Role();
-//            authorRole.setId(0);
-//
-//            User user1 = author1.getUserId();
-//            user1.setRole(authorRole);
-//
-//            userRepository.save(user1);
-//
-//        } else {
-//            return new ResponseEntity<>("Khong tim thay Author" + username, HttpStatus.NOT_FOUND);
-//        }
-//
-//        return new ResponseEntity<>("Them thanh cong author", HttpStatus.ACCEPTED);
-//    }
-//
-//    @Override
-//    public ResponseEntity<String> deniedAuthor(String username) {
-//        User user;
-//
-//        try {
-//            user = userRepository.findByUsername(username)
-//                    .orElseThrow(() -> new DataNotFoundException("Author not found: " + username));
-//        } catch (DataNotFoundException e) {
-//            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-//        }
-//
-//        Optional<Author> author = authorRepository.findByUserId(user.getId());
-//        if (author.isPresent() && author.get().getStatus() == 0) {
-//            Author author1 = author.get();
-//            author1.setStatus(-1);
-//            authorRepository.save(author1);
-//        } else {
-//            return new ResponseEntity<>("Khong tim thay Author" + username, HttpStatus.NOT_FOUND);
-//        }
-//
-//        return new ResponseEntity<>("Them tu choi Author thanh cong", HttpStatus.ACCEPTED);
-//    }
-//
-//    @Override
-//    public ResponseEntity<String> deleteAuthor(String username) {
-//        User user;
-//
-//        try {
-//            user = userRepository.findByUsername(username)
-//                    .orElseThrow(() -> new DataNotFoundException("Author not found: " + username));
-//        } catch (DataNotFoundException e) {
-//            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-//        }
-//
-//        Optional<Author> author = authorRepository.findByUserIdAndStatus(user.getId());
-//        if (author.isPresent() && author.get().getStatus() == 1) {
-//            Author author1 = author.get();
-//            Role authorRole = new Role();
-//            authorRole.setId(2);
-//
-//            User user1 = author1.getUserId();
-//            user1.setRole(authorRole);
-//
-//            userRepository.save(user1);
-//
-//            authorRepository.delete(author1);
-//            return new ResponseEntity<>("Delete author successfully", HttpStatus.ACCEPTED);
-//        }
-//        return new ResponseEntity<>("No author found", HttpStatus.FORBIDDEN);
-//    }
+    @Override
+    public ResponseEntity<String> deniedAuthor(String username) {
+        Author author = authorRepositoryCustom.getAuthorByUsernameAndStatus(username, 0);
+        if (author != null && author.getStatus() == 0) {
+            author.setStatus(-1);
+            authorRepository.save(author);
+
+        } else {
+            throw new DataNotFoundException("Author not found" + username);
+        }
+
+        return new ResponseEntity<>("Deny author successfully", HttpStatus.ACCEPTED);
+    }
+
+    @Override
+    public ResponseEntity<String> deleteAuthor(String username) {
+        Author author = authorRepositoryCustom.getAuthorByUsernameAndStatus(username, 1);
+        if (author==null) {
+            throw new DataNotFoundException("Author not found" + username);
+        }
+        Role authorRole = new Role();
+        authorRole.setId(2);
+
+        User user1 = author.getUser();
+        user1.setRole(authorRole);
+
+        userRepository.save(user1);
+
+        authorRepository.delete(author);
+
+        return new ResponseEntity<>("Delete author successfully", HttpStatus.ACCEPTED);
+    }
 
     @Override
     public List<AuthorResponse> getAuThor() {

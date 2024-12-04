@@ -13,15 +13,10 @@ import java.util.List;
 public interface IAuthorService {
 
     AuthorResponse infoAuthor(User user);
-
     void becomeAuthor(User user, AuthorDTO authorDTO) throws InvalidParamException;
-
-//    ResponseEntity<String> acceptedAuthor(String username);
-//
-//    ResponseEntity<String> deniedAuthor(String username);
-//
-//    ResponseEntity<String> deleteAuthor(String username);
-//
+    ResponseEntity<String> acceptedAuthor(String username);
+    ResponseEntity<String> deniedAuthor(String username);
+    ResponseEntity<String> deleteAuthor(String username);
     List<AuthorResponse> getAuThor();
 
     List<AuthorResponse> getAuthorRequest();

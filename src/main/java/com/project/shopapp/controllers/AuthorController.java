@@ -32,6 +32,8 @@ public class AuthorController {
             return ResponseEntity.ok(author);
         } catch (DataNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
         }
 
     }
@@ -47,15 +49,22 @@ public class AuthorController {
         }
     }
 
-//    @PostMapping("/accept")
-//    public ResponseEntity<String> acceptedAuthor(@RequestParam String username) {
-//        return authorService.acceptedAuthor(username);
-//    }
+    @PostMapping("/accept")
+    public ResponseEntity<String> acceptedAuthor(@RequestParam String username) {
+        try {
+            return authorService.acceptedAuthor(username);
+        } catch (DataNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+
+    }
 //
-//    @PostMapping("/deny")
-//    public ResponseEntity<String> deniedAuthor(@RequestParam String username) {
-//        return authorService.deniedAuthor(username);
-//    }
+    @PostMapping("/deny")
+    public ResponseEntity<String> deniedAuthor(@RequestParam String username) {
+        return authorService.deniedAuthor(username);
+    }
 //
 //    @DeleteMapping("/delete")
 //    public ResponseEntity<String> deleteAuthor(@RequestParam String username) {

@@ -34,6 +34,7 @@ public class BookServiceImpl implements IBookService {
     private RoleRepository roleRepository;
     private DriveService driveService;
     private UploadDriveHelper uploadDriveHelper;
+    private AuthorRepositoryCustom authorRepositoryCustom;
 
     @Override
     public List<BookDTO> findAll(Map<String, Object> params) {
@@ -102,7 +103,7 @@ public class BookServiceImpl implements IBookService {
 
         Set<Author> authors = new HashSet<>();
         for (String username : bookDTO.getUsername()) {
-            Author existingAuthor = authorRepository.findAuthorByUser_Username(username);
+            Author existingAuthor = authorRepositoryCustom.getAuthorByUsernameAndStatus(username, 1);
 
             if (existingAuthor != null) {
                 authors.add(existingAuthor);
