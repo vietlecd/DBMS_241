@@ -19,7 +19,7 @@ public class Point extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User userId;
+    private User user;
 
     @Column(name = "amount")
     private Integer amount;

@@ -133,16 +133,12 @@ public class VNPayService implements IVNPayService {
     }
 
     public ResponseEntity<?> getPaymentsByUser(User user) {
-        List<Payment> payment = paymentRepository.findByUserId(user);
+        List<Payment> payment = paymentRepository.findByUserIdAndStatus(user, "SUCCESS");
         List<PaymentDTO> res = new ArrayList<>();
-
-        if (payment.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("user with not found any payment");
-        }
 
         for (Payment payment1 : payment) {
             PaymentDTO paymentDTO = PaymentDTO.builder()
-                    .orderInfo("Deposit")
+                    .orderInfo("DEPOSIT")
                     .paymentTime(payment1.getPayTime())
                     .transactionId(payment1.getVnpTxnRef())
                     .totalPrice(payment1.getPayAmount())

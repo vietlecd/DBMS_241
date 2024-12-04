@@ -6,10 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "user")
@@ -42,6 +39,9 @@ public class User extends BaseEntity implements UserDetails {
     @JoinColumn(name = "role_id")
     private Role role;
 
+    @Column(name = "total_point")
+    private Integer totalPoint;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Review> reviews;
 
@@ -51,7 +51,8 @@ public class User extends BaseEntity implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "author_id")
     )
-    private Set<Author> followedAuthor;
+    @Builder.Default
+    private Set<Author> followedAuthor = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -88,7 +89,7 @@ public class User extends BaseEntity implements UserDetails {
     }
 
     public void unfollowAuthor(Author author) {
-        this.followedAuthor.add(author);
-        author.getFollowers().add(this);
+        this.followedAuthor.remove(author);
+        author.getFollowers().remove(this);
     }
 }

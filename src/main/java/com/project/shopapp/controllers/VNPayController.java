@@ -43,7 +43,7 @@ public class VNPayController {
         return ResponseEntity.ok(vnpayUrl);
     }
 
-    @GetMapping("/vnpay-payment")
+    @GetMapping("/payment_return")
     public ResponseEntity<?> getOrder(HttpServletRequest request, HttpServletResponse response) {
         String vnp_TxnRef = request.getParameter("vnp_TxnRef");
         Optional<Payment> paymentOpt = paymentRepository.findByVnpTxnRef(vnp_TxnRef);

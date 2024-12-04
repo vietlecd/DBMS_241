@@ -9,10 +9,8 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface PointPayRepository extends JpaRepository<Pay, Integer> {
-    @Query("SELECT p FROM Pay p WHERE p.point.userId = :user")
-    List<Pay> findByUserId(User user);
+    List<Pay> findPayByUser(User user);
 
-    @Query("SELECT p FROM Pay p JOIN p.point c WHERE c.userId.id = :userId AND p.book.bookID = :bookId")
-    Pay findByUserIdAndId(@Param("userId") Integer userId, @Param("bookId") Integer bookId);
+    Pay findPayByUserAndBook_BookID(User user, Integer bookId);
 
 }
