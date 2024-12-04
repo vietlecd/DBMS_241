@@ -30,7 +30,7 @@ public class CookieUtil {
                 .secure(false)
                 .path("/")
                 .maxAge(COOKIE_EXPIRATION)
-                .sameSite("Lax")
+                .sameSite("None")
                 .build();
 
         response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());

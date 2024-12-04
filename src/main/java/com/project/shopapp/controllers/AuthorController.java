@@ -1,11 +1,16 @@
 package com.project.shopapp.controllers;
 
 import com.project.shopapp.DTO.AuthorDTO;
+import com.project.shopapp.customexceptions.DataNotFoundException;
+import com.project.shopapp.customexceptions.InvalidParamException;
 import com.project.shopapp.helpers.AuthenticationHelper;
+import com.project.shopapp.models.Author;
 import com.project.shopapp.models.User;
+import com.project.shopapp.responses.AuthorResponse;
 import com.project.shopapp.responses.BaseProjection;
 import com.project.shopapp.services.IAuthorService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -21,38 +26,58 @@ public class AuthorController {
 
     @GetMapping("/info")
     public ResponseEntity<?> infoAuthor(Authentication authentication) {
-        User user = authenticationHelper.getUser(authentication);
-        return authorService.infoAuthor(user);
+        try {
+            User user = authenticationHelper.getUser(authentication);
+            AuthorResponse author = authorService.infoAuthor(user);
+            return ResponseEntity.ok(author);
+        } catch (DataNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+
     }
 
     @PostMapping("/become")
-    public ResponseEntity<String> becomeAuthor(@RequestBody AuthorDTO authorDTO, Authentication authentication) {
-        User user = authenticationHelper.getUser(authentication);
-        return authorService.becomeAuthor(user, authorDTO);
+    public ResponseEntity<?> becomeAuthor(@RequestBody AuthorDTO authorDTO, Authentication authentication) {
+        try {
+            User user = authenticationHelper.getUser(authentication);
+            authorService.becomeAuthor(user, authorDTO);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(null);
+        } catch (InvalidParamException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PostMapping("/accept")
     public ResponseEntity<String> acceptedAuthor(@RequestParam String username) {
-        return authorService.acceptedAuthor(username);
-    }
+        try {
+            return authorService.acceptedAuthor(username);
+        } catch (DataNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
 
+    }
+//
     @PostMapping("/deny")
     public ResponseEntity<String> deniedAuthor(@RequestParam String username) {
         return authorService.deniedAuthor(username);
     }
-
-    @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteAuthor(@RequestParam String username) {
-        return authorService.deleteAuthor(username);
-    }
-
+//
+//    @DeleteMapping("/delete")
+//    public ResponseEntity<String> deleteAuthor(@RequestParam String username) {
+//        return authorService.deleteAuthor(username);
+//    }
+//
     @GetMapping("/getAuthor")
-    public List<BaseProjection> getAuthorList() {
+    public List<AuthorResponse> getAuthorList() {
         return authorService.getAuThor();
     }
 
     @GetMapping("/getAuthorRequest")
-    public List<BaseProjection> getAuthorRequest() {
+    public List<AuthorResponse> getAuthorRequest() {
         return authorService.getAuthorRequest();
     }
 

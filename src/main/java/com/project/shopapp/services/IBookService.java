@@ -21,7 +21,7 @@ public interface IBookService {
     boolean denyBookRequestCheck(Integer bookID);
     ResponseEntity<?> getBooksByAuthor(String authorUsername);
 
-    ResponseEntity<?> getBookBought(User user);
+//    ResponseEntity<?> getBookBought(User user);
 
     ResponseEntity<?> getBookWritten(User user);
 }

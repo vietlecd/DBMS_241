@@ -33,30 +33,24 @@ public class UserService implements IUserService {
             if (updateUserDTO == null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Du lieu kh duoc de trong");
             }
+            String username= updateUserDTO.getUsername();
+            String phoneNumber = updateUserDTO.getPhoneNumber();
 
-            if (updateUserDTO.getUsername() != null && !updateUserDTO.getUsername().equals(user.getUsername())) {
-                Optional<User> userWithSameUsername = userRepository.findByUsername(updateUserDTO.getUsername());
-                if (userWithSameUsername.isPresent() && !userWithSameUsername.get().getId().equals(user.getId())) {
+            if (username!= null) {
+                if (userRepository.existsByUsername(username)) {
                     return ResponseEntity.badRequest().body("username has been set yet.");
                 }
                 user.setUsername(updateUserDTO.getUsername());
             }
-            if (updateUserDTO.getPhoneNumber() != null && !updateUserDTO.getPhoneNumber().equals(user.getPhoneNumber())) {
-                Optional<User> userWithSamePhone = userRepository.findByPhoneNumber(updateUserDTO.getPhoneNumber());
-                if (userWithSamePhone.isPresent() && !userWithSamePhone.get().getId().equals(user.getId())) {
+            if (phoneNumber != null) {
+                if (userRepository.existsByPhoneNumber(phoneNumber)) {
                     return ResponseEntity.badRequest().body("phoneNumber has been set yet.");
                 }
                 user.setPhoneNumber(updateUserDTO.getPhoneNumber());
             }
-
-            if (updateUserDTO.getPassword() != null) {
-                user.setPassword(updateUserDTO.getPassword());
-            }
-
             if (updateUserDTO.getFullName() != null) {
                 user.setFullName(updateUserDTO.getFullName());
             }
-
             userRepository.save(user);
 
             return ResponseEntity.ok("Da cap nhat thanh cong");

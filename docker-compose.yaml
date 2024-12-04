@@ -1,8 +1,7 @@
 services:
   spring-boot-app:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: vietlecd/devjava:latest
     ports:
       - "8000:8080"
     env_file:

@@ -72,11 +72,11 @@
             return bookService.getBooksByAuthor(authorName);
         }
 
-        @GetMapping("/findBookBought")
-        public ResponseEntity<?> findBookBought(Authentication authentication) {
-            User user = authenticationHelper.getUser(authentication);
-            return bookService.getBookBought(user);
-        }
+//        @GetMapping("/findBookBought")
+//        public ResponseEntity<?> findBookBought(Authentication authentication) {
+//            User user = authenticationHelper.getUser(authentication);
+//            return bookService.getBookBought(user);
+//        }
 
         @GetMapping("/findBookWritten")
         public ResponseEntity<?> findBookWritten(Authentication authentication) {

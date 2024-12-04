@@ -1,8 +1,10 @@
 package com.project.shopapp.models;
 
+import com.project.shopapp.responses.AuthorResponse;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -19,7 +21,7 @@ public class Author {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User userId;
+    private User user;
 
     @ManyToMany
     @JoinTable(
@@ -29,6 +31,9 @@ public class Author {
     )
     Set<Book> bookSet;
 
+    @ManyToMany(mappedBy = "followedAuthor")
+    private Set<User> followers = new HashSet<>();
+
     @Column(name = "bio")
     private String bio;
 
@@ -37,4 +42,16 @@ public class Author {
 
     @Column(name = "status")
     private Integer status;
+
+    public void addFollower(User user) {
+        this.getFollowers().add(user);
+        user.getFollowedAuthor().add(this);
+    }
+
+    public void deleteFollower(User user) {
+        this.getFollowers().remove(user);
+        user.getFollowedAuthor().remove(this);
+    }
+
+
 }
