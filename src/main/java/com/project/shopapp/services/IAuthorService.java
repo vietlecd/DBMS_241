@@ -5,7 +5,6 @@ import com.project.shopapp.customexceptions.InvalidParamException;
 import com.project.shopapp.models.Author;
 import com.project.shopapp.models.User;
 import com.project.shopapp.responses.AuthorResponse;
-import com.project.shopapp.responses.BaseProjection;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;

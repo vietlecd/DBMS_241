@@ -27,14 +27,15 @@
         private AuthenticationHelper authenticationHelper;
 
         @GetMapping("/book")
-        public List<BookDTO> getBook(
+        public List<BookDTO> getBook (
                 @RequestParam Map<String, Object> params) {
             List<BookDTO> result = bookService.findAll(params);
             return result;
         }
 
         @GetMapping("/bookByAuthor")
-        public ResponseEntity<?> searchBookByAuthor(@RequestParam String authorName) {
+        public ResponseEntity<?> searchBookByAuthor (
+                @RequestParam String authorName) {
             try {
                 return bookService.getBooksByAuthor(authorName);
             } catch (DataNotFoundException e) {
@@ -96,7 +97,5 @@
             } catch (DataNotFoundException e) {
                 return ResponseEntity.badRequest().body(e.getMessage());
             }
-
         }
-
     }

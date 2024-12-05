@@ -1,6 +1,5 @@
 package com.project.shopapp.models;
 
-import com.project.shopapp.responses.AuthorResponse;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -54,7 +53,7 @@ public class Author {
     @Column(name = "id_card")
     private String idCard;
 
-    @Column(name = "status")
+    @Column(name = "a_status")
     private Integer status;
 
     public void addFollower(User user) {

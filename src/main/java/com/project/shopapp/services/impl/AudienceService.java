@@ -2,14 +2,11 @@ package com.project.shopapp.services.impl;
 
 import com.project.shopapp.customexceptions.DataNotFoundException;
 import com.project.shopapp.customexceptions.InvalidParamException;
-import com.project.shopapp.customexceptions.PermissionDenyException;
 import com.project.shopapp.helpers.AuthorHelper;
 import com.project.shopapp.models.Author;
 import com.project.shopapp.models.User;
 import com.project.shopapp.repositories.AuthorRepository;
-import com.project.shopapp.repositories.AuthorRepositoryCustom;
 import com.project.shopapp.repositories.UserRepository;
-import com.project.shopapp.responses.BaseProjection;
 import com.project.shopapp.services.IAudienceService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -17,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -36,8 +32,7 @@ public class AudienceService implements IAudienceService{
         author.addFollower(user);
         userRepository.save(user);
         return new ResponseEntity<>("Follow request sent successfully", HttpStatus.ACCEPTED);
-
-        }
+    }
 
     public ResponseEntity<String> deleteFollow(User user, String authorUsername) throws InvalidParamException {
         Author author = findAuthor(user, authorUsername);

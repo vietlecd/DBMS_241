@@ -13,6 +13,9 @@ import com.project.shopapp.services.IBookService;
 import com.project.shopapp.utils.CheckExistedUtils;
 import com.project.shopapp.utils.StringSimilarityUtil;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -21,6 +24,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -61,14 +66,10 @@ public class BookServiceImpl implements IBookService {
             Set<String> categoryNames = categories.stream()
                     .map(Category::getNamecategory)
                     .collect(Collectors.toSet());
-            String categoryDescriptions = categories.stream()
-                    .map(Category::getCatedescription)
-                    .collect(Collectors.joining(", "));
 
             // Set giá trị tên và mô tả của danh mục vào BookDTO
 
-            book.setCatedescription(categoryDescriptions);
-            book.setPdf(item.getPdf());
+
             //book.setNamecategory(categoryNames);
 
 
@@ -92,28 +93,19 @@ public class BookServiceImpl implements IBookService {
         checkExistedUtils.checkFileExists(image, "image");
         checkExistedUtils.checkFileExists(pdf, "pdf");
 
-        String file = uploadDriveHelper.upDrive(pdf);
-        String img = uploadDriveHelper.upDrive(image);
-        book.setPdf(file);
-        book.setCoverimage(img);
-
         Set<Author> authors = new HashSet<>();
         for (String username : bookDTO.getUsername()) {
-            Optional<Author> existingAuthor = authorHelper.getAuthorByUsernameAndStatus(username, 0);
+            Optional<Author> existingAuthor = authorHelper.getAuthorByUsernameAndStatus(username, 1);
+            checkExistedUtils.checkObjectExisted(existingAuthor, "Author");
 
-            if (existingAuthor.isPresent()) {
-                Author author = existingAuthor.get();
-                authors.add(author);
-                author.getBookSet().add(book);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Khong tim thay ten username cua author tren");
-            }
+            Author author = existingAuthor.get();
+            authors.add(author);
+            author.getBookSet().add(book);
         }
         book.setAuthorList(authors);
 
         Set<String> categoryNames = bookDTO.getNamecategory();
         Set<Category> categories = new HashSet<>();
-
         for (String categoryName : categoryNames) {
             List<Category> existingCategories = categoryRepository.findByNamecategory(categoryName);
             if (categoryName == null) {
@@ -125,6 +117,11 @@ public class BookServiceImpl implements IBookService {
                 category.getBooks().add(book);
             }
         }
+
+        String file = uploadDriveHelper.upDrive(pdf);
+        String img = uploadDriveHelper.upDrive(image);
+        book.setPdf(file);
+        book.setCoverimage(img);
 
         book.setCategories(categories);
 
@@ -180,7 +177,7 @@ public class BookServiceImpl implements IBookService {
 
     @Override
     public ResponseEntity<?> getBookWritten(String username) {
-        List<Book> bookList = bookRepository.findBooksByUsername(username);
+        List<Book> bookList = bookRepository.findBooksByAuthorUsername(username);
         List<BookAuthorResponse> res = bookResponseHelper.bookListGet(bookList);
         return ResponseEntity.ok(res);
     }
@@ -188,7 +185,6 @@ public class BookServiceImpl implements IBookService {
     @Override
     public ResponseEntity<?> getBooksByAuthor(String authorName) {
         List<Author> authors = authorRepository.findAll();
-
         List<Author> matchedAuthors = new ArrayList<>();
         double similarityThreshold = 0.8;
 
@@ -202,9 +198,13 @@ public class BookServiceImpl implements IBookService {
         checkExistedUtils.checkObjectExisted(matchedAuthors, "Author");
 
         List<Book> books = new ArrayList<>();
-        for (Author author : matchedAuthors) {
-            books.addAll(bookRepository.findBooksByUsername(author.getUser().getUsername()));
-        }
+        matchedAuthors.forEach(author -> {
+            List<Book> foundBooks = bookRepository.findBooksByAuthorUsername(author.getUser().getUsername());
+            if (foundBooks != null && !foundBooks.isEmpty()) {
+                books.addAll(foundBooks);
+            }
+        });
+
 
         List<BookAuthorResponse> responses = bookResponseHelper.bookListGet(books);
 
