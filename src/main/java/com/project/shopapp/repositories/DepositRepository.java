@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DepositRepository extends JpaRepository<Point, Integer> {
-    Point findByUserIdAndType(User user, String type);
+    Point findByUserAndType(User user, String type);
 }

@@ -30,7 +30,11 @@ public class Point extends BaseEntity{
     @Column(name = "view_count")
     private Integer viewCount;
 
-    @ManyToMany(mappedBy = "pointSet")
-    private Set<Payment> paymentSet;
+    public void addPoint(int point) {
+        if (this.amount == null) {
+            amount = 0; 
+        }
+        this.setAmount(this.amount + point);
+    }
 
 }

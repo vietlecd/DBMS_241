@@ -10,7 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
-    Optional<Payment> findByVnpTxnRef(String vnp_TxnRef);
-
+    Optional<Payment> findPaymentByVnpTxnRef(String vnp_TxnRef);
     List<Payment> findByUserIdAndStatus(User user, String status);
 }

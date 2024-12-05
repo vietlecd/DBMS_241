@@ -17,7 +17,7 @@ public class DepositService implements IDepositService {
 
     @Override
     public Point depositPoint(int amount, User user) {
-        Point exPoint = depositRepository.findByUserIdAndType(user, "DEPOSIT");
+        Point exPoint = depositRepository.findByUserAndType(user, "DEPOSIT");
 
         int newPoint;
         if (exPoint != null) {
@@ -38,9 +38,7 @@ public class DepositService implements IDepositService {
 
     @Override
     public void createDeposit(Payment payment, Point point) {
-        payment.getPointSet().add(point);
+        point.addPoint(payment.getPayAmount());
         paymentRepository.save(payment);
     }
-
-
 }

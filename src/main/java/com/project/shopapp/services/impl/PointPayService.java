@@ -61,7 +61,7 @@ public class PointPayService implements IPayService {
             for (Pay pay : history) {
                 PaymentDTO paymentDTO = PaymentDTO.builder()
                         .orderInfo("Point Payment")
-                        .totalPrice(String.valueOf(pay.getBook_price()))
+                        .totalPrice(pay.getBook_price())
                         .transactionId(String.valueOf(pay.getId()))
                         .paymentTime(String.valueOf(pay.getTimestamp()))
                         .build();

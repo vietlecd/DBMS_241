@@ -46,7 +46,7 @@ public class VNPayController {
     @GetMapping("/payment_return")
     public ResponseEntity<?> getOrder(HttpServletRequest request, HttpServletResponse response) {
         String vnp_TxnRef = request.getParameter("vnp_TxnRef");
-        Optional<Payment> paymentOpt = paymentRepository.findByVnpTxnRef(vnp_TxnRef);
+        Optional<Payment> paymentOpt = paymentRepository.findPaymentByVnpTxnRef(vnp_TxnRef);
 
         if (paymentOpt.isEmpty()) {
             return ResponseEntity.badRequest().body("Transaction failed: Payment record not found");
