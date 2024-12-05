@@ -24,7 +24,7 @@ public class Payment {
     private User userId;
 
     @Column(name = "pay_amount")
-    private String payAmount;
+    private Integer payAmount;
 
     @Column(name = "pay_time")
     private String payTime;
@@ -34,14 +34,6 @@ public class Payment {
 
     @Column(name = "status")
     private String status;  // Status of the payment (e.g., "PENDING", "SUCCESS", "FAILED")
-
-    @ManyToMany
-    @JoinTable (
-            name = "deposit_withdraw",
-            joinColumns = @JoinColumn(name = "payment_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "point_id", referencedColumnName = "id")
-    )
-    private Set<Point> pointSet;
 
 
 }

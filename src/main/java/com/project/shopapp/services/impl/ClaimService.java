@@ -123,7 +123,7 @@ public class ClaimService implements IClaimService {
     }
 
     private Claim getOrCreateClaim(User user) {
-        Claim claim = claimRepository.findByUserIdAndPointId(user.getId(), getOrCreateUserPoint(user).getId());
+        Claim claim = claimRepository.findByUserIdAndPointId(user, getOrCreateUserPoint(user));
         if (claim == null) {
             claim = new Claim();
             claim.setUserId(user);

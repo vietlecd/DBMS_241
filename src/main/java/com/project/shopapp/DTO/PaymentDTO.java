@@ -22,7 +22,7 @@ public class PaymentDTO implements Serializable {
     @JsonProperty("paymentTime")
     private String paymentTime;
     private String transactionId;
-    private String totalPrice;
+    private Integer totalPrice;
 
 
 }

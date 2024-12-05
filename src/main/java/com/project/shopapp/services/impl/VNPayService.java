@@ -57,7 +57,7 @@ public class VNPayService implements IVNPayService {
         Payment payment = new Payment();
         payment.setUserId(user);
         payment.setPayTime(new SimpleDateFormat("yyyy-MM-dd HH-mm-ss").format(new Date()));
-        payment.setPayAmount(String.valueOf(total));
+        payment.setPayAmount(total);
         payment.setVnpTxnRef(vnp_TxnRef);
         payment.setStatus("PENDING");
         paymentRepository.save(payment);
@@ -110,7 +110,7 @@ public class VNPayService implements IVNPayService {
 
 //            String signValue = VNPayConfig.hashAllFields(fields);
         String vnp_TxnRef = request.getParameter("vnp_TxnRef");
-        Optional<Payment> optionalPayment = paymentRepository.findByVnpTxnRef(vnp_TxnRef);
+        Optional<Payment> optionalPayment = paymentRepository.findPaymentByVnpTxnRef(vnp_TxnRef);
 
         if (optionalPayment.isPresent()) {
             Payment payment = optionalPayment.get();
@@ -118,7 +118,7 @@ public class VNPayService implements IVNPayService {
             if ("00".equals(request.getParameter("vnp_TransactionStatus"))) {
                 payment.setStatus("SUCCESS");
                 //Set Point
-                int total = Integer.parseInt(payment.getPayAmount());
+                int total = payment.getPayAmount();
                 Point point = pointService.depositPoint(total, user);
                 pointService.createDeposit(payment, point);
                 //***********************//

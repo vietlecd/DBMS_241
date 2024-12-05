@@ -11,13 +11,18 @@ public class CheckExistedUtils {
             throw new DataNotFoundException(fileName + " not found");
         }
     }
-
     public void checkObjectExisted(Object object, String objectName) {
         if (object == null) {
             throw new DataNotFoundException(objectName + " not found");
         }
         if (object instanceof String && ((String) object).trim().isEmpty()) {
             throw new DataNotFoundException(objectName + " is empty");
+        }
+    }
+
+    public void checkStatusExisted(Boolean status, String statusName) {
+        if (!status) {
+            throw new DataNotFoundException(statusName + " not found");
         }
     }
 

@@ -1,5 +1,6 @@
 package com.project.shopapp.repositories;
 
+import com.project.shopapp.models.Book;
 import com.project.shopapp.models.ListReading;
 import com.project.shopapp.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,11 +13,5 @@ import java.util.Set;
 
 @Repository
 public interface ListReadingRepository extends JpaRepository<ListReading, Integer> {
-    @Query("SELECT lr FROM ListReading lr JOIN lr.bookSet b WHERE lr.userId.id = :userId AND b.bookID = :bookId")
-    Set<ListReading> findAllByUserIdAndBookId(@Param("userId") Integer userId, @Param("bookId") Integer bookId);
-
-    Optional<ListReading> findFirstByUserId(User user);
-
-    @Query("SELECT lr FROM ListReading lr JOIN lr.bookSet WHERE lr.userId.id = :userId")
-    Optional<ListReading> findFirstByUserIdAndBooks(@Param("userId") Integer userId);
+    Optional<ListReading> findFirstByUser(User user);
 }
