@@ -1,6 +1,7 @@
 package com.project.shopapp.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -42,16 +43,16 @@ public class Book {
 
     @Column(name = "publishyear")
     private Integer publishyear;
-    @Column(name = "status")
+
+    @Column(name = "b_status")
+    @JsonIgnore
     private String status;
 
-
-
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "cate", // Tên bảng trung gian
-            joinColumns = @JoinColumn(name = "bookID", referencedColumnName = "bookID"), // Tham chiếu đến bookID của BookEntity
-            inverseJoinColumns = @JoinColumn(name = "cateID", referencedColumnName = "cateID") // Tham chiếu đến cateID của CategoryEntity
+            joinColumns = @JoinColumn(name = "bookID", referencedColumnName = "bookID"),
+            inverseJoinColumns = @JoinColumn(name = "cateID", referencedColumnName = "cateID")
     )
     private Set<Category> categories;
 
@@ -70,7 +71,7 @@ public class Book {
     @ManyToMany(mappedBy = "bookSet")
     private List<ListReading> listReadings;
 
-    @ManyToMany(mappedBy = "bookSet")
+    @ManyToMany(mappedBy = "bookSet", fetch = FetchType.EAGER)
     Set<Author> authorList;
 
 }

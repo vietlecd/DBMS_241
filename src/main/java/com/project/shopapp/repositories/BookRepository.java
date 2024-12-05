@@ -2,22 +2,27 @@ package com.project.shopapp.repositories;
 
 
 import com.project.shopapp.models.Book;
-import com.project.shopapp.responses.BookAuthorResponse;
-import com.project.shopapp.responses.BookProjection;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long>, BookRepositoryCustom {
+
     Book findByBookID(Integer bookID);
-    @Query(value = "CALL get_books_by_uploader_username(:p_uploader_username)", nativeQuery = true)
-    List<Book> findBooksByUsername(@Param("p_uploader_username") String username);
-    @Query(value = "CALL find_book_bought(:p_username)", nativeQuery = true)
+
+    @Procedure(procedureName = "find_book_bought")
     List<Book> findBookBought(@Param("p_username") String username);
 
+    @Procedure(procedureName = "find_book_by_author")
+//    @Query(value = "CALL find_book_by_author(:p_author_username)", nativeQuery = true)
+    List<Book> findBooksByAuthorUsername(@Param("p_author_username") String p_author_username);
 }

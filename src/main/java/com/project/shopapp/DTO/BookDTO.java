@@ -59,9 +59,6 @@ public class BookDTO {
     @NotBlank(message = "username kh duoc de trong")
     private Set<String> username;
 
-    @JsonProperty("pdf")
-    private String pdf;
-
     public void setNamecategory(@JsonProperty("namecategory") String namecategoryString) {
         if (namecategoryString != null && !namecategoryString.isEmpty()) {
             this.namecategory = new HashSet<>(Arrays.asList(namecategoryString.split(",\\s*")));

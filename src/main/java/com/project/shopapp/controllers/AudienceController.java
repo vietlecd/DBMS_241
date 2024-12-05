@@ -5,14 +5,12 @@ import com.project.shopapp.customexceptions.InvalidParamException;
 import com.project.shopapp.helpers.AuthenticationHelper;
 import com.project.shopapp.models.Author;
 import com.project.shopapp.models.User;
-import com.project.shopapp.responses.BaseProjection;
 import com.project.shopapp.services.IAudienceService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Set;
 
 @RestController
