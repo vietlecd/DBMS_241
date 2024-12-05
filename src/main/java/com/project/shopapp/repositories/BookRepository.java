@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @Repository
-public interface BookRepository extends JpaRepository<Book, Long>, BookRepositoryCustom {
+public interface BookRepository extends JpaRepository<Book, Long> {
 
     Book findByBookID(Integer bookID);
 
@@ -23,6 +23,11 @@ public interface BookRepository extends JpaRepository<Book, Long>, BookRepositor
     List<Book> findBookBought(@Param("p_username") String username);
 
     @Procedure(procedureName = "find_book_by_author")
-//    @Query(value = "CALL find_book_by_author(:p_author_username)", nativeQuery = true)
     List<Book> findBooksByAuthorUsername(@Param("p_author_username") String p_author_username);
+
+    @Procedure(procedureName = "count_book_written")
+    Integer count_book_written(@Param("p_author_username") String username);
+
+    @Procedure(procedureName = "GetBooksByParams")
+    List<Book> GetBooksByParams(@Param("categoryName") String categoryName);
 }

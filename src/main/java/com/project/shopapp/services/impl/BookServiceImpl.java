@@ -42,40 +42,10 @@ public class BookServiceImpl implements IBookService {
     private AuthorRepository authorRepository;
 
     @Override
-    public List<BookDTO> findAll(Map<String, Object> params) {
-        // Fetch list of Book using JPA with filters
-        List<Book> bookEntities = bookRepository.findByParamsAndTypeCode(params);
-        List<BookDTO> result = new ArrayList<>();
-
-        // Convert each Book to BookDTO
-        for (Book item : bookEntities) {
-            BookDTO book = new BookDTO();
-            book.setTitle(item.getTitle());
-
-            book.setDescription(item.getDescription());
-            book.setBookID(item.getBookID());
-            book.setPrice(item.getPrice());
-            book.setPublishyear(item.getPublishyear());
-            book.setCoverimage(item.getCoverimage());
-
-            // Lấy tên và mô tả của các danh mục liên quan
-
-            Set<Category> categories = item.getCategories();
-
-            // Chuyển đổi Set<Category> thành Set<String> cho tên và mô tả danh mục
-            Set<String> categoryNames = categories.stream()
-                    .map(Category::getNamecategory)
-                    .collect(Collectors.toSet());
-
-            // Set giá trị tên và mô tả của danh mục vào BookDTO
-
-
-            //book.setNamecategory(categoryNames);
-
-
-            result.add(book);
-        }
-
+    public List<BookAuthorResponse> findAll(String params) {
+        List<Book> bookEntities = bookRepository.GetBooksByParams(params);
+        checkExistedUtils.checkObjectExisted(bookEntities, "Book");
+        List<BookAuthorResponse> result = bookResponseHelper.bookListGet(bookEntities);
         return result;
     }
     @Override
@@ -210,5 +180,11 @@ public class BookServiceImpl implements IBookService {
 
         return ResponseEntity.ok(responses);
 
+    }
+
+    @Override
+    public ResponseEntity<?> countBookWritten(String username) {
+        Integer res = bookRepository.count_book_written(username);
+        return ResponseEntity.ok(res);
     }
 }
