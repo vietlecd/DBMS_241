@@ -53,8 +53,6 @@ public class WebSecurityConfig {
                                     String.format("%s/findBookAuthor/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
 
                             .requestMatchers(POST,
-                                    String.format("%s/users/logout", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR, Role.ADMIN)
-                            .requestMatchers(POST,
                                     String.format("%s/payment/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
                             .requestMatchers(GET,
                                     String.format("%s/payment/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
@@ -100,6 +98,9 @@ public class WebSecurityConfig {
                                     String.format("%s/submitOrder", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
 
                             .requestMatchers(POST,
+                                    String.format("%s/users/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
+
+                            .requestMatchers(GET,
                                     String.format("%s/users/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
 
                             .requestMatchers(GET,

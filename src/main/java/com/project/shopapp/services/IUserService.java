@@ -8,4 +8,6 @@ public interface IUserService {
     ResponseEntity<?> userInfo(User user);
 
     ResponseEntity<?> updateUser(UpdateUserDTO updateUserDTO, User user);
+
+    ResponseEntity<?> countUserPoint(User user);
 }

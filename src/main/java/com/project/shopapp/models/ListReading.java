@@ -11,7 +11,6 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "list_reading")
-//@IdClass(ListId.class)
 @Builder
 public class ListReading extends BaseEntity {
 
@@ -21,7 +20,7 @@ public class ListReading extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User userId;
+    private User user;
 
     @ManyToMany
     @JoinTable(
@@ -30,4 +29,15 @@ public class ListReading extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "book_id")
     )
     Set<Book> bookSet;
+
+    public void addBook(Book book) {
+        this.getBookSet().add(book);
+        book.getListReadings().add(this);
+    }
+
+    public boolean removeBook(Book book) {
+        this.getBookSet().remove(book);
+        book.getListReadings().remove(this);
+        return true;
+    }
 }

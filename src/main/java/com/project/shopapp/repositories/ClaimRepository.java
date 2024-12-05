@@ -1,24 +1,24 @@
 package com.project.shopapp.repositories;
 
 import com.project.shopapp.models.Claim;
+import com.project.shopapp.models.Point;
+import com.project.shopapp.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @Repository
 public interface ClaimRepository extends JpaRepository<Claim, Integer> {
 
-//    @Query("SELECT c FROM Claim c WHERE c.userId = :user AND c.claimType = :claimType")
-//    Claim findByUserIdAndClaimType(@Param("user") User user, @Param("claimType") String claimType);
+    Claim findByUserIdAndPointId(User user, Point point);
 
-    @Query("SELECT c FROM Claim c WHERE c.userId.id = :user AND c.pointId.id = :pointId")
-    Claim findByUserIdAndPointId(@Param("user") Integer userId, @Param("pointId") Integer pointId);
-
-    @Query("SELECT MAX(c.claimDate) FROM Claim c WHERE c.userId.id = :userId")
-    LocalDate findLastClaimDateByUserId(@Param("userId") Integer userId);
+    @Procedure(procedureName = "findLastClaimDateByUserId")
+    LocalDate findLastClaimDateByUserId(@Param("p_user_id") Integer userId);
 
 
 }

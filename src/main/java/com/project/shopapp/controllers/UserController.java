@@ -1,6 +1,7 @@
 package com.project.shopapp.controllers;
 
 import com.project.shopapp.DTO.UpdateUserDTO;
+import com.project.shopapp.customexceptions.DataNotFoundException;
 import com.project.shopapp.helpers.AuthenticationHelper;
 import com.project.shopapp.models.User;
 import com.project.shopapp.services.IUserService;
@@ -18,13 +19,32 @@ public class UserController {
     private AuthenticationHelper authenticationHelper;
     @GetMapping("")
     public ResponseEntity<?> userInfo(Authentication authentication) {
-        User user = authenticationHelper.getUser(authentication);
-        return userService.userInfo(user);
+        try {
+            User user = authenticationHelper.getUser(authentication);
+            return userService.userInfo(user);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
     }
 
     @PutMapping("/update")
     public ResponseEntity<?> updateUser(@RequestBody UpdateUserDTO updateUserDTO, Authentication authentication) {
-        User user = authenticationHelper.getUser(authentication);
-        return userService.updateUser(updateUserDTO, user);
+        try {
+            User user = authenticationHelper.getUser(authentication);
+            return userService.updateUser(updateUserDTO, user);
+        } catch (DataNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/countPoint")
+    public ResponseEntity<?> countUserPoint(Authentication authentication) {
+        try {
+            User user = authenticationHelper.getUser(authentication);
+            return userService.countUserPoint(user);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
