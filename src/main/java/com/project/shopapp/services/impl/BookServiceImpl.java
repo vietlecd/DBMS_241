@@ -40,6 +40,9 @@ public class BookServiceImpl implements IBookService {
     private AuthorHelper authorHelper;
     private CheckExistedUtils checkExistedUtils;
     private AuthorRepository authorRepository;
+    private NotificationService notificationService;
+
+
 
     @Override
     public List<BookAuthorResponse> findAll(String params) {
@@ -132,11 +135,22 @@ public class BookServiceImpl implements IBookService {
         Book book = bookRepository.findByBookID(bookID);
 
         if (book != null) {
+            // Lấy thông tin người dùng từ đối tượng User
+            User user = book.getUploader(); // Lấy đối tượng User từ sách
+
+
+            // Tạo thông báo cho người dùng
+            String message = "Your book request for '" + book.getTitle() + "' has been denied.";
+            notificationService.createNotification(message, user); // Gửi thông báo với tên người dùng
+            bookRepository.deleteAuthorBookByBookID(bookID);
+            // Xóa sách khỏi cơ sở dữ liệu
             bookRepository.delete(book);
+
             return true;
         }
         return false;
     }
+
 
     @Override
     public ResponseEntity<?> getBookBought(String username) {
