@@ -5,6 +5,7 @@
     import com.project.shopapp.customexceptions.InvalidParamException;
     import com.project.shopapp.helpers.AuthenticationHelper;
     import com.project.shopapp.models.User;
+    import com.project.shopapp.responses.BookAuthorResponse;
     import com.project.shopapp.services.IBookService;
     import org.springframework.beans.factory.annotation.Autowired;
     import org.springframework.http.HttpStatus;
@@ -27,10 +28,14 @@
         private AuthenticationHelper authenticationHelper;
 
         @GetMapping("/book")
-        public List<BookDTO> getBook (
-                @RequestParam Map<String, Object> params) {
-            List<BookDTO> result = bookService.findAll(params);
-            return result;
+        public ResponseEntity<?> getBook (
+                @RequestParam String params) {
+            try {
+                List<BookAuthorResponse> result = bookService.findAll(params);
+                return ResponseEntity.ok(result);
+            } catch (DataNotFoundException e) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+            }
         }
 
         @GetMapping("/bookByAuthor")
@@ -94,6 +99,16 @@
             try {
                 String username = authenticationHelper.getUsername(authentication);
                 return bookService.getBookWritten(username);
+            } catch (DataNotFoundException e) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+            }
+        }
+
+        @GetMapping("/countBookWritten")
+        public ResponseEntity<?> countBookWritten(Authentication authentication) {
+            try {
+                String username = authenticationHelper.getUsername(authentication);
+                return bookService.countBookWritten(username);
             } catch (DataNotFoundException e) {
                 return ResponseEntity.badRequest().body(e.getMessage());
             }

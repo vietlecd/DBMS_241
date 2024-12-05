@@ -2,6 +2,7 @@ package com.project.shopapp.services;
 
 import com.project.shopapp.DTO.BookDTO;
 import com.project.shopapp.models.User;
+import com.project.shopapp.responses.BookAuthorResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface IBookService {
-    List<BookDTO> findAll(Map<String, Object> params);
+    List<BookAuthorResponse> findAll(String params);
     ResponseEntity<?> createBook(BookDTO bookDTO, MultipartFile pdf, MultipartFile image, User user) throws IOException;
 
     boolean deleteBookBybookID(Integer bookID);
@@ -24,4 +25,6 @@ public interface IBookService {
     ResponseEntity<?> getBooksByAuthor(String authorName);
 
     ResponseEntity<?> getBookWritten(String username);
+
+    ResponseEntity<?> countBookWritten(String username);
 }
