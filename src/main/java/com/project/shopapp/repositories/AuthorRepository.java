@@ -9,9 +9,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface AuthorRepository extends JpaRepository<Author, Long>{
+public interface AuthorRepository extends JpaRepository<Author, Integer>{
     boolean existsAuthorByUser(User user);
     Optional<Author> findAuthorByUser_Username(String username);
 
     List<Author> findAuthorByUser_FullName(String fullName);
+
 }

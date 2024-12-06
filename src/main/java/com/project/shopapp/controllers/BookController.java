@@ -20,12 +20,13 @@
 
     @RestController
     @RequestMapping("${api.prefix}")
-    public class BookController {
+    public class BookController{
 
         @Autowired
         private IBookService bookService;
         @Autowired
         private AuthenticationHelper authenticationHelper;
+
 
         @GetMapping("/book")
         public ResponseEntity<?> getBook (
@@ -62,6 +63,7 @@
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
             }
         }
+
 
 
         @DeleteMapping("/deleteBook")
