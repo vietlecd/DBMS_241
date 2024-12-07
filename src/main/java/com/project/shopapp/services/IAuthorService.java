@@ -22,6 +22,8 @@ public interface IAuthorService {
 
     List<AuthorResponse> getAuthorRequest();
 
+    Integer countFollowers(User user);
 
 
+    Integer countRecommendBookWritten(User user);
 }

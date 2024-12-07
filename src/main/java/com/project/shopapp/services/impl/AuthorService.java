@@ -20,7 +20,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -153,6 +152,29 @@ public class AuthorService implements IAuthorService {
             return Collections.emptyList();
         }
     }
+
+    @Override
+    public Integer countFollowers(User user) {
+        Optional<Author> author = authorRepository.findAuthorByUser_Username(user.getUsername());
+        checkExistedUtils.checkObjectExisted(author, "Author");
+        Author author1 = author.get();
+
+        Integer res = 0;
+        res = authorRepository.count_followers(author1.getId());
+        return res;
+    }
+
+    @Override
+    public Integer countRecommendBookWritten(User user) {
+        Optional<Author> author = authorRepository.findAuthorByUser_Username(user.getUsername());
+        checkExistedUtils.checkObjectExisted(author, "Author");
+        Author author1 = author.get();
+
+        Integer res = 0;
+        res = authorRepository.count_recommended_books_by_author(author1.getId());
+        return res;
+    }
+
 
 
 }

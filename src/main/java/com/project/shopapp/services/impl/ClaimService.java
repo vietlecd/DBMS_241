@@ -68,34 +68,6 @@ public class ClaimService implements IClaimService {
         pointRepository.save(claimPoints);
     }
 
-    @Override
-    public ResponseEntity<?> claimAdPoint(User user) {
-        int adPointValue = 50;
-        Point claimPoints = getOrCreateUserPoint(user);
-        Claim adClaim = getOrCreateClaim(user);
-
-        LocalDate today = LocalDate.now();
-        LocalDate lastClaimDate = (adClaim.getClaimDate() != null) ? adClaim.getClaimDate() : null;
-
-        // Reset
-        if (lastClaimDate == null || !lastClaimDate.isEqual(today)) {
-            claimPoints.setViewCount(0);
-            adClaim.setClaimDate(today);
-        }
-
-        if (claimPoints.getViewCount() < 5) {
-            claimPoints.setViewCount(claimPoints.getViewCount() + 1);
-            claimPoints.setAmount(claimPoints.getAmount() + adPointValue);
-
-            claimRepository.save(adClaim);
-            pointRepository.save(claimPoints);
-
-            return ResponseEntity.ok("Claimed 50 points for qc view " + claimPoints.getViewCount() + ".");
-        } else {
-            return ResponseEntity.badRequest().body("Nap tien di, 5 lan duoc roi");
-        }
-    }
-
     private int calculateStreakCount(User user) {
         int streakCount = 1;
         LocalDate currentDate = LocalDate.now();
@@ -142,7 +114,6 @@ public class ClaimService implements IClaimService {
             userPoint = Point.builder()
                     .user(user)
                     .amount(0)
-                    .viewCount(0)
                     .type("CLAIM")
                     .build();
             pointRepository.save(userPoint);

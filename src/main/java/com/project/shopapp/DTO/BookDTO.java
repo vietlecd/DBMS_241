@@ -43,6 +43,10 @@ public class BookDTO {
     @NotBlank(message = "category kh duoc de trong")
     private Set<String> namecategory;
 
+    @JsonProperty("authorname")
+    @NotBlank(message = "ten tg kh duoc de trong")
+    private String author_name;
+
     @JsonProperty("description")
     @NotBlank(message = "mo ta sach kh duoc de trong")
     private String description;
@@ -66,9 +70,5 @@ public class BookDTO {
             this.namecategory = new HashSet<>();
         }
     }
-
-
-
-
 
 }

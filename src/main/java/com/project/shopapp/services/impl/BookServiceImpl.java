@@ -5,20 +5,18 @@ import com.project.shopapp.DTO.BookDTO;
 import com.project.shopapp.customexceptions.DataNotFoundException;
 import com.project.shopapp.helpers.AuthorHelper;
 import com.project.shopapp.helpers.BookResponseHelper;
+import com.project.shopapp.helpers.BookViewHelper;
 import com.project.shopapp.helpers.UploadDriveHelper;
 import com.project.shopapp.models.*;
 import com.project.shopapp.repositories.*;
 import com.project.shopapp.responses.BookAuthorResponse;
 import com.project.shopapp.services.IBookService;
+import com.project.shopapp.services.IDriveService;
 import com.project.shopapp.services.INotificationService;
 import com.project.shopapp.utils.CheckExistedUtils;
 import com.project.shopapp.utils.NotificationUtils;
 import com.project.shopapp.utils.StringSimilarityUtil;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,9 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -44,8 +39,24 @@ public class BookServiceImpl implements IBookService {
     private AuthorRepository authorRepository;
     private INotificationService notificationService;
     private NotificationUtils notificationUtils;
+    private IDriveService driveService;
+    private BookViewHelper bookViewHelper;
 
+    @Override
+    public Integer count_view_book(Integer bookId) {
+        Book book = bookRepository.findByBookID(bookId);
+        checkExistedUtils.checkObjectExisted(book, "Book");
+        return bookViewHelper.getViewCountFromRedis(bookId);
+    }
 
+    @Override
+    public void readingBook (Integer bookId) {
+        Book book = bookRepository.findByBookID(bookId);
+        checkExistedUtils.checkObjectExisted(book, "Book");
+        if (book != null) {
+            bookViewHelper.incrementViewCountInRedis(bookId);
+        }
+    }
 
     @Override
     public List<BookAuthorResponse> findByCategory(String params) {
@@ -65,6 +76,7 @@ public class BookServiceImpl implements IBookService {
         book.setPrice(bookDTO.getPrice());
         book.setTotalpage(bookDTO.getTotalpage());
         book.setUploader(user);
+        book.setAuthor_name(bookDTO.getAuthor_name());
 
         checkExistedUtils.checkFileExists(image, "image");
         checkExistedUtils.checkFileExists(pdf, "pdf");
@@ -94,8 +106,8 @@ public class BookServiceImpl implements IBookService {
             }
         }
 
-        String file = uploadDriveHelper.upDrive(pdf);
-        String img = uploadDriveHelper.upDrive(image);
+        String file = uploadDriveHelper.upPDFDrive(pdf);
+        String img = uploadDriveHelper.upIMGDrive(image);
         book.setPdf(file);
         book.setCoverimage(img);
 
@@ -111,8 +123,11 @@ public class BookServiceImpl implements IBookService {
         Book book = bookRepository.findByBookID(bookID);
 
         if (book != null) {
+            driveService.deleteFileOrFolder(book.getCoverimage());
+            driveService.deleteFileOrFolder(book.getPdf());
+
             book.getCategories().clear();
-            bookRepository.save(book);
+            bookRepository.deleteAuthorBookByBookID(bookID);
 
             bookRepository.delete(book);
 
@@ -203,5 +218,21 @@ public class BookServiceImpl implements IBookService {
     public ResponseEntity<?> countBookWritten(String username) {
         Integer res = bookRepository.count_book_written(username);
         return ResponseEntity.ok(res);
+    }
+
+    @Override
+    public List<?> getFreeBook() {
+        List<Book> res = bookRepository.get_free_books();
+        checkExistedUtils.checkObjectExisted(res, "Free Book List");
+        List <BookAuthorResponse> responses = bookResponseHelper.bookListGet(res);
+        return responses;
+    }
+
+    @Override
+    public List<?> getRecommendBook() {
+        List<Book> res = bookRepository.get_recommend_books();
+        checkExistedUtils.checkObjectExisted(res, "Free Book List");
+        List <BookAuthorResponse> responses = bookResponseHelper.bookListGet(res);
+        return responses;
     }
 }

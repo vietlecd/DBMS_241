@@ -31,7 +31,7 @@ public class Author {
     )
     Set<Book> bookSet;
 
-    @ManyToMany(mappedBy = "followedAuthor")
+    @ManyToMany(mappedBy = "followedAuthor", fetch = FetchType.EAGER)
     private Set<User> followers = new HashSet<>();
     @Override
     public boolean equals(Object o) {
