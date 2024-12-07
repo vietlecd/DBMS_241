@@ -14,3 +14,5 @@ services:
   - type: redis
     name: redis
     plan: starter
+    ipAllowList:
+      - source: allow-all
