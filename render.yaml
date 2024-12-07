@@ -15,4 +15,4 @@ services:
     name: redis
     plan: starter
     ipAllowList:
-      - source: allow-all
+      - source: 0.0.0.0/0
