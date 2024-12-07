@@ -33,4 +33,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     @Procedure(procedureName = "deleteAuthorBookByBookID")
     void deleteAuthorBookByBookID(@Param("bookID") Integer bookID);
+
+    @Procedure(procedureName = "search_books")
+    List<Book> search_books(@Param("keyword") String keyword, @Param("page") Integer page, @Param("pageSize") Integer pageSize);
 }

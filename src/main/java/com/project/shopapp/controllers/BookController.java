@@ -28,11 +28,11 @@
         private AuthenticationHelper authenticationHelper;
 
 
-        @GetMapping("/book")
+        @GetMapping("/bookByCategory")
         public ResponseEntity<?> getBook (
                 @RequestParam String params) {
             try {
-                List<BookAuthorResponse> result = bookService.findAll(params);
+                List<BookAuthorResponse> result = bookService.findByCategory(params);
                 return ResponseEntity.ok(result);
             } catch (DataNotFoundException e) {
                 return ResponseEntity.badRequest().body(e.getMessage());
