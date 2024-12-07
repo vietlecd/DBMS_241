@@ -10,14 +10,7 @@ services:
       - key: SPRING_DATA_REDIS_PORT
         value: 6379
     healthCheckPath: /
-    port: 8080
-    autoDeploy: true
-    dependsOn:
-      - name: redis
-        type: redis
 
   - type: redis
     name: redis
     plan: starter
-    disk:
-      sizeGB: 1
