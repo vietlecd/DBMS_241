@@ -11,7 +11,8 @@ import java.util.List;
 import java.util.Map;
 
 public interface IBookService {
-    List<BookAuthorResponse> findAll(String params);
+
+    List<BookAuthorResponse> findByCategory(String params);
     ResponseEntity<?> createBook(BookDTO bookDTO, MultipartFile pdf, MultipartFile image, User user) throws IOException;
 
     boolean deleteBookBybookID(Integer bookID);

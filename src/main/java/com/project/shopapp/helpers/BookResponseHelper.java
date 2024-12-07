@@ -5,7 +5,9 @@ import com.project.shopapp.models.Author;
 import com.project.shopapp.models.Book;
 import com.project.shopapp.models.Category;
 import com.project.shopapp.responses.BookAuthorResponse;
+import com.project.shopapp.utils.CheckExistedUtils;
 import jakarta.persistence.Column;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -15,6 +17,8 @@ import java.util.stream.Collectors;
 
 @Component
 public class BookResponseHelper {
+    @Autowired
+    private CheckExistedUtils checkExistedUtils;
 
     public List<BookAuthorResponse> bookListGet(List<Book> bookList) {
         if (bookList.isEmpty()) {
@@ -29,9 +33,13 @@ public class BookResponseHelper {
                     .map(author -> author.getUser().getFullName())
                     .collect(Collectors.toSet());
 
+            checkExistedUtils.checkObjectExisted(authorSet, "AuthorSet");
+
             Set<String> nameCategories = book.getCategories().stream()
                     .map(Category::getNamecategory)
                     .collect(Collectors.toSet());
+
+            checkExistedUtils.checkObjectExisted(nameCategories, "categories");
 
             BookAuthorResponse res = BookAuthorResponse.builder()
                     .price(book.getPrice())

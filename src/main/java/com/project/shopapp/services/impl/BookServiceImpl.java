@@ -10,7 +10,9 @@ import com.project.shopapp.models.*;
 import com.project.shopapp.repositories.*;
 import com.project.shopapp.responses.BookAuthorResponse;
 import com.project.shopapp.services.IBookService;
+import com.project.shopapp.services.INotificationService;
 import com.project.shopapp.utils.CheckExistedUtils;
+import com.project.shopapp.utils.NotificationUtils;
 import com.project.shopapp.utils.StringSimilarityUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -40,12 +42,13 @@ public class BookServiceImpl implements IBookService {
     private AuthorHelper authorHelper;
     private CheckExistedUtils checkExistedUtils;
     private AuthorRepository authorRepository;
-    private NotificationService notificationService;
+    private INotificationService notificationService;
+    private NotificationUtils notificationUtils;
 
 
 
     @Override
-    public List<BookAuthorResponse> findAll(String params) {
+    public List<BookAuthorResponse> findByCategory(String params) {
         List<Book> bookEntities = bookRepository.GetBooksByParams(params);
         checkExistedUtils.checkObjectExisted(bookEntities, "Book");
         List<BookAuthorResponse> result = bookResponseHelper.bookListGet(bookEntities);
@@ -122,7 +125,10 @@ public class BookServiceImpl implements IBookService {
     public boolean acceptBookRequestCheck(Integer bookID) {
         Book book = bookRepository.findByBookID(bookID);
         if (book != null && "false".equals(book.getStatus())) {
+            User user = book.getUploader();
             book.setStatus("true");
+            String message = notificationUtils.return_book(book.getTitle(), "accept");
+            notificationService.createNotification(message, user);
             bookRepository.save(book);
 
             return true;
@@ -135,15 +141,12 @@ public class BookServiceImpl implements IBookService {
         Book book = bookRepository.findByBookID(bookID);
 
         if (book != null) {
-            // Lấy thông tin người dùng từ đối tượng User
-            User user = book.getUploader(); // Lấy đối tượng User từ sách
+            User user = book.getUploader();
 
-
-            // Tạo thông báo cho người dùng
-            String message = "Your book request for '" + book.getTitle() + "' has been denied.";
-            notificationService.createNotification(message, user); // Gửi thông báo với tên người dùng
+            String message = notificationUtils.return_book(book.getTitle(), "deny");
+            notificationService.createNotification(message, user);
             bookRepository.deleteAuthorBookByBookID(bookID);
-            // Xóa sách khỏi cơ sở dữ liệu
+
             bookRepository.delete(book);
 
             return true;

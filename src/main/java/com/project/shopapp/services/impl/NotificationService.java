@@ -4,6 +4,7 @@ import com.project.shopapp.DTO.NotificationDTO;
 import com.project.shopapp.models.Notification;
 import com.project.shopapp.models.User;
 import com.project.shopapp.repositories.NotificationRepository;
+import com.project.shopapp.services.INotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,21 +12,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class NotificationService {
+public class NotificationService implements INotificationService {
 
     @Autowired
     private NotificationRepository notificationRepository;
 
-    // Tạo thông báo mới
-    public Notification createNotification(String message, User user) {
+    @Override
+    public void createNotification(String message, User user) {
         Notification notification = new Notification(message,user);
-        return notificationRepository.save(notification);
+        notificationRepository.save(notification);
     }
 
-    // Lấy tất cả thông báo của người dùng
+    @Override
     public List<NotificationDTO> getNotificationsByUser(User user) {
         List<Notification> notifications = notificationRepository.findByUser(user);
-
 
         List<NotificationDTO> notificationDTOs = new ArrayList<>();
 
@@ -40,7 +40,4 @@ public class NotificationService {
 
         return notificationDTOs;
     }
-
-
-
 }
