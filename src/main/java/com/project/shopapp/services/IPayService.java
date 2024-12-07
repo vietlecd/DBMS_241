@@ -11,6 +11,4 @@ public interface IPayService {
     ResponseEntity<?> payForBook(User user, Integer bookId);
 
     List<PaymentDTO> checkHistory(User user);
-
-
 }

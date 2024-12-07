@@ -5,6 +5,5 @@ import org.springframework.http.ResponseEntity;
 
 public interface IClaimService {
     void claimStreakPoint(User user);
-    ResponseEntity<?> claimAdPoint(User user);
 
 }

@@ -8,7 +8,6 @@ import com.project.shopapp.repositories.BookRepository;
 import com.project.shopapp.responses.BookAuthorResponse;
 import com.project.shopapp.services.ISearchService;
 import com.project.shopapp.utils.CheckExistedUtils;
-import com.project.shopapp.utils.StringSimilarityUtil;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 

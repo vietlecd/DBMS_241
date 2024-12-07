@@ -49,6 +49,12 @@ public class Book {
     @JsonIgnore
     private String status;
 
+    @Column(name = "view_count")
+    private Integer view_count = 0;
+
+    @Column(name = "author_name")
+    private String author_name;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "cate", // Tên bảng trung gian

@@ -40,7 +40,7 @@ public class AudienceController {
         }
     }
 
-    @GetMapping("/getAuthorFollow")
+    @GetMapping("/getFollow")
     public ResponseEntity<?> getFollow(Authentication authentication) {
         try {
             User user = authenticationHelper.getUser(authentication);
@@ -50,4 +50,5 @@ public class AudienceController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
 }

@@ -15,6 +15,9 @@
     import org.springframework.web.bind.annotation.*;
     import org.springframework.web.multipart.MultipartFile;
 
+    import javax.xml.crypto.Data;
+    import java.io.IOException;
+    import java.security.GeneralSecurityException;
     import java.util.List;
     import java.util.Map;
 
@@ -27,6 +30,25 @@
         @Autowired
         private AuthenticationHelper authenticationHelper;
 
+        @GetMapping("/getViewBook")
+        public ResponseEntity<?> getViewBook(@RequestParam Integer bookId) {
+            try {
+                Integer res = bookService.count_view_book(bookId);
+                return ResponseEntity.ok(res);
+            } catch (DataNotFoundException e) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+            }
+        }
+
+        @GetMapping("/readingBook")
+        public ResponseEntity<?> readingBook (@RequestParam Integer bookId) {
+            try {
+                bookService.readingBook(bookId);
+                return ResponseEntity.ok("Reading Recorded");
+            } catch (DataNotFoundException e) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+            }
+        }
 
         @GetMapping("/bookByCategory")
         public ResponseEntity<?> getBook (
@@ -64,12 +86,9 @@
             }
         }
 
-
-
         @DeleteMapping("/deleteBook")
         public String deleteBookByTitle(@RequestParam Integer bookID) {
 
-            // Gọi đến service để xóa sách theo title
             boolean deleted = bookService.deleteBookBybookID(bookID);
             return deleted ? "Book with title '" + bookID + "' was deleted successfully." : "Book with title '" + bookID+ "' not found.";
         }
@@ -111,6 +130,24 @@
             try {
                 String username = authenticationHelper.getUsername(authentication);
                 return bookService.countBookWritten(username);
+            } catch (DataNotFoundException e) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+            }
+        }
+
+        @GetMapping("/bookFree")
+        public ResponseEntity<?> bookFree() {
+            try {
+                return ResponseEntity.ok(bookService.getFreeBook());
+            } catch (DataNotFoundException e) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+            }
+        }
+
+        @GetMapping("/bookRecommend")
+        public ResponseEntity<?> bookRecommend() {
+            try {
+                return ResponseEntity.ok(bookService.getRecommendBook());
             } catch (DataNotFoundException e) {
                 return ResponseEntity.badRequest().body(e.getMessage());
             }

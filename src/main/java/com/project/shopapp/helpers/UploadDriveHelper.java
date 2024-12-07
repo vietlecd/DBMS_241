@@ -17,7 +17,33 @@ public class UploadDriveHelper {
     @Autowired
     private DriveService driveService;
 
-    public String upDrive(MultipartFile pdf) throws IOException {
+
+    public String upIMGDrive(MultipartFile pdf) throws IOException {
+        if (pdf.isEmpty()) {
+            throw new DataNotFoundException("khong tim thay Image");
+        }
+
+        File pdfFile = new File(pdf.getOriginalFilename());
+        try (FileOutputStream fos = new FileOutputStream(pdfFile)) {
+            fos.write(pdf.getBytes());
+
+            DriveResponse res = driveService.uploadImageToDrive(pdfFile);
+
+            if (res != null) {
+                return res.getUrl();
+            }
+        } catch (IOException | GeneralSecurityException | NullPointerException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error uploading PDF to drive", e);
+        } finally {
+            if (pdfFile.exists()) {
+                pdfFile.delete();
+            }
+        }
+        return null;
+    }
+
+    public String upPDFDrive(MultipartFile pdf) throws IOException {
         if (pdf.isEmpty()) {
             throw new DataNotFoundException("khong tim thay filePDF");
         }
@@ -26,7 +52,7 @@ public class UploadDriveHelper {
         try (FileOutputStream fos = new FileOutputStream(pdfFile)) {
             fos.write(pdf.getBytes());
 
-            DriveResponse res = driveService.uploadImageToDrive(pdfFile);
+            DriveResponse res = driveService.uploadPdfToDrive(pdfFile);
 
             if (res != null) {
                 return res.getUrl();

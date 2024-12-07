@@ -19,6 +19,9 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     Book findByBookID(Integer bookID);
 
+    @Procedure(procedureName = "count_book_view")
+    Integer count_book_view(@Param("bookId") Integer bookId);
+
     @Procedure(procedureName = "find_book_bought")
     List<Book> findBookBought(@Param("p_username") String username);
 
@@ -26,7 +29,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     List<Book> findBooksByAuthorUsername(@Param("p_author_username") String p_author_username);
 
     @Procedure(procedureName = "count_book_written")
-    Integer count_book_written(@Param("p_author_username") String username);
+    Integer count_book_written(@Param("p_author_username") String p_author_username);
 
     @Procedure(procedureName = "GetBooksByParams")
     List<Book> GetBooksByParams(@Param("categoryName") String categoryName);
@@ -36,4 +39,10 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     @Procedure(procedureName = "search_books")
     List<Book> search_books(@Param("keyword") String keyword, @Param("page") Integer page, @Param("pageSize") Integer pageSize);
+
+    @Procedure(procedureName = "get_free_books")
+    List<Book> get_free_books();
+
+    @Procedure(procedureName = "get_recommend_books")
+    List<Book> get_recommend_books();
 }

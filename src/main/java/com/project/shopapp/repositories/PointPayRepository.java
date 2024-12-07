@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface PointPayRepository extends JpaRepository<Pay, Integer> {
-    List<Pay> findPayByUser(User user);
+    List<Pay> findPayByUserOrderByTimestampAsc(User user);
 
     Pay findPayByUserAndBook_BookID(User user, Integer bookId);
 

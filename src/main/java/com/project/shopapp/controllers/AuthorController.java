@@ -79,4 +79,23 @@ public class AuthorController {
         return authorService.getAuthorRequest();
     }
 
+    @GetMapping("/countFollowers")
+    public ResponseEntity<?> countFollower(Authentication authentication) {
+        try {
+            User user = authenticationHelper.getUser(authentication);
+            return ResponseEntity.ok(authorService.countFollowers(user));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/countRecommendBook")
+    public ResponseEntity<?> countRecommendBook(Authentication authentication) {
+        try {
+            User user = authenticationHelper.getUser(authentication);
+            return ResponseEntity.ok(authorService.countRecommendBookWritten(user));
+        } catch (DataNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

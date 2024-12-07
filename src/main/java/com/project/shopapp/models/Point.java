@@ -27,9 +27,6 @@ public class Point extends BaseEntity{
     @Column(name = "type")
     private String type;
 
-    @Column(name = "view_count")
-    private Integer viewCount;
-
     public void addPoint(int point) {
         if (this.amount == null) {
             amount = 0; 
