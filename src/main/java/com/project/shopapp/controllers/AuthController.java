@@ -3,18 +3,23 @@ package com.project.shopapp.controllers;
 import com.project.shopapp.DTO.UserDTO;
 import com.project.shopapp.DTO.UserLoginDTO;
 import com.project.shopapp.components.CookieUtil;
+import com.project.shopapp.customexceptions.DataNotFoundException;
+import com.project.shopapp.helpers.AuthenticationHelper;
 import com.project.shopapp.services.IAuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("${api.prefix}/users")
@@ -22,6 +27,7 @@ import java.util.List;
 public class AuthController {
 
     private IAuthService userService;
+    private AuthenticationHelper authenticationHelper;
 
     @PostMapping("/register")
     public ResponseEntity<?> createUser(@Valid @RequestBody UserDTO userDTO,
@@ -45,12 +51,11 @@ public class AuthController {
         }
     }
     @PostMapping("/login")
-    public ResponseEntity<String> login (
+    public ResponseEntity<?> login (
             @Valid @RequestBody UserLoginDTO userLoginDTO,
             HttpServletResponse response) {
-        // Kiểm tra thông tin đăng nhập và sinh token
         try {
-            String token = userService.login(userLoginDTO.getUsername(), userLoginDTO.getPassword());
+            Map<String, String> token = userService.login(userLoginDTO.getUsername(), userLoginDTO.getPassword());
 
             // Trả về token trong response
             return ResponseEntity.ok(token);
@@ -59,20 +64,21 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletResponse response) {
-
-        // Xoa Cokie
-        CookieUtil.deleteTokenCookie(response);
-
-        return ResponseEntity.ok("Logged out successfully");
+    @GetMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request) {
+        try {
+            return userService.logout(request);
+        } catch (DataNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/refreshToken")
-    public ResponseEntity<?> refreshToken(HttpServletRequest request, HttpServletResponse response) {
-        return userService.refreshToken(request, response);
-
-
+    public ResponseEntity<?> refreshToken(HttpServletRequest request) {
+        try {
+            return userService.refreshToken(request);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
-
 }

@@ -1,16 +1,18 @@
 package com.project.shopapp.services.impl;
 
 import com.project.shopapp.DTO.UserDTO;
-import com.project.shopapp.components.CookieUtil;
 import com.project.shopapp.components.JwtTokenUtil;
 import com.project.shopapp.customexceptions.DataNotFoundException;
 import com.project.shopapp.customexceptions.PermissionDenyException;
 import com.project.shopapp.models.Role;
+import com.project.shopapp.models.Token;
 import com.project.shopapp.models.User;
 import com.project.shopapp.repositories.RoleRepository;
+import com.project.shopapp.repositories.TokenRepository;
 import com.project.shopapp.repositories.UserRepository;
 import com.project.shopapp.services.IAuthService;
 import com.project.shopapp.services.IClaimService;
+import com.project.shopapp.utils.CheckExistedUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -33,10 +38,11 @@ public class AuthService implements IAuthService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtTokenUtil jwtTokenUtil;
     private final AuthenticationManager authenticationManager;
     private final IClaimService claimService;
-    private final UserDetailsService userDetailsService;
+    private final TokenRepository tokenRepository;
+    private final CheckExistedUtils checkExistedUtils;
+    private final TokenService tokenService;
     @Override
     public User createUser(UserDTO userDTO) throws Exception {
         //register user
@@ -74,7 +80,7 @@ public class AuthService implements IAuthService {
 
 
     @Override
-    public String login(String username, String password) throws Exception {
+    public Map<String, String> login(String username, String password) throws Exception {
         Optional<User> optionalUser = userRepository.findByUsername(username);
         if(optionalUser.isEmpty()) {
             throw new DataNotFoundException("Invalid username / password");
@@ -98,42 +104,49 @@ public class AuthService implements IAuthService {
         claimService.claimStreakPoint(existingUser);
         //*****************************//
 
-        return jwtTokenUtil.generateToken(existingUser);
+        String accessToken = tokenService.generateAccessToken(existingUser);
+        String refreshToken = tokenService.generateRefreshToken(existingUser);
+
+        Token storedRefreshToken = tokenRepository.findByToken(refreshToken);
+        Token storedAccessToken = tokenRepository.findByToken(accessToken);
+        storedRefreshToken.setLinkedAccessToken(storedAccessToken);
+        tokenRepository.save(storedRefreshToken);
+
+        Map<String, String> res = new HashMap<>();
+        res.put("accessToken", accessToken);
+        res.put("refreshToken", refreshToken);
+
+        return res;
     }
 
     @Override
-    public ResponseEntity<?> refreshToken(HttpServletRequest request, HttpServletResponse response) {
-        try {
-            String token = CookieUtil.getTokenCookieName(request);
-            String username = jwtTokenUtil.extractUsername(token);
-            if (username.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Khong tim thay Username nay");
-            }
-            User userDetails = (User) userDetailsService.loadUserByUsername(username);
-
-            if (token == null) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Khong the tim thay token");
-            }
-
-            if (!jwtTokenUtil.validateToken(token, userDetails)) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token không hợp lệ hoặc đã hết hạn");
-            }
-
-            Optional<User> userData = userRepository.findByUsername(username);
-            if (userData.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("khong tim thay user data");
-            }
-
-            User user = userData.get();
-            String newAccessToken = jwtTokenUtil.generateToken(user);
-
-            CookieUtil.setTokenCookie(newAccessToken, response);
-
-            return ResponseEntity.ok("Yeu cau refresh token cua khach hang: " + user.getUsername() + " thanh cong" );
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(e);
+    public ResponseEntity<?> refreshToken(HttpServletRequest request) throws Exception {
+        final String authHeader = request.getHeader("Authorization");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("");
         }
+        final String token = authHeader.substring(7);
+        String newAccessToken = tokenService.refreshAccessToken(token);
+        return ResponseEntity.ok(newAccessToken);
     }
 
+    @Override
+    public ResponseEntity<?> logout(HttpServletRequest request) {
+        final String authHeader = request.getHeader("Authorization");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("");
+        }
+        final String token = authHeader.substring(7);
+        Token tokenModel = tokenRepository.findByTokenAndRevoked(token, false);
+        checkExistedUtils.checkObjectExisted(tokenModel, "Token");
 
+        User user = tokenModel.getUser();
+        List<Token> tokenList = tokenRepository.findAllByUserAndRevoked(user, false);
+
+        checkExistedUtils.checkObjectExisted(token, "Token");
+        for (Token token1 : tokenList) {
+            tokenService.invalidateToken(token1);
+        }
+        return ResponseEntity.ok("Log out successfully");
+    }
 }

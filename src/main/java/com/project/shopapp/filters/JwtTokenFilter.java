@@ -2,7 +2,10 @@ package com.project.shopapp.filters;
 
 import com.project.shopapp.components.CookieUtil;
 import com.project.shopapp.components.JwtTokenUtil;
+import com.project.shopapp.models.Token;
 import com.project.shopapp.models.User;
+import com.project.shopapp.repositories.TokenRepository;
+import com.project.shopapp.utils.CheckExistedUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,6 +34,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     private final UserDetailsService userDetailsService;
     private final JwtTokenUtil jwtTokenUtil;
+    private final TokenRepository tokenRepository;
+    private final CheckExistedUtils checkExistedUtils;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
@@ -52,6 +57,15 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             final String username = jwtTokenUtil.extractUsername(token);
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 User userDetails = (User) userDetailsService.loadUserByUsername(username);
+
+                Token storedToken = tokenRepository.findByTokenAndRevoked(token, false);
+                checkExistedUtils.checkObjectExisted(storedToken, "Token");
+
+                if (storedToken.getTokenType().equals("REFRESH")) {
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                    return;
+                }
+
                 if(jwtTokenUtil.validateToken(token, userDetails)) {
                     UsernamePasswordAuthenticationToken authenticationToken =
                             new UsernamePasswordAuthenticationToken(userDetails, null,
@@ -70,6 +84,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         final List<Pair<String, String>> bypassTokens = Arrays.asList(
                 Pair.of(String.format("%s/users/register", apiPrefix), "POST"),
                 Pair.of(String.format("%s/users/login", apiPrefix), "POST"),
+                Pair.of(String.format("%s/users/refreshToken", apiPrefix), "GET"),
+                Pair.of(String.format("%s/users/logout", apiPrefix), "GET"),
                 Pair.of(String.format("%s/payment_return", apiPrefix), "GET")
         );
         for(Pair<String, String> bypassToken: bypassTokens) {

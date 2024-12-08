@@ -22,7 +22,7 @@ public class ListReading extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "include",
             joinColumns = @JoinColumn(name = "list_id"),

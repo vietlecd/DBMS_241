@@ -22,27 +22,26 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 public class JwtTokenUtil {
     @Value("${jwt.expiration}")
-    private int expiration; //save to an environment variable
+    public int accessExpiration;
+
+    @Value("${jwt.refresh_expiration}")
+    public int refreshExpiration;
 
     @Value("${jwt.secretKey}")
     private String secretKey;
-    public String generateToken(User user) throws Exception{
-        //properties => claims
-        Map<String, Object> claims = new HashMap<>();
-        //this.generateSecretKey();
-        claims.put("username", user.getUsername());
+
+    public String generateToken(User user, String tokenType) throws InvalidParamException {
+        int expirationTime = "REFRESH".equalsIgnoreCase(tokenType) ? refreshExpiration : accessExpiration;
+
         try {
-            String token = Jwts.builder()
-                    .setClaims(claims) //how to extract claims from this ?  Payload
+            return Jwts.builder()
+                    .setClaims(Map.of("username", user.getUsername(), "tokenType", tokenType))
                     .setSubject(user.getUsername())
-                    .setExpiration(new Date(System.currentTimeMillis() + expiration * 1000L)) //1 hour
+                    .setExpiration(new Date(System.currentTimeMillis() + expirationTime * 1000L))
                     .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                     .compact();
-            return token;
-        }catch (Exception e) {
-            //you can "inject" Logger, instead System.out.println
-            throw new InvalidParamException("Cannot create jwt token, error: "+e.getMessage());
-            //return null;
+        } catch (Exception e) {
+            throw new InvalidParamException("Cannot create JWT token, error: " + e.getMessage());
         }
     }
 
@@ -81,6 +80,11 @@ public class JwtTokenUtil {
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
+
+    public String extractTokenType(String token) {
+        return extractClaim(token, claims -> (String) claims.get("tokenType"));
+    }
+
     public boolean validateToken(String token, UserDetails userDetails) {
         String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()))

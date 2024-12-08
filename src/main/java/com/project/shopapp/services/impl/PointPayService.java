@@ -4,6 +4,8 @@ import com.project.shopapp.DTO.PaymentDTO;
 import com.project.shopapp.models.*;
 import com.project.shopapp.repositories.*;
 import com.project.shopapp.services.IPayService;
+import com.project.shopapp.utils.CheckExistedUtils;
+import com.project.shopapp.utils.NotificationUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,12 +22,15 @@ import java.util.*;
 public class PointPayService implements IPayService {
     private BookRepository bookRepository;
     private PointPayRepository pointPayRepository;
+    private CheckExistedUtils checkExistedUtils;
+    private NotificationUtils notificationUtils;
 
     @Override
     public ResponseEntity<?> payForBook(User user, Integer bookId) {
         Book book = bookRepository.findByBookID(bookId);
+        checkExistedUtils.checkObjectExisted(book, "Book");
 
-        if (book == null || book.getStatus().equals("false")) {
+        if (book.getStatus().equals("false")) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Can not found your book");
         }
 
@@ -50,26 +55,25 @@ public class PointPayService implements IPayService {
 
         pointPayRepository.save(pay);
 
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Payment successful!");
+        String res = notificationUtils.return_payment("Success");
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(res);
     }
     @Override
     public List<PaymentDTO> checkHistory(User user) {
         List<Pay> history = pointPayRepository.findPayByUserOrderByTimestampAsc(user);
+        checkExistedUtils.checkObjectExisted(history, "Book Payment");
         List<PaymentDTO> res = new ArrayList<>();
 
-        if (!history.isEmpty()) {
-            for (Pay pay : history) {
-                PaymentDTO paymentDTO = PaymentDTO.builder()
-                        .orderInfo("Point Payment")
-                        .totalPrice(pay.getBook_price())
-                        .transactionId(String.valueOf(pay.getId()))
-                        .paymentTime(String.valueOf(pay.getTimestamp()))
-                        .build();
+        for (Pay pay : history) {
+            PaymentDTO paymentDTO = PaymentDTO.builder()
+                    .orderInfo("Point Payment")
+                    .totalPrice(pay.getBook_price())
+                    .transactionId(String.valueOf(pay.getId()))
+                    .paymentTime(String.valueOf(pay.getTimestamp()))
+                    .build();
 
-                res.add(paymentDTO);
-            }
-        } else {
-            return Collections.emptyList();
+            res.add(paymentDTO);
         }
 
         return res;

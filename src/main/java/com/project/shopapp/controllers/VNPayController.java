@@ -2,6 +2,7 @@ package com.project.shopapp.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.shopapp.DTO.PaymentDTO;
+import com.project.shopapp.customexceptions.DataNotFoundException;
 import com.project.shopapp.helpers.AuthenticationHelper;
 import com.project.shopapp.models.Payment;
 import com.project.shopapp.models.User;
@@ -89,7 +90,12 @@ public class VNPayController {
 
     @GetMapping("/payments")
     public ResponseEntity<?> getPaymentsByUser(Authentication authentication) {
-        User user = authenticationHelper.getUser(authentication);
-        return vnPayService.getPaymentsByUser(user);
+        try {
+            User user = authenticationHelper.getUser(authentication);
+            return vnPayService.getPaymentsByUser(user);
+        } catch (DataNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
     }
 }

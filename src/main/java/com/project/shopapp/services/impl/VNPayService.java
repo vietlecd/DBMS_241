@@ -9,6 +9,7 @@ import com.project.shopapp.repositories.DepositRepository;
 import com.project.shopapp.repositories.PaymentRepository;
 import com.project.shopapp.services.IDepositService;
 import com.project.shopapp.services.IVNPayService;
+import com.project.shopapp.utils.CheckExistedUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,7 @@ public class VNPayService implements IVNPayService {
 
     private final PaymentRepository paymentRepository;
     private final IDepositService pointService;
+    private final CheckExistedUtils checkExistedUtils;
 
     public String createOrder(int total, String urlReturn, HttpServletRequest request, User user) {
         String vnp_Version = "2.1.0";
@@ -135,6 +137,7 @@ public class VNPayService implements IVNPayService {
 
     public ResponseEntity<?> getPaymentsByUser(User user) {
         List<Payment> payment = paymentRepository.findByUserIdAndStatus(user, "SUCCESS");
+        checkExistedUtils.checkObjectExisted(payment, "Payment List");
         List<PaymentDTO> res = new ArrayList<>();
 
         for (Payment payment1 : payment) {

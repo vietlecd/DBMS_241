@@ -5,6 +5,7 @@ import com.project.shopapp.helpers.AuthenticationHelper;
 import com.project.shopapp.models.User;
 import com.project.shopapp.services.IListReadingService;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -27,13 +28,22 @@ public class ListReadingController {
 
     @DeleteMapping("/delist")
     public ResponseEntity<?> deList(@RequestParam(name = "bookId") Integer bookId, Authentication authentication) {
-        User user = authenticationHelper.getUser(authentication);
-        return listReadingService.deList(user, bookId);
+        try {
+            User user = authenticationHelper.getUser(authentication);
+            return listReadingService.deList(user, bookId);
+        } catch (DataNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
     }
 
     @GetMapping("/get")
     public ResponseEntity<?> getList(Authentication authentication) {
-        User user = authenticationHelper.getUser(authentication);
-        return listReadingService.getList(user);
+        try {
+            User user = authenticationHelper.getUser(authentication);
+            return listReadingService.getList(user);
+        } catch (DataNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

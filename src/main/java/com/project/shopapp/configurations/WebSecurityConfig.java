@@ -38,7 +38,8 @@ public class WebSecurityConfig {
                                     String.format("%s/users/register", apiPrefix),
                                     String.format("%s/users/login", apiPrefix),
                                     String.format("%s/payment_return", apiPrefix),
-                                    String.format("%s/refreshToken",apiPrefix)
+                                    String.format("%s/users/refreshToken",apiPrefix),
+                                    String.format("%s/users/logout", apiPrefix)
                             )
                             .permitAll()
                             .requestMatchers(POST,
@@ -104,28 +105,10 @@ public class WebSecurityConfig {
                                     String.format("%s/users/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
 
                             .requestMatchers(GET,
-                                    String.format("%s/author/info", apiPrefix)).hasAnyRole(Role.ADMIN, Role.USER, Role.AUTHOR)
-
-                            .requestMatchers(GET,
                                     String.format("%s/author/getAuthorRequest", apiPrefix)).hasAnyRole(Role.ADMIN)
 
                             .requestMatchers(POST,
                                     String.format("%s/author/become", apiPrefix)).hasAnyRole(Role.USER)
-
-                            .requestMatchers(GET,
-                                    String.format("%s/author/**", apiPrefix)).hasAnyRole(Role.USER, Role.ADMIN, Role.AUTHOR)
-
-                            .requestMatchers(GET,
-                                    String.format("%s/categories**", apiPrefix)).hasAnyRole(Role.USER, Role.ADMIN, Role.AUTHOR)
-
-                            .requestMatchers(POST,
-                                    String.format("%s/categories/**", apiPrefix)).hasAnyRole(Role.ADMIN)
-
-                            .requestMatchers(PUT,
-                                    String.format("%s/categories/**", apiPrefix)).hasAnyRole(Role.ADMIN)
-
-                            .requestMatchers(DELETE,
-                                    String.format("%s/categories/**", apiPrefix)).hasAnyRole(Role.ADMIN)
 
                             .anyRequest().authenticated();
 

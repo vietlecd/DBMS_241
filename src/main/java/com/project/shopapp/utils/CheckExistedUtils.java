@@ -4,6 +4,10 @@ import com.project.shopapp.customexceptions.DataNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Collection;
+import java.util.Map;
+import java.util.Optional;
+
 @Component
 public class CheckExistedUtils {
     public void checkFileExists(MultipartFile file, String fileName) {
@@ -12,10 +16,19 @@ public class CheckExistedUtils {
         }
     }
     public void checkObjectExisted(Object object, String objectName) {
-        if (object == null) {
+        if (object == null || object.equals("")) {
             throw new DataNotFoundException(objectName + " not found");
         }
         if (object instanceof String && ((String) object).trim().isEmpty()) {
+            throw new DataNotFoundException(objectName + " is empty");
+        }
+        if (object instanceof Optional && ((Optional<?>) object).isEmpty()) {
+            throw new DataNotFoundException(objectName + " is empty");
+        }
+        if (object instanceof Collection &&((Collection<?>) object).isEmpty()) {
+            throw new DataNotFoundException(objectName + " is empty");
+        }
+        if (object instanceof Map && ((Map<?, ?>) object).isEmpty()) {
             throw new DataNotFoundException(objectName + " is empty");
         }
     }
