@@ -67,68 +67,93 @@ public class ReviewServiceImpl implements IReviewService {
         book.getComments().add(review);
 
 
-    // Tạo đối tượng DTO để trả về
-    ReviewDTO savedReviewDTO = new ReviewDTO();
-    savedReviewDTO.setRating(reviewDTO.getRating());
-    savedReviewDTO.setUsername(user.getUsername());
-    // Thêm username vào DTO trả về
-    savedReviewDTO.setEvaluate(reviewDTO.getEvaluate());
-    savedReviewDTO.setComment(comment);
+        // Tạo đối tượng DTO để trả về
+        ReviewDTO savedReviewDTO = new ReviewDTO();
+        savedReviewDTO.setRating(reviewDTO.getRating());
+        savedReviewDTO.setUsername(user.getUsername());
+        // Thêm username vào DTO trả về
+        savedReviewDTO.setEvaluate(reviewDTO.getEvaluate());
+        savedReviewDTO.setComment(comment);
 
-    return ResponseEntity.status(HttpStatus.ACCEPTED).body(savedReviewDTO);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(savedReviewDTO);
     }
+
     @Override
-    public List<ReviewDTO> findReviewsByBookId(Long bookID, String username) {
-        // Kiểm tra sự tồn tại của Book theo bookID
-        Optional<Book> optionalBook = bookRepository.findById(bookID);
-        if (!optionalBook.isPresent()) {
-            throw new RuntimeException("Không tìm thấy Book với ID: " + bookID);
+    public ResponseEntity<?> findReviewsByBookId(Long bookID, String username) {
+        try {
+            // Kiểm tra sự tồn tại của Book theo bookID
+            Optional<Book> optionalBook = bookRepository.findById(bookID);
+            if (!optionalBook.isPresent()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("Không tìm thấy Book với ID: " + bookID);
+            }
+
+            // Tìm tất cả các Review dựa trên bookID và chuyển đổi chúng thành ReviewDTO
+            List<ReviewDTO> reviewDTOList = reviewRepository.findByBook_BookID(bookID)
+                    .stream()
+                    .map(review -> {
+                        ReviewDTO dto = new ReviewDTO();
+
+                        // Gán giá trị cho rating
+                        dto.setRating(review.getRating());
+
+                        // Gán comment từ review
+                        dto.setComment(review.getComment());
+
+                        // Lấy username từ đối tượng User liên kết với Review
+                        dto.setUsername(review.getUser().getUsername());
+
+                        // Gán thêm thuộc tính evaluate nếu có
+                        dto.setEvaluate(review.getEvaluate()); // Giả sử review có thuộc tính evaluate
+
+                        return dto;
+                    })
+                    .collect(Collectors.toList());
+
+            // Trả về danh sách ReviewDTO trong ResponseEntity
+            return ResponseEntity.ok(reviewDTOList);
+        } catch (Exception e) {
+            // Trả về lỗi nếu xảy ra ngoại lệ
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Đã xảy ra lỗi: " + e.getMessage());
         }
-
-        // Tìm tất cả các Review dựa trên bookID và chuyển đổi chúng thành ReviewDTO
-        return reviewRepository.findByBook_BookID(bookID)
-                .stream()
-                .map(review -> {
-                    ReviewDTO dto = new ReviewDTO();
-
-                    // Gán giá trị cho rating
-                    dto.setRating(review.getRating());
-
-                    // Sử dụng trực tiếp Set<String> từ review.getComments()
-                    dto.setComment(review.getComment()); // Giả sử review.getComments() trả về Set<String>
-
-                    // Lấy username từ đối tượng User liên kết với Review
-
-                    dto.setUsername(review.getUser().getUsername());
-
-
-                    // Gán thêm thuộc tính evaluate nếu có
-                    dto.setEvaluate(review.getEvaluate()); // Giả sử review có thuộc tính evaluate
-
-                    return dto;
-                })
-                .collect(Collectors.toList());
     }
 
     @Override
-    public ReviewDTO updateReview(Long reviewID, ReviewDTO reviewDTO) {
-        Optional<Review> optionalReview = reviewRepository.findById(reviewID);
-        if (optionalReview.isPresent()) {
-            Review review = optionalReview.get();
-            review.setRating(reviewDTO.getRating());
-            review.setComment(reviewDTO.getComment()); // Assuming only one comment is updated
-            review.setEvaluate(reviewDTO.getEvaluate());
-            reviewRepository.save(review);
+    public ResponseEntity<?> updateReview(Long reviewID, ReviewDTO reviewDTO, User user) {
+        try {
+            // Kiểm tra sự tồn tại của Review
+            Optional<Review> optionalReview = reviewRepository.findById(reviewID);
+            if (optionalReview.isPresent()) {
+                Review review = optionalReview.get();
 
-            // Convert updated review back to ReviewDTO and return
-            ReviewDTO updatedReviewDTO = new ReviewDTO();
-            updatedReviewDTO.setRating(review.getRating());
-            updatedReviewDTO.setComment(review.getComment());
-            updatedReviewDTO.setUsername(review.getUser().getUsername());
-            updatedReviewDTO.setEvaluate(review.getEvaluate());
-            return updatedReviewDTO;
-        } else {
-            throw new RuntimeException("Review not found with ID: " + reviewID);
+                // Cập nhật giá trị từ ReviewDTO
+                review.setRating(reviewDTO.getRating());
+                review.setComment(reviewDTO.getComment());
+                review.setEvaluate(reviewDTO.getEvaluate());
+                review.setUser(user);
+
+                // Lưu lại thay đổi vào repository
+                reviewRepository.save(review);
+
+                // Chuyển đổi Review đã cập nhật thành ReviewDTO để trả về
+                ReviewDTO updatedReviewDTO = new ReviewDTO();
+                updatedReviewDTO.setRating(review.getRating());
+                updatedReviewDTO.setComment(review.getComment());
+                updatedReviewDTO.setUsername(review.getUser().getUsername());
+                updatedReviewDTO.setEvaluate(review.getEvaluate());
+
+                // Trả về ResponseEntity chứa ReviewDTO sau khi cập nhật thành công
+                return ResponseEntity.status(HttpStatus.ACCEPTED).body(updatedReviewDTO);
+            } else {
+                // Xử lý nếu Review không tồn tại
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("Review not found with ID: " + reviewID);
+            }
+        } catch (Exception e) {
+            // Xử lý ngoại lệ
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error: " + e.getMessage());
         }
     }
 

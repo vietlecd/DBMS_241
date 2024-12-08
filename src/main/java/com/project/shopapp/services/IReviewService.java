@@ -10,6 +10,6 @@ import java.util.List;
 
 public interface IReviewService {
     ResponseEntity<?> addReviewToBook(Long bookID, ReviewDTO reviewDTO, User user); // hoặc void nếu không cần trả về
-    List<ReviewDTO> findReviewsByBookId(Long bookID, String username);
-    ReviewDTO updateReview(Long reviewID, ReviewDTO reviewDTO);
+    ResponseEntity<?> findReviewsByBookId(Long bookID, String username);
+    ResponseEntity<?> updateReview(Long reviewID, ReviewDTO reviewDTO,User user);
 }

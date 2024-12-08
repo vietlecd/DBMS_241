@@ -5,6 +5,7 @@ import com.project.shopapp.helpers.AuthenticationHelper;
 import com.project.shopapp.models.User;
 import com.project.shopapp.services.IReportService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -25,24 +26,38 @@ public class ReportController {
             @PathVariable Long bookID,
             @RequestBody ReportDTO reportDTO,
             Authentication authentication) {
-        User user = authenticationHelper.getUser(authentication);
-        return reportService.addReportToBook(bookID, reportDTO, user);
+        try {
+            User user = authenticationHelper.getUser(authentication);
+            return reportService.addReportToBook(bookID, reportDTO, user);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+        }
     }
+
 
     // Endpoint to find all reports by book ID
     @GetMapping("/get/{bookID}")
-    public ResponseEntity<?> getReportsByBookId(@PathVariable Long bookID, Authentication authentication) {
-        String username = authenticationHelper.getUsername(authentication);
-        return reportService.findReportsByBookId(bookID, username);
+    public ResponseEntity<?> getReportsByBookId(
+            @PathVariable Long bookID,
+            Authentication authentication) {
+        try {
+            String username = authenticationHelper.getUsername(authentication);
+            return reportService.findReportsByBookId(bookID, username);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+        }
     }
-
     // Endpoint to delete a report by book ID and report ID
     @DeleteMapping("/delete/{bookID}/{reportID}")
     public ResponseEntity<?> deleteReportById(
             @PathVariable Long bookID,
             @PathVariable int reportID,
             Authentication authentication) {
-        User user = authenticationHelper.getUser(authentication);
-        return reportService.deleteReportByBookIdAndReportId(bookID, reportID, user);
+        try {
+            User user = authenticationHelper.getUser(authentication);
+            return reportService.deleteReportByBookIdAndReportId(bookID, reportID, user);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+        }
     }
 }

@@ -1,0 +1,13 @@
+DB_URL=jdbc:mysql://104.214.171.0:3306/book_stores
+DB_USERNAME=root
+DB_PASSWORD=mypassword
+
+JWT_SECRET_KEY=TaqlmGv1iEDMRiFp/pHuID1+T84IABfuA0xXh4GhiUI=
+vnp_TmnCode=CFFPCQMR
+vnp_SecretKey=RQVXVKUPTO4HAVSJGLMDI0XXW603FEY0
+
+GOOGLE_DRIVE_FOLDER_ID=1adwfKxe6kbVcAa3ti-UworcBebr8ePTB
+
+redis_host=redis
+redis_port=6379
+redis_password=123456

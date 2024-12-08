@@ -68,12 +68,13 @@ public class WebSecurityConfig {
                             .requestMatchers(GET,
                                     String.format("%s/view_advertisement", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
 
-                            .requestMatchers(POST,
-                                    String.format("%s/review/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
+
                             .requestMatchers(GET,
                                     String.format("%s/review/**", apiPrefix)).hasAnyRole(Role.ADMIN, Role.AUTHOR)
+                            .requestMatchers(POST,
+                                    String.format("%s/review/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR,Role.ADMIN)
                             .requestMatchers(PUT,
-                                    String.format("%s/review/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
+                                    String.format("%s/review/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR,Role.ADMIN)
                             .
                             requestMatchers(POST,
                                     String.format("%s/bookmark/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
@@ -84,10 +85,10 @@ public class WebSecurityConfig {
                                     String.format("%s/bookmark/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
 
                             .requestMatchers(POST,
-                                    String.format("%s/report/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
+                                    String.format("%s/report/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR,Role.ADMIN)
 
                             .requestMatchers(DELETE,
-                                    String.format("%s/report/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR)
+                                    String.format("%s/report/**", apiPrefix)).hasAnyRole(Role.USER, Role.AUTHOR,Role.ADMIN)
                             .requestMatchers(GET,
                                     String.format("%s/report/**", apiPrefix)).hasAnyRole(Role.ADMIN)
 
